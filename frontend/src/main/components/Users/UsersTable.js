@@ -1,5 +1,5 @@
 import React from "react";
-import OurTable from "main/components/OurTable"
+import OurTable, { ButtonColumn } from "main/components/OurTable"
 
 const columns = [
     {
@@ -24,6 +24,11 @@ const columns = [
         accessor: (row, _rowIndex) => String(row.admin) // hack needed for boolean values to show up
     },
 ];
+
+const buttonColumns = [
+    ...columns,
+        ButtonColumn("Toggle Admin", "danger", postCallback, "UsersTable")
+]
 
 export default function UsersTable({ users }) {
     return <OurTable
