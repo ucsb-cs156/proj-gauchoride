@@ -23,12 +23,12 @@ const columns = [
         id: 'admin',
         accessor: (row, _rowIndex) => String(row.admin) // hack needed for boolean values to show up
     },
+    {
+        Header: 'Driver',
+        id: 'driver',
+        accessor: (row, _rowIndex) => String(row.driver) // hack needed for boolean values to show up
+    },
 ];
-
-const buttonColumns = [
-    ...columns,
-        ButtonColumn("Toggle Admin", "danger", postCallback, "UsersTable")
-]
 
 export default function UsersTable({ users }) {
     return <OurTable
