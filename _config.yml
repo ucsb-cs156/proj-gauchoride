@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156/proj-gauchoride
 owner: ucsb-cs156
 repo_name: proj-gauchoride
-pull_requests: [{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pc-stryker-incremental","number":25,"title":"pc - set up separate workflow for incremental mutation testing ","url":"https://github.com/ucsb-cs156/proj-gauchoride/pull/25"}]
+pull_requests: []
