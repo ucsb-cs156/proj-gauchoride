@@ -12,10 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.ucsb.cs156.gauchoride.models.SystemInfo;
 import edu.ucsb.cs156.gauchoride.services.SystemInfoService;
 
+/**
+ * SystemInfoController returns information about the application; typically
+ * the values of environment variables that may be needed by the frontend.
+ */
+
 @Api(description = &quot;System Information&quot;)
 @RequestMapping(&quot;/api/systemInfo&quot;)
 @RestController
-<span class="fc" id="L18">public class SystemInfoController extends ApiController {</span>
+<span class="fc" id="L23">public class SystemInfoController extends ApiController {</span>
 
     @Autowired
     private SystemInfoService systemInfoService;
@@ -24,7 +29,7 @@ import edu.ucsb.cs156.gauchoride.services.SystemInfoService;
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @GetMapping(&quot;&quot;)
     public SystemInfo getSystemInfo() {
-<span class="fc" id="L27">        return systemInfoService.getSystemInfo();</span>
+<span class="fc" id="L32">        return systemInfoService.getSystemInfo();</span>
     }
 
 }
