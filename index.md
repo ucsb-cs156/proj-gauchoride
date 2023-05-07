@@ -18,15 +18,12 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="{{pr.url}}">PR {{pr.number}}</a></td>
-<td>{{pr.headRefName}}</td>
-<td>{{pr.author.login}}</td>
-<td><a href="prs/{{pr.number}}/javadoc">javadoc</a></td>
-<td><a href="prs/{{pr.number}}/jacoco">jacoco</a></td>
-<td><a href="prs/{{pr.number}}/pitest">pitest</a></td>
-<td><a href="prs/{{pr.number}}/storybook">storybook</a></td>
-<td><a href="prs/{{pr.number}}/coverage">coverage</a></td>
-<td><a href="prs/{{pr.number}}/stryker">stryker</a></td>
+<td><a href="javadoc">javadoc</a></td>
+<td><a href="jacoco">jacoco</a></td>
+<td><a href="pitest">pitest</a></td>
+<td><a href="storybook">storybook</a></td>
+<td><a href="coverage">coverage</a></td>
+<td><a href="stryker">stryker</a></td>
 </tr>
 </tbody>
 </table>
