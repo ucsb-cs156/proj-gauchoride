@@ -25,7 +25,13 @@ jobs:
       - uses: actions/checkout@v3.5.2
         with: 
           fetch-depth: 2
-      - name: Figure out Branch name
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version-file: 'frontend/package.json'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: Figure out Branch nam
         id: get-branch-name
         run: | 
             GITHUB_HEAD_REF="${GITHUB_HEAD_REF}"
@@ -50,12 +56,6 @@ jobs:
       - name: Debugging output one
         run: |
           ls -lRt frontend
-
-      - name: Setup node 
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
-
       - run: npm ci
         working-directory: ./frontend
       - run: npx stryker run --incremental --incrementalFile reports/stryker-incremental-${{env.branch_name}}.json
@@ -73,7 +73,7 @@ jobs:
 
       - name: Upload stryker report to Artifacts
         if: always() # always upload artifacts, even if tests fail
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: stryker-report
-          path: frontend/reports/mutation/html/*
+          path: frontend/reports/mutation/*
