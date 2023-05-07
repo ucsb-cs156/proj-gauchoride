@@ -14,25 +14,32 @@ import edu.ucsb.cs156.gauchoride.services.CurrentUserService;
 
 import java.util.Map;
 
-<span class="fc" id="L17">@Slf4j</span>
-<span class="fc" id="L18">public abstract class ApiController {</span>
+/**
+ * Base class for all API controllers.
+ * 
+ * Provides a method to get the current user as well as common methods for
+ * error handling.
+ */
+
+<span class="fc" id="L24">@Slf4j</span>
+<span class="fc" id="L25">public abstract class ApiController {</span>
   @Autowired
   private CurrentUserService currentUserService;
 
   protected CurrentUser getCurrentUser() {
-<span class="fc" id="L23">    return currentUserService.getCurrentUser();</span>
+<span class="fc" id="L30">    return currentUserService.getCurrentUser();</span>
   }
 
   protected Object genericMessage(String message) {
-<span class="fc" id="L27">    return Map.of(&quot;message&quot;, message);</span>
+<span class="fc" id="L34">    return Map.of(&quot;message&quot;, message);</span>
   }
 
   @ExceptionHandler({ EntityNotFoundException.class })
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public Object handleGenericException(Throwable e) {
-<span class="fc" id="L33">    return Map.of(</span>
-<span class="fc" id="L34">      &quot;type&quot;, e.getClass().getSimpleName(),</span>
-<span class="fc" id="L35">      &quot;message&quot;, e.getMessage()</span>
+<span class="fc" id="L40">    return Map.of(</span>
+<span class="fc" id="L41">      &quot;type&quot;, e.getClass().getSimpleName(),</span>
+<span class="fc" id="L42">      &quot;message&quot;, e.getMessage()</span>
     );
   }
 }
