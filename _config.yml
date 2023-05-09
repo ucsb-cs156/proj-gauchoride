@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156/proj-gauchoride
 owner: ucsb-cs156
 repo_name: proj-gauchoride
-pull_requests: [{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pc-removeTodos","number":34,"title":"pc - remove TODOs, left over from starter code","url":"https://github.com/ucsb-cs156/proj-gauchoride/pull/34"},{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pc-sample-backend-pr","number":33,"title":"pc - add javadoc for ApiController.java","url":"https://github.com/ucsb-cs156/proj-gauchoride/pull/33"}]
+pull_requests: null
