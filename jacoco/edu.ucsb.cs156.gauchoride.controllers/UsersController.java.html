@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiParam;
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @GetMapping(&quot;/get&quot;)
     public User users(
-            @ApiParam(&quot;id&quot;) @RequestParam Long id)
+            @ApiParam(name = &quot;id&quot;, type = &quot;Long&quot;, value = &quot;id number of user to get&quot;, example = &quot;1&quot;, required = true) @RequestParam Long id)
             throws JsonProcessingException {
 <span class="fc" id="L54">        User user = userRepository.findById(id)</span>
 <span class="fc" id="L55">                .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
@@ -60,7 +60,7 @@ import io.swagger.annotations.ApiParam;
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @DeleteMapping(&quot;/delete&quot;)
     public Object deleteUser_Admin(
-            @ApiParam(&quot;id&quot;) @RequestParam Long id) {
+            @ApiParam(name = &quot;id&quot;, type = &quot;Long&quot;, value = &quot;id number of user to delete&quot;, example = &quot;1&quot;, required = true) @RequestParam Long id) {
 <span class="fc" id="L64">              User user = userRepository.findById(id)</span>
 <span class="fc" id="L65">          .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
@@ -73,13 +73,25 @@ import io.swagger.annotations.ApiParam;
     @ApiOperation(value = &quot;Toggle the admin field&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/toggleAdmin&quot;)
-    public Object toggleAdmin( @ApiParam(&quot;id&quot;) @RequestParam Long id){
+    public Object toggleAdmin( @ApiParam(name = &quot;id&quot;, type = &quot;Long&quot;, value = &quot;id number of user to toggle their admin field&quot;, example = &quot;1&quot;, required = true) @RequestParam Long id){
 <span class="fc" id="L77">        User user = userRepository.findById(id)</span>
 <span class="fc" id="L78">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
 <span class="fc bfc" id="L80" title="All 2 branches covered.">        user.setAdmin(!user.getAdmin());</span>
 <span class="fc" id="L81">        userRepository.save(user);</span>
 <span class="fc" id="L82">        return genericMessage(&quot;User with id %s has toggled admin status&quot;.formatted(id));</span>
+    }
+
+    @ApiOperation(value = &quot;Toggle the driver field&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PostMapping(&quot;/toggleDriver&quot;)
+    public Object toggleDriver( @ApiParam(name = &quot;id&quot;, type = &quot;Long&quot;, value = &quot;id number of user to toggle their driver field&quot;, example = &quot;1&quot;, required = true) @RequestParam Long id){
+<span class="fc" id="L89">        User user = userRepository.findById(id)</span>
+<span class="fc" id="L90">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        user.setDriver(!user.getDriver());</span>
+<span class="fc" id="L93">        userRepository.save(user);</span>
+<span class="fc" id="L94">        return genericMessage(&quot;User with id %s has toggled driver status&quot;.formatted(id));</span>
     }
 
 }
