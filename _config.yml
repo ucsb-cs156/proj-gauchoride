@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156/proj-gauchoride
 owner: ucsb-cs156
 repo_name: proj-gauchoride
-pull_requests: [{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pconrad-patch-11","number":54,"title":"Create 99-copy-issues.md","url":"https://github.com/ucsb-cs156/proj-gauchoride/pull/54"}]
+pull_requests: [{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pconrad-patch-12","number":55,"title":"Create 99-copy-issues.yml","url":"https://github.com/ucsb-cs156/proj-gauchoride/pull/55"},{"author":{"id":"MDQ6VXNlcjExMTkwMTc=","is_bot":false,"login":"pconrad","name":"Phill Conrad"},"headRefName":"pconrad-patch-11","number":54,"title":"Create 99-copy-issues.md","url":"https://github.com/ucsb-cs156/proj-gauchoride/pull/54"}]
