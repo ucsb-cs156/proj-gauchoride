@@ -15,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +27,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 @Tag(name = &quot;User information (admin only)&quot;)
 @RequestMapping(&quot;/api/admin/users&quot;)
 @RestController
-<span class="fc" id="L31">public class UsersController extends ApiController {</span>
+<span class="fc" id="L30">public class UsersController extends ApiController {</span>
     @Autowired
     UserRepository userRepository;
 
@@ -40,9 +39,9 @@ import io.swagger.v3.oas.annotations.Parameter;
     @GetMapping(&quot;&quot;)
     public ResponseEntity&lt;String&gt; users()
             throws JsonProcessingException {
-<span class="fc" id="L43">        Iterable&lt;User&gt; users = userRepository.findAll();</span>
-<span class="fc" id="L44">        String body = mapper.writeValueAsString(users);</span>
-<span class="fc" id="L45">        return ResponseEntity.ok().body(body);</span>
+<span class="fc" id="L42">        Iterable&lt;User&gt; users = userRepository.findAll();</span>
+<span class="fc" id="L43">        String body = mapper.writeValueAsString(users);</span>
+<span class="fc" id="L44">        return ResponseEntity.ok().body(body);</span>
     }
 
     @Operation(summary = &quot;Get user by id&quot;)
@@ -51,9 +50,9 @@ import io.swagger.v3.oas.annotations.Parameter;
     public User users(
             @Parameter(name = &quot;id&quot;, description = &quot;Long, id number of user to get&quot;, example = &quot;1&quot;, required = true) @RequestParam Long id)
             throws JsonProcessingException {
-<span class="fc" id="L54">        User user = userRepository.findById(id)</span>
-<span class="fc" id="L55">                .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
-<span class="fc" id="L56">        return user;</span>
+<span class="fc" id="L53">        User user = userRepository.findById(id)</span>
+<span class="fc" id="L54">                .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+<span class="fc" id="L55">        return user;</span>
     }
 
     @Operation(summary = &quot;Delete a user (admin)&quot;)
@@ -61,12 +60,12 @@ import io.swagger.v3.oas.annotations.Parameter;
     @DeleteMapping(&quot;/delete&quot;)
     public Object deleteUser_Admin(
             @Parameter(name = &quot;id&quot;, description = &quot;Long, id number of user to delete&quot;, example = &quot;1&quot;, required = true) @RequestParam Long id) {
-<span class="fc" id="L64">              User user = userRepository.findById(id)</span>
-<span class="fc" id="L65">          .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+<span class="fc" id="L63">              User user = userRepository.findById(id)</span>
+<span class="fc" id="L64">          .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
-<span class="fc" id="L67">          userRepository.delete(user);</span>
+<span class="fc" id="L66">          userRepository.delete(user);</span>
 
-<span class="fc" id="L69">        return genericMessage(&quot;User with id %s deleted&quot;.formatted(id));</span>
+<span class="fc" id="L68">        return genericMessage(&quot;User with id %s deleted&quot;.formatted(id));</span>
     }
 
     
@@ -74,25 +73,36 @@ import io.swagger.v3.oas.annotations.Parameter;
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/toggleAdmin&quot;)
     public Object toggleAdmin( @Parameter(name = &quot;id&quot;, description = &quot;Long, id number of user to toggle their admin field&quot;, example = &quot;1&quot;, required = true) @RequestParam Long id){
-<span class="fc" id="L77">        User user = userRepository.findById(id)</span>
-<span class="fc" id="L78">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+<span class="fc" id="L76">        User user = userRepository.findById(id)</span>
+<span class="fc" id="L77">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
-<span class="fc bfc" id="L80" title="All 2 branches covered.">        user.setAdmin(!user.getAdmin());</span>
-<span class="fc" id="L81">        userRepository.save(user);</span>
-<span class="fc" id="L82">        return genericMessage(&quot;User with id %s has toggled admin status&quot;.formatted(id));</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        user.setAdmin(!user.getAdmin());</span>
+<span class="fc" id="L80">        userRepository.save(user);</span>
+<span class="fc" id="L81">        return genericMessage(&quot;User with id %s has toggled admin status to %s&quot;.formatted(id, user.getAdmin()));</span>
     }
 
     @Operation(summary = &quot;Toggle the driver field&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/toggleDriver&quot;)
     public Object toggleDriver( @Parameter(name = &quot;id&quot;, description = &quot;Long, id number of user to toggle their driver field&quot;, example = &quot;1&quot;, required = true) @RequestParam Long id){
-<span class="fc" id="L89">        User user = userRepository.findById(id)</span>
-<span class="fc" id="L90">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+<span class="fc" id="L88">        User user = userRepository.findById(id)</span>
+<span class="fc" id="L89">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
-<span class="fc bfc" id="L92" title="All 2 branches covered.">        user.setDriver(!user.getDriver());</span>
-<span class="fc" id="L93">        userRepository.save(user);</span>
-<span class="fc" id="L94">        return genericMessage(&quot;User with id %s has toggled driver status&quot;.formatted(id));</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        user.setDriver(!user.getDriver());</span>
+<span class="fc" id="L92">        userRepository.save(user);</span>
+<span class="fc" id="L93">        return genericMessage(&quot;User with id %s has toggled driver status to %s&quot;.formatted(id, user.getDriver()));</span>
     }
 
+    @Operation(summary = &quot;Toggle the rider field&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PostMapping(&quot;/toggleRider&quot;)
+    public Object toggleRider( @Parameter(name = &quot;id&quot;) @RequestParam Long id){
+<span class="fc" id="L100">        User user = userRepository.findById(id)</span>
+<span class="fc" id="L101">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        user.setRider(!user.getRider());</span>
+<span class="fc" id="L104">        userRepository.save(user);</span>
+<span class="fc" id="L105">        return genericMessage(&quot;User with id %s has toggled rider status to %s&quot;.formatted(id, user.getRider()));</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
