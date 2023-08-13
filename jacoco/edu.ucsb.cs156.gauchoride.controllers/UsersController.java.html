@@ -81,28 +81,30 @@ import io.swagger.v3.oas.annotations.Parameter;
 <span class="fc" id="L81">        return genericMessage(&quot;User with id %s has toggled admin status to %s&quot;.formatted(id, user.getAdmin()));</span>
     }
 
+
     @Operation(summary = &quot;Toggle the driver field&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/toggleDriver&quot;)
     public Object toggleDriver( @Parameter(name = &quot;id&quot;, description = &quot;Long, id number of user to toggle their driver field&quot;, example = &quot;1&quot;, required = true) @RequestParam Long id){
-<span class="fc" id="L88">        User user = userRepository.findById(id)</span>
-<span class="fc" id="L89">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
-<span class="fc bfc" id="L91" title="All 2 branches covered.">        user.setDriver(!user.getDriver());</span>
-<span class="fc" id="L92">        userRepository.save(user);</span>
-<span class="fc" id="L93">        return genericMessage(&quot;User with id %s has toggled driver status to %s&quot;.formatted(id, user.getDriver()));</span>
+<span class="fc" id="L90">        User user = userRepository.findById(id)</span>
+<span class="fc" id="L91">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        user.setDriver(!user.getDriver());</span>
+<span class="fc" id="L94">        userRepository.save(user);</span>
+<span class="fc" id="L95">        return genericMessage(&quot;User with id %s has toggled driver status to %s&quot;.formatted(id, user.getDriver()));</span>
     }
 
     @Operation(summary = &quot;Toggle the rider field&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/toggleRider&quot;)
     public Object toggleRider( @Parameter(name = &quot;id&quot;) @RequestParam Long id){
-<span class="fc" id="L100">        User user = userRepository.findById(id)</span>
-<span class="fc" id="L101">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
+<span class="fc" id="L102">        User user = userRepository.findById(id)</span>
+<span class="fc" id="L103">        .orElseThrow(() -&gt; new EntityNotFoundException(User.class, id));</span>
 
-<span class="fc bfc" id="L103" title="All 2 branches covered.">        user.setRider(!user.getRider());</span>
-<span class="fc" id="L104">        userRepository.save(user);</span>
-<span class="fc" id="L105">        return genericMessage(&quot;User with id %s has toggled rider status to %s&quot;.formatted(id, user.getRider()));</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        user.setRider(!user.getRider());</span>
+<span class="fc" id="L106">        userRepository.save(user);</span>
+<span class="fc" id="L107">        return genericMessage(&quot;User with id %s has toggled rider status to %s&quot;.formatted(id, user.getRider()));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
