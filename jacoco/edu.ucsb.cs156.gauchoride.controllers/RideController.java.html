@@ -84,35 +84,43 @@ import javax.validation.Valid;
         @Parameter(name=&quot;endTime&quot;, description=&quot;String, Time the ride ends HH:MM(A/P)M&quot;, example=&quot;12:30AM&quot;, required = true)
         @RequestParam String endTime,
 
-        @Parameter(name=&quot;pickupLocation&quot;, description=&quot;String, Location the ride starts&quot;, example=&quot;Phelps Hall&quot;, required = true)
-        @RequestParam String pickupLocation,
+        @Parameter(name=&quot;pickupBuilding&quot;, description=&quot;String, Location the ride starts&quot;, example=&quot;Phelps Hall&quot;, required = true)
+        @RequestParam String pickupBuilding,
 
-        @Parameter(name=&quot;dropoffLocation&quot;, description=&quot;String, Location the ride ends&quot;, example=&quot;South Hall&quot;, required = true)
-        @RequestParam String dropoffLocation,
+        @Parameter(name=&quot;pickupRoom&quot;, description=&quot;String, Room number the pickupLocation&quot;, example=&quot;1431&quot;, required = true)
+        @RequestParam String pickupRoom,
 
-        @Parameter(name=&quot;room&quot;, description=&quot;String, Room number for the dropoffLocation&quot;, example=&quot;1431&quot;, required = true)
-        @RequestParam String room,
+        @Parameter(name=&quot;dropoffBuilding&quot;, description=&quot;String, Location the ride ends&quot;, example=&quot;South Hall&quot;, required = true)
+        @RequestParam String dropoffBuilding,
+
+        @Parameter(name=&quot;dropoffRoom&quot;, description=&quot;String, Room number for the dropoffLocation&quot;, example=&quot;1431&quot;, required = true)
+        @RequestParam String dropoffRoom,
 
         @Parameter(name=&quot;course&quot;, description=&quot;String, Course number for the class at the dropoffLocation&quot;, example=&quot;CMPSC 156&quot;, required = true)
-        @RequestParam String course
+        @RequestParam String course,
+
+         @Parameter(name=&quot;notes&quot;, description=&quot;String, Extra information&quot;, example=&quot;We have two people riding&quot;, required = true)
+        @RequestParam String notes
         )
         {
 
-<span class="fc" id="L101">        Ride ride = new Ride();</span>
+<span class="fc" id="L107">        Ride ride = new Ride();</span>
         
-<span class="fc" id="L103">        ride.setRiderId(getCurrentUser().getUser().getId());</span>
-<span class="fc" id="L104">        ride.setStudent(getCurrentUser().getUser().getFullName());</span>
-<span class="fc" id="L105">        ride.setDay(day);</span>
-<span class="fc" id="L106">        ride.setStartTime(startTime);</span>
-<span class="fc" id="L107">        ride.setEndTime(endTime);</span>
-<span class="fc" id="L108">        ride.setPickupLocation(pickupLocation);</span>
-<span class="fc" id="L109">        ride.setDropoffLocation(dropoffLocation);</span>
-<span class="fc" id="L110">        ride.setRoom(room);</span>
-<span class="fc" id="L111">        ride.setCourse(course);</span>
+<span class="fc" id="L109">        ride.setRiderId(getCurrentUser().getUser().getId());</span>
+<span class="fc" id="L110">        ride.setStudent(getCurrentUser().getUser().getFullName());</span>
+<span class="fc" id="L111">        ride.setDay(day);</span>
+<span class="fc" id="L112">        ride.setStartTime(startTime);</span>
+<span class="fc" id="L113">        ride.setEndTime(endTime);</span>
+<span class="fc" id="L114">        ride.setPickupBuilding(pickupBuilding);</span>
+<span class="fc" id="L115">        ride.setPickupRoom(pickupRoom);</span>
+<span class="fc" id="L116">        ride.setDropoffBuilding(dropoffBuilding);</span>
+<span class="fc" id="L117">        ride.setDropoffRoom(dropoffRoom);</span>
+<span class="fc" id="L118">        ride.setCourse(course);</span>
+<span class="fc" id="L119">        ride.setNotes(notes);</span>
 
-<span class="fc" id="L113">        Ride savedRide = rideRepository.save(ride);</span>
+<span class="fc" id="L121">        Ride savedRide = rideRepository.save(ride);</span>
 
-<span class="fc" id="L115">        return savedRide;</span>
+<span class="fc" id="L123">        return savedRide;</span>
     }
 
     @Operation(summary = &quot;Delete a ride, only user's if not admin/driver&quot;)
@@ -125,17 +133,17 @@ import javax.validation.Valid;
 
         Ride ride;
 
-<span class="fc bfc" id="L128" title="All 2 branches covered.">        if (getCurrentUser().getRoles().contains(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;)) ||</span>
-<span class="fc bfc" id="L129" title="All 2 branches covered.">            getCurrentUser().getRoles().contains(new SimpleGrantedAuthority(&quot;ROLE_DRIVER&quot;))) {</span>
-<span class="fc" id="L130">            ride = rideRepository.findById(id)</span>
-<span class="fc" id="L131">                .orElseThrow(() -&gt; new EntityNotFoundException(Ride.class, id));;</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (getCurrentUser().getRoles().contains(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;)) ||</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">            getCurrentUser().getRoles().contains(new SimpleGrantedAuthority(&quot;ROLE_DRIVER&quot;))) {</span>
+<span class="fc" id="L138">            ride = rideRepository.findById(id)</span>
+<span class="fc" id="L139">                .orElseThrow(() -&gt; new EntityNotFoundException(Ride.class, id));;</span>
         } else {
-<span class="fc" id="L133">            ride = rideRepository.findByIdAndRiderId(id, getCurrentUser().getUser().getId())</span>
-<span class="fc" id="L134">                .orElseThrow(() -&gt; new EntityNotFoundException(Ride.class, id));</span>
+<span class="fc" id="L141">            ride = rideRepository.findByIdAndRiderId(id, getCurrentUser().getUser().getId())</span>
+<span class="fc" id="L142">                .orElseThrow(() -&gt; new EntityNotFoundException(Ride.class, id));</span>
         }
 
-<span class="fc" id="L137">        rideRepository.delete(ride);</span>
-<span class="fc" id="L138">        return genericMessage(&quot;Ride with id %s deleted&quot;.formatted(id));</span>
+<span class="fc" id="L145">        rideRepository.delete(ride);</span>
+<span class="fc" id="L146">        return genericMessage(&quot;Ride with id %s deleted&quot;.formatted(id));</span>
     }
 
 
@@ -150,26 +158,28 @@ import javax.validation.Valid;
 
         Ride ride;
 
-<span class="fc bfc" id="L153" title="All 2 branches covered.">        if (getCurrentUser().getRoles().contains(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;)) ||</span>
-<span class="fc bfc" id="L154" title="All 2 branches covered.">            getCurrentUser().getRoles().contains(new SimpleGrantedAuthority(&quot;ROLE_DRIVER&quot;))) {</span>
-<span class="fc" id="L155">            ride = rideRepository.findById(id)</span>
-<span class="fc" id="L156">                .orElseThrow(() -&gt; new EntityNotFoundException(Ride.class, id));;</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if (getCurrentUser().getRoles().contains(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;)) ||</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">            getCurrentUser().getRoles().contains(new SimpleGrantedAuthority(&quot;ROLE_DRIVER&quot;))) {</span>
+<span class="fc" id="L163">            ride = rideRepository.findById(id)</span>
+<span class="fc" id="L164">                .orElseThrow(() -&gt; new EntityNotFoundException(Ride.class, id));;</span>
         } else {
-<span class="fc" id="L158">            ride = rideRepository.findByIdAndRiderId(id, getCurrentUser().getUser().getId())</span>
-<span class="fc" id="L159">                .orElseThrow(() -&gt; new EntityNotFoundException(Ride.class, id));</span>
+<span class="fc" id="L166">            ride = rideRepository.findByIdAndRiderId(id, getCurrentUser().getUser().getId())</span>
+<span class="fc" id="L167">                .orElseThrow(() -&gt; new EntityNotFoundException(Ride.class, id));</span>
         }
 
-<span class="fc" id="L162">        ride.setDay(incoming.getDay());</span>
-<span class="fc" id="L163">        ride.setStartTime(incoming.getStartTime());</span>
-<span class="fc" id="L164">        ride.setEndTime(incoming.getEndTime());</span>
-<span class="fc" id="L165">        ride.setPickupLocation(incoming.getPickupLocation());</span>
-<span class="fc" id="L166">        ride.setDropoffLocation(incoming.getDropoffLocation());</span>
-<span class="fc" id="L167">        ride.setRoom(incoming.getRoom());</span>
-<span class="fc" id="L168">        ride.setCourse(incoming.getCourse());</span>
+<span class="fc" id="L170">        ride.setDay(incoming.getDay());</span>
+<span class="fc" id="L171">        ride.setStartTime(incoming.getStartTime());</span>
+<span class="fc" id="L172">        ride.setEndTime(incoming.getEndTime());</span>
+<span class="fc" id="L173">        ride.setPickupBuilding(incoming.getPickupBuilding());</span>
+<span class="fc" id="L174">        ride.setPickupRoom(incoming.getPickupRoom());</span>
+<span class="fc" id="L175">        ride.setDropoffBuilding(incoming.getDropoffBuilding());</span>
+<span class="fc" id="L176">        ride.setDropoffRoom(incoming.getDropoffRoom());</span>
+<span class="fc" id="L177">        ride.setCourse(incoming.getCourse());</span>
+<span class="fc" id="L178">        ride.setNotes(incoming.getNotes());</span>
 
-<span class="fc" id="L170">        rideRepository.save(ride);</span>
+<span class="fc" id="L180">        rideRepository.save(ride);</span>
 
-<span class="fc" id="L172">        return ride;</span>
+<span class="fc" id="L182">        return ride;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
