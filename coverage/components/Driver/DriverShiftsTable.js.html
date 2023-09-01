@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for components/Nav/Footer.js</title>
+    <title>Code coverage report for components/Driver/DriverShiftsTable.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">components/Nav</a> Footer.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">components/Driver</a> DriverShiftsTable.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -100,35 +100,12 @@
 <a name='L35'></a><a href='#L35'>35</a>
 <a name='L36'></a><a href='#L36'>36</a>
 <a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a>
-<a name='L41'></a><a href='#L41'>41</a>
-<a name='L42'></a><a href='#L42'>42</a>
-<a name='L43'></a><a href='#L43'>43</a>
-<a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
+<a name='L38'></a><a href='#L38'>38</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">244x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -155,95 +132,49 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Container } from "react-bootstrap";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import OurTable from "main/components/OurTable"
 &nbsp;
-export const space = " ";
 &nbsp;
-export default function Footer() {
-  return (
-    &lt;footer className="bg-light pt-3 pt-md-4 pb-4 pb-md-5"&gt;
-      &lt;Container&gt;
-        &lt;p&gt;
-          This app is a class project of{space}
-          &lt;a
-            data-testid="footer-class-website-link"
-            href="https://ucsb-cs156.github.io"
-            target="_blank"
-            rel="noopener noreferrer"
-          &gt;
-            CMPSC 156
-          &lt;/a&gt;
-          {space}
-          at
-          {space}
-          &lt;a data-testid="footer-ucsb-link" href="https://ucsb.edu" target="_blank" rel="noopener noreferrer"&gt;
-            UCSB
-          &lt;/a&gt;
-          . Check out the source code on
-          {space}
-          &lt;a
-            data-testid="footer-source-code-link"
-            href={"https://github.com/ucsb-cs156-s23/proj-gauchoride-s23-5pm-2"}
-            target="_blank"
-            rel="noopener noreferrer"
-          &gt;
-            GitHub
-          &lt;/a&gt;
-          .
-        &lt;/p&gt;
+export default function DriverShiftsTable({ drivershifts }) {
 &nbsp;
-        &lt;p&gt;
-          See our{space}
-          &lt;a
-          href="/privacy.html"
-          &gt;
-            privacy policy
-          &lt;/a&gt;
+    const columns = [
+        {
+            Header: 'id',
+            accessor: 'id', // accessor is the "key" in the data
+        },
+        {
+            Header: 'Day',
+            accessor: 'day',
+        },
+        {
+            Header: 'Shift start',
+            accessor: 'shiftStart',
+        },
+        {
+            Header: 'Shift end',
+            accessor: 'shiftEnd',
+        },
+        {
+            Header: 'Driver',
+            accessor: 'driverID',
+        },
+        {
+            Header: 'Backup driver',
+            accessor: 'driverBackupID',
+        }
+    ];
 &nbsp;
-        &lt;/p&gt;
-&nbsp;
-        &lt;p&gt;
-          The cartoon Storke Tower images in the brand logo and favicon for this site were
-          developed by Chelsea Lyon-Hayden, Art Director for UCSB Associate Students, and are
-          used here by permission of the Executive Director of UCSB Associated Students.
-          These images are Copyright © 2021 UCSB Associated Students, and may not be reused
-          without express written permission of the Executive Director of UCSB Associated Students.  For more info, visit:
-          {space}
-          &lt;a data-testid="footer-sticker-link" href="https://www.as.ucsb.edu/sticker-packs"&gt;www.as.ucsb.edu/sticker-packs/&lt;/a&gt;
-          .
-        &lt;/p&gt;
-      &lt;/Container&gt;
-    &lt;/footer&gt;
-  );
-}</pre></td></tr></table></pre>
+    return &lt;OurTable
+        data={drivershifts}
+        columns={columns}
+        testid={"DriverShiftsTable"}
+    /&gt;;
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
