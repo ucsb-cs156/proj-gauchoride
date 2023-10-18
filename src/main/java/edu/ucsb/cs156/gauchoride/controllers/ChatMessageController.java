@@ -1,12 +1,19 @@
 package edu.ucsb.cs156.gauchoride.controllers;
 
 import edu.ucsb.cs156.gauchoride.entities.ChatMessage;
+import edu.ucsb.cs156.gauchoride.entities.User;
 import edu.ucsb.cs156.gauchoride.models.ChatMessageWithUserInfo;
 import edu.ucsb.cs156.gauchoride.repositories.ChatMessageRepository;
+import edu.ucsb.cs156.gauchoride.repositories.UserRepository;
+import edu.ucsb.cs156.gauchoride.services.SystemInfoService;
+import edu.ucsb.cs156.gauchoride.services.TwilioSMSService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +35,12 @@ public class ChatMessageController extends ApiController {
     @Autowired
     ChatMessageRepository chatMessageRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    private TwilioSMSService twilioSMSService;
+
     @Operation(summary = "Create a new message")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_DRIVER')")
     @PostMapping("/post")
@@ -44,6 +57,10 @@ public class ChatMessageController extends ApiController {
 
         ChatMessage savedMessage = chatMessageRepository.save(message);
 
+        Iterable<String> phoneNumbers = userRepository.findAllMemberUserPhoneNumbers();
+        
+        twilioSMSService.sendSMSToAll(phoneNumbers, content);
+
         return savedMessage;
     }
 
@@ -57,4 +74,6 @@ public class ChatMessageController extends ApiController {
         Page<ChatMessageWithUserInfo> messages = chatMessageRepository.findAllWithUserInfo(PageRequest.of(page, size, Sort.by("timestamp").descending()));
         return messages;
     }
+
+    
 }
