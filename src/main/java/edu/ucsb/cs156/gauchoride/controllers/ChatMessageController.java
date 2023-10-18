@@ -51,15 +51,15 @@ public class ChatMessageController extends ApiController {
         {
 
         ChatMessage message = new ChatMessage();
-        
-        message.setUserId(getCurrentUser().getUser().getId());
+        User user = getCurrentUser().getUser();
+        message.setUserId(user.getId());
         message.setPayload(content);
 
         ChatMessage savedMessage = chatMessageRepository.save(message);
 
         Iterable<String> phoneNumbers = userRepository.findAllMemberUserPhoneNumbers();
         
-        twilioSMSService.sendSMSToAll(phoneNumbers, content);
+        twilioSMSService.sendSMSToAll(phoneNumbers, user.getFullName() + ", sent: " + content);
 
         return savedMessage;
     }
