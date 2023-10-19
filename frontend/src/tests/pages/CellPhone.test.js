@@ -190,8 +190,8 @@ describe("CellPhone tests", () => {
         expect(screen.getByText("Input phone number")).toBeInTheDocument();
 
         
-        const phoneInput = screen.getByPlaceholderText("###-###-####");
-        fireEvent.change(phoneInput, { target: { value: '' } });
+        const phoneInput = screen.getByPlaceholderText("+EXT##########");
+        fireEvent.change(phoneInput, { target: { value: '+11111111111' } });
 
         const saveButton = screen.getByText("Save Changes");
         fireEvent.click(saveButton);
