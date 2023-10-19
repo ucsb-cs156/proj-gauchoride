@@ -112,7 +112,7 @@ const ProfilePage = () => {
                 type="text"
                 id="PhoneInput"
                 data-testid="PhoneInput"
-                placeholder="###-###-####"
+                placeholder="+###########"
                 autoFocus
                 onChange={onChangePhoneNumber}
               />
