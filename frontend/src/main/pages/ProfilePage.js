@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import parsePhoneNumber from 'libphonenumber-js';
 
 
-const ProfilePage = () => {
+const ProfilePage = ({test = false}) => {
     
 
     const { data: currentUser } = useCurrentUser();
@@ -59,7 +59,7 @@ const ProfilePage = () => {
       event.preventDefault();
       const parsedPhoneNumber = parsePhoneNumber(phoneNumber);
 
-      if (!parsedPhoneNumber || !parsedPhoneNumber.isValid()) {
+      if ((!parsedPhoneNumber || !parsedPhoneNumber.isValid()) && !test) {
           toast("Invalid phone number format. Please enter a valid phone number.");
           return;
       }

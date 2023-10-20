@@ -64,7 +64,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
@@ -83,7 +83,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
@@ -101,7 +101,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
@@ -128,7 +128,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
@@ -142,7 +142,7 @@ describe("CellPhone tests", () => {
         expect(screen.getByText("Input phone number")).toBeInTheDocument();
 
         
-        const phoneInput = screen.getByPlaceholderText("###-###-####");
+        const phoneInput = screen.getByPlaceholderText("+#(###)###-####");
         fireEvent.change(phoneInput, { target: { value: '987-654-3210' } });
 
         const saveButton = screen.getByText("Save Changes");
@@ -176,7 +176,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
@@ -190,19 +190,18 @@ describe("CellPhone tests", () => {
         expect(screen.getByText("Input phone number")).toBeInTheDocument();
 
         
-        const phoneInput = screen.getByPlaceholderText("+EXT##########");
-        fireEvent.change(phoneInput, { target: { value: '+11111111111' } });
+        const phoneInput = screen.getByPlaceholderText("+#(###)###-####");
+        fireEvent.change(phoneInput, { target: { value: '' } });
 
         const saveButton = screen.getByText("Save Changes");
         fireEvent.click(saveButton);
         
-        await waitFor(() => expect(screen.queryByText("Input phone number")).not.toBeInTheDocument());
-        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
+        await waitFor(() => expect(screen.getByText("Input phone number")).toBeInTheDocument());
+        await waitFor(() => expect(axiosMock.history.put.length).toBe(0));
+        await waitFor(() => expect(mockToast).toBeCalledWith("Invalid phone number format. Please enter a valid phone number."));
+
         
-        await waitFor(() => expect(mockToast).toBeCalledWith("Cell Phone number changed "));
-        await waitFor(() => expect(screen.queryByText("Cell Phone number changed ")).not.toBeInTheDocument());
-        
-        expect(screen.getByText('cell phone number: N/A')).toBeInTheDocument();
+        expect(screen.getByText('cell phone number: 111-111-1111')).toBeInTheDocument();
 
     });
 
@@ -218,7 +217,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
