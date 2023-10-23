@@ -19,6 +19,8 @@ will likely see an error such as:
 
 <img src="https://user-images.githubusercontent.com/1119017/149858436-c9baa238-a4f7-4c52-b995-0ed8bee97487.png" alt="Authorization Error; Error 401: invalid_client; The OAuth client was not found." width="400"/>
 
+Please also see the setup in [`docs/twilio.md`](docs/twilio.md)
+
 # Getting Started on localhost
 
 * Open *two separate terminal windows*  
