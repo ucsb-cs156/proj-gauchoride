@@ -6,6 +6,7 @@ import edu.ucsb.cs156.gauchoride.models.ChatMessageWithUserInfo;
 import edu.ucsb.cs156.gauchoride.repositories.ChatMessageRepository;
 import edu.ucsb.cs156.gauchoride.repositories.UserRepository;
 import edu.ucsb.cs156.gauchoride.testconfig.TestConfig;
+import edu.ucsb.cs156.gauchoride.services.TwilioSMSService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,6 +32,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 @WebMvcTest(controllers = ChatMessageController.class)
@@ -39,6 +41,9 @@ public class ChatMessageControllerTests extends ControllerTestCase {
 
         @MockBean
         UserRepository userRepository;
+
+        @MockBean
+        private TwilioSMSService twilioSMSService;
 
         @MockBean
         ChatMessageRepository chatMessageRepository;
@@ -136,6 +141,10 @@ public class ChatMessageControllerTests extends ControllerTestCase {
                                 .build();
 
                 when(chatMessageRepository.save(eq(message1))).thenReturn(message1);
+                Iterable<String> phoneNumbers = userRepository.findAllMemberUserPhoneNumbers();
+                List<String> messageSids = new ArrayList<>();
+                messageSids.add("1");
+                when(twilioSMSService.sendSMSToAll(phoneNumbers, currentUserService.getCurrentUser().getUser().getFullName() + ", sent: " + "message1")).thenReturn(messageSids);
 
                 String postRequesString = "content=message1";
 
@@ -167,6 +176,10 @@ public class ChatMessageControllerTests extends ControllerTestCase {
                                 .build();
 
                 when(chatMessageRepository.save(eq(message1))).thenReturn(message1);
+                Iterable<String> phoneNumbers = userRepository.findAllMemberUserPhoneNumbers();
+                List<String> messageSids = new ArrayList<>();
+                messageSids.add("1");
+                when(twilioSMSService.sendSMSToAll(phoneNumbers, currentUserService.getCurrentUser().getUser().getFullName() + ", sent: " + "message1")).thenReturn(messageSids);
 
                 String postRequesString = "content=message1";
 
@@ -181,6 +194,38 @@ public class ChatMessageControllerTests extends ControllerTestCase {
                 String expectedJson = mapper.writeValueAsString(message1);
                 String responseString = response.getResponse().getContentAsString();
 
+                assertEquals(expectedJson, responseString);
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void twilioSMSService_returns_false() throws Exception {
+                // arrange
+
+                long userId = currentUserService.getCurrentUser().getUser().getId();
+
+                ChatMessage message1 = ChatMessage.builder()
+                                .userId(userId)
+                                .payload("message1")
+                                .build();
+
+                when(chatMessageRepository.save(eq(message1))).thenReturn(message1);
+                Iterable<String> phoneNumbers = userRepository.findAllMemberUserPhoneNumbers();
+                List<String> messageSids = new ArrayList<>();
+                when(twilioSMSService.sendSMSToAll(phoneNumbers, currentUserService.getCurrentUser().getUser().getFullName() + ", sent: " + "message1")).thenReturn(messageSids);
+
+                String postRequesString = "content=message1";
+
+                // act
+                MvcResult response = mockMvc.perform(
+                                post("/api/chat/post?" + postRequesString)
+                                                .with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+                verify(chatMessageRepository, times(1)).save(message1);
+                String expectedJson = "";
+                String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
         }
 

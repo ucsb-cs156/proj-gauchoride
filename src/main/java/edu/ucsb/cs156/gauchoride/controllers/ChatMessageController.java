@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -59,9 +61,11 @@ public class ChatMessageController extends ApiController {
 
         Iterable<String> phoneNumbers = userRepository.findAllMemberUserPhoneNumbers();
         
-        twilioSMSService.sendSMSToAll(phoneNumbers, user.getFullName() + ", sent: " + content);
-
-        return savedMessage;
+        Iterable<String> all_messages_sent = twilioSMSService.sendSMSToAll(phoneNumbers, user.getFullName() + ", sent: " + content);
+        if(all_messages_sent == null || !all_messages_sent.iterator().hasNext())
+            return null;
+        else
+            return savedMessage;
     }
 
     @Operation(summary = "List all messages with user info")

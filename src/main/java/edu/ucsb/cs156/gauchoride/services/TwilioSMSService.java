@@ -7,8 +7,7 @@ import com.twilio.type.PhoneNumber;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import java.util.ArrayList;
-
-
+import java.util.List;
 import java.net.URI;
 import java.math.BigDecimal;
 
@@ -16,15 +15,15 @@ import java.math.BigDecimal;
 public class TwilioSMSService {
     // Find your Account Sid and Token at twilio.com/console
     @Value("${twilio.account.sid:twilio_account_sid_unset}")
-    private String ACCOUNT_SID = "";
+    protected String ACCOUNT_SID = "";
 
     @Value("${twilio.auth.token:twilio_auth_token_unset}")
-    private String AUTH_TOKEN = "";
+    protected String AUTH_TOKEN = "";
 
-    public void sendSMSToAll(Iterable<String> receivers, String content) {
+    public List<String> sendSMSToAll(Iterable<String> receivers, String content) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
-        Iterable<String> messageSids = new ArrayList<>();
+        List<String> messageSids = new ArrayList<>();
 
         for (String receiver : receivers) {
             Message message = Message.creator(
@@ -32,8 +31,9 @@ public class TwilioSMSService {
                     new PhoneNumber("+18886710358"),
                     content
             ).create();
-           message.getSid();
+            messageSids.add(message.getSid());
         }
+        return messageSids;
     }
 }
 
