@@ -25,14 +25,14 @@ public class TwilioSMSService {
 
         List<String> messageSids = new ArrayList<>();
 
-        for (String receiver : receivers) {
-            Message message = Message.creator(
-                    new PhoneNumber(receiver),
-                    new PhoneNumber("+18886710358"),
-                    content
-            ).create();
-            messageSids.add(message.getSid());
-        }
+        // for (String receiver : receivers) {
+        //     Message message = Message.creator(
+        //             new PhoneNumber(receiver),
+        //             new PhoneNumber("+18886710358"),
+        //             content
+        //     ).create();
+        //     //messageSids.add(message.getSid());
+        // }
         return messageSids;
     }
 }
