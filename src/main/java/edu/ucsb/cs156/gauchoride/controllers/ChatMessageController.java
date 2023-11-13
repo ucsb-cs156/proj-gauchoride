@@ -2,8 +2,10 @@ package edu.ucsb.cs156.gauchoride.controllers;
 
 import edu.ucsb.cs156.gauchoride.entities.ChatMessage;
 import edu.ucsb.cs156.gauchoride.entities.User;
+import edu.ucsb.cs156.gauchoride.entities.TwilioError;
 import edu.ucsb.cs156.gauchoride.models.ChatMessageWithUserInfo;
 import edu.ucsb.cs156.gauchoride.repositories.ChatMessageRepository;
+import edu.ucsb.cs156.gauchoride.repositories.TwilioErrorRepository;
 import edu.ucsb.cs156.gauchoride.repositories.UserRepository;
 import edu.ucsb.cs156.gauchoride.services.SystemInfoService;
 import edu.ucsb.cs156.gauchoride.services.TwilioSMSService;
@@ -36,6 +38,9 @@ public class ChatMessageController extends ApiController {
 
     @Autowired
     ChatMessageRepository chatMessageRepository;
+
+    @Autowired
+    TwilioErrorRepository twilioErrorRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -77,6 +82,17 @@ public class ChatMessageController extends ApiController {
     ) {
         Page<ChatMessageWithUserInfo> messages = chatMessageRepository.findAllWithUserInfo(PageRequest.of(page, size, Sort.by("timestamp").descending()));
         return messages;
+    }
+
+    @Operation(summary = "List all messages with user info")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/getErrors")
+    public Page<TwilioError> allErrors(
+         @Parameter(name="page") @RequestParam int page,
+         @Parameter(name="size") @RequestParam int size
+    ) {
+        Page<TwilioError> errors = twilioErrorRepository.findAll(PageRequest.of(page, size, Sort.by("timestamp").descending()));
+        return errors;
     }
 
     
