@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import parsePhoneNumber from 'libphonenumber-js';
 
 
-const ProfilePage = ({test = false}) => {
+const ProfilePage = ({test = true}) => {
     
 
     const { data: currentUser } = useCurrentUser();
