@@ -3,6 +3,12 @@ import OurTable from "main/components/OurTable";
 import { Button } from "react-bootstrap";
 import { useBackend } from "main/utils/useBackend";
 
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    return formattedDate;
+  }
+
 const PagedTwilioErrorTable = () => {
 
     const testId = "PagedTwilioErrorTable";
@@ -46,27 +52,28 @@ const PagedTwilioErrorTable = () => {
 
     const columns = [
         {
-            Header: 'id',
+            Header: 'Id',
             accessor: 'id', // accessor is the "key" in the data
         },
         {
-            Header: 'timestamp',
-            accessor: 'timestamp'
+            Header: 'Timestamp',
+            accessor: 'timestamp',
+            Cell: ({ value }) => formatTimestamp(value),
         },
         {
-            Header: 'errorMessage',
+            Header: 'Error Message',
             accessor: 'errorMessage'
         },
         {
-            Header: 'content',
+            Header: 'Content',
             accessor: 'content'
         },
         {
-            Header: 'receiver',
+            Header: 'Receiver',
             accessor: 'receiver'
         },
         {
-            Header: 'sender',
+            Header: 'Sender',
             accessor: 'sender'
         },
     ];
