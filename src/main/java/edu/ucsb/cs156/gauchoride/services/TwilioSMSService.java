@@ -30,7 +30,6 @@ public class TwilioSMSService {
     }
 
     public List<String> sendSMSToAll(Iterable<String> receivers, String content) {
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
         List<String> messageSids = new ArrayList<>();
 

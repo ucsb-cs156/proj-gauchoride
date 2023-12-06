@@ -4,6 +4,8 @@ import edu.ucsb.cs156.gauchoride.ControllerTestCase;
 import edu.ucsb.cs156.gauchoride.entities.ChatMessage;
 import edu.ucsb.cs156.gauchoride.models.ChatMessageWithUserInfo;
 import edu.ucsb.cs156.gauchoride.repositories.ChatMessageRepository;
+import edu.ucsb.cs156.gauchoride.repositories.TwilioErrorRepository;
+import edu.ucsb.cs156.gauchoride.entities.TwilioError;
 import edu.ucsb.cs156.gauchoride.repositories.UserRepository;
 import edu.ucsb.cs156.gauchoride.testconfig.TestConfig;
 import edu.ucsb.cs156.gauchoride.services.TwilioSMSService;
@@ -47,6 +49,9 @@ public class ChatMessageControllerTests extends ControllerTestCase {
 
         @MockBean
         ChatMessageRepository chatMessageRepository;
+
+        @MockBean
+        TwilioErrorRepository twilioErrorRepository;
 
         @WithMockUser(roles = { "ADMIN" })
         @Test
@@ -225,6 +230,48 @@ public class ChatMessageControllerTests extends ControllerTestCase {
                 // assert
                 verify(chatMessageRepository, times(1)).save(message1);
                 String expectedJson = "";
+                String responseString = response.getResponse().getContentAsString();
+                assertEquals(expectedJson, responseString);
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_get_errors() throws Exception {
+
+                // arrange
+
+                PageRequest pageRequest = PageRequest.of(0, 5);
+
+                TwilioError error1 = TwilioError.builder()
+                                .content("Content1")
+                                .receiver("receiver1")
+                                .sender("sender1")
+                                .errorMessage("error1")
+                                .build();
+                TwilioError error2 = TwilioError.builder()
+                                .content("Content2")
+                                .receiver("receiver2")
+                                .sender("sender2")
+                                .errorMessage("error2")
+                                .build();
+
+                ArrayList<TwilioError> expectedErrors = new ArrayList<>();
+                expectedErrors.addAll(Arrays.asList(error1, error2));
+
+                Page<TwilioError> expectedErrorPage = new PageImpl<>(expectedErrors, pageRequest,
+                                expectedErrors.size());
+
+                when(twilioErrorRepository.findAll(any())).thenReturn(expectedErrorPage);
+
+                // act
+                MvcResult response = mockMvc.perform(get("/api/chat/getErrors?page=0&size=10"))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+
+                verify(twilioErrorRepository, atLeastOnce()).findAll(any());
+
+                String expectedJson = mapper.writeValueAsString(expectedErrorPage);
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
         }
