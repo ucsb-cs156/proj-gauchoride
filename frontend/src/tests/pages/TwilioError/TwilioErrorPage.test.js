@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import TwilioErrorPage from "main/pages/TwilioErrorPage"
-import { firstPagedFixture, secondPagedFixture, thirdPagedFixture } from "fixtures/twilioErrorFixtures";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 
