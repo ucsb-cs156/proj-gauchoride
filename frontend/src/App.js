@@ -16,6 +16,8 @@ import ShiftEditPage from "main/pages/Shift/ShiftEditPage";
 import ShiftIndexPage from "main/pages/Shift/ShiftIndexPage";
 import DriverPage from "main/pages/DriverPage";
 
+import TwilioErrorPage from "main/pages/TwilioErrorPage";
+
 
 import { hasRole, useCurrentUser } from "main/utils/currentUser";
 
@@ -68,6 +70,9 @@ function App() {
         }
         { 
           hasRole(currentUser, "ROLE_DRIVER") && <Route exact path="/drivers" element={<DriverList />} />
+        }
+        {
+          hasRole(currentUser, "ROLE_ADMIN") && <Route exact path="/twilioError" element={<TwilioErrorPage />} />
         }
         <Route exact path="/privacy.html"  />
         <Route exact path="/*" element={<PageNotFound />} />

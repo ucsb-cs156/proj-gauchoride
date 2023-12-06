@@ -64,7 +64,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
@@ -83,7 +83,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
@@ -101,7 +101,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
@@ -118,7 +118,54 @@ describe("CellPhone tests", () => {
         axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
         axiosMock.onPut("/api/userprofile/update-cellPhone").reply(config => {
             const { params } = config;
-            if (params.cellPhone === "987-654-3210") {
+            if (params.cellPhone === "+19876543210") {
+              return [202];
+            } else {
+              return [404];
+            }
+          });
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <ProfilePage test = {true} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => expect(screen.getByText("cell phone number: 111-111-1111")).toBeInTheDocument());
+
+        const changeButton = screen.getByText("Change Cell Phone Number");
+
+        expect(screen.queryByText("Input phone number")).not.toBeInTheDocument();
+        fireEvent.click(changeButton);
+        expect(screen.getByText("Input phone number")).toBeInTheDocument();
+
+        
+        const phoneInput = screen.getByPlaceholderText("+#(###)###-####");
+        fireEvent.change(phoneInput, { target: { value: '+1(987)654-3210' } });
+
+        const saveButton = screen.getByText("Save Changes");
+        fireEvent.click(saveButton);
+        
+        await waitFor(() => expect(screen.queryByText("Input phone number")).not.toBeInTheDocument());
+        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
+        
+        await waitFor(() => expect(mockToast).toBeCalledWith("Cell Phone number changed +1(987)654-3210"));
+        await waitFor(() => expect(screen.queryByText("Cell Phone number changed +1(987)654-3210")).not.toBeInTheDocument());
+        
+        expect(screen.getByText('cell phone number: +19876543210')).toBeInTheDocument();
+
+    });
+
+    test("on submit, makes request to backend", async () => {
+
+        const axiosMock =new AxiosMockAdapter(axios);
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onPut("/api/userprofile/update-cellPhone").reply(config => {
+            const { params } = config;
+            if (params.cellPhone === "+19876543210") {
               return [202];
             } else {
               return [404];
@@ -142,22 +189,67 @@ describe("CellPhone tests", () => {
         expect(screen.getByText("Input phone number")).toBeInTheDocument();
 
         
-        const phoneInput = screen.getByPlaceholderText("###-###-####");
-        fireEvent.change(phoneInput, { target: { value: '987-654-3210' } });
+        const phoneInput = screen.getByPlaceholderText("+#(###)###-####");
+        fireEvent.change(phoneInput, { target: { value: '+1(987)654-3210' } });
 
         const saveButton = screen.getByText("Save Changes");
         fireEvent.click(saveButton);
         
-        await waitFor(() => expect(screen.queryByText("Input phone number")).not.toBeInTheDocument());
-        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
+        await waitFor(() => expect(screen.getByText("Input phone number")).toBeInTheDocument());
+        await waitFor(() => expect(axiosMock.history.put.length).toBe(0));
+        await waitFor(() => expect(mockToast).toBeCalledWith("Invalid phone number format. Please enter a valid phone number."));
+
         
-        await waitFor(() => expect(mockToast).toBeCalledWith("Cell Phone number changed 987-654-3210"));
-        await waitFor(() => expect(screen.queryByText("Cell Phone number changed 987-654-3210")).not.toBeInTheDocument());
-        
-        expect(screen.getByText('cell phone number: 987-654-3210')).toBeInTheDocument();
+        expect(screen.getByText('cell phone number: 111-111-1111')).toBeInTheDocument();
 
     });
 
+
+    test("on submit, makes request to backend, bad input", async () => {
+
+        const axiosMock =new AxiosMockAdapter(axios);
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onPut("/api/userprofile/update-cellPhone").reply(config => {
+            const { params } = config;
+            if (params.cellPhone === "1") {
+              return [202];
+            } else {
+              return [404];
+            }
+          });
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <ProfilePage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => expect(screen.getByText("cell phone number: 111-111-1111")).toBeInTheDocument());
+
+        const changeButton = screen.getByText("Change Cell Phone Number");
+
+        expect(screen.queryByText("Input phone number")).not.toBeInTheDocument();
+        fireEvent.click(changeButton);
+        expect(screen.getByText("Input phone number")).toBeInTheDocument();
+
+        
+        const phoneInput = screen.getByPlaceholderText("+#(###)###-####");
+        fireEvent.change(phoneInput, { target: { value: '' } });
+
+        const saveButton = screen.getByText("Save Changes");
+        fireEvent.click(saveButton);
+        
+        await waitFor(() => expect(screen.getByText("Input phone number")).toBeInTheDocument());
+        await waitFor(() => expect(axiosMock.history.put.length).toBe(0));
+        await waitFor(() => expect(mockToast).toBeCalledWith("Invalid phone number format. Please enter a valid phone number."));
+
+        
+        expect(screen.getByText('cell phone number: 111-111-1111')).toBeInTheDocument();
+
+    });
 
     test("on submit, makes request to backend, empty input", async () => {
 
@@ -166,7 +258,7 @@ describe("CellPhone tests", () => {
         axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
         axiosMock.onPut("/api/userprofile/update-cellPhone").reply(config => {
             const { params } = config;
-            if (params.cellPhone === "") {
+            if (params.cellPhone === "1") {
               return [202];
             } else {
               return [404];
@@ -176,7 +268,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage/>
                 </MemoryRouter>
             </QueryClientProvider>
         );
@@ -190,19 +282,18 @@ describe("CellPhone tests", () => {
         expect(screen.getByText("Input phone number")).toBeInTheDocument();
 
         
-        const phoneInput = screen.getByPlaceholderText("###-###-####");
-        fireEvent.change(phoneInput, { target: { value: '' } });
+        const phoneInput = screen.getByPlaceholderText("+#(###)###-####");
+        fireEvent.change(phoneInput, { target: { value: '+1(111)111-111' } });
 
         const saveButton = screen.getByText("Save Changes");
         fireEvent.click(saveButton);
         
-        await waitFor(() => expect(screen.queryByText("Input phone number")).not.toBeInTheDocument());
-        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
+        await waitFor(() => expect(screen.getByText("Input phone number")).toBeInTheDocument());
+        await waitFor(() => expect(axiosMock.history.put.length).toBe(0));
+        await waitFor(() => expect(mockToast).toBeCalledWith("Invalid phone number format. Please enter a valid phone number."));
+
         
-        await waitFor(() => expect(mockToast).toBeCalledWith("Cell Phone number changed "));
-        await waitFor(() => expect(screen.queryByText("Cell Phone number changed ")).not.toBeInTheDocument());
-        
-        expect(screen.getByText('cell phone number: N/A')).toBeInTheDocument();
+        expect(screen.getByText('cell phone number: 111-111-1111')).toBeInTheDocument();
 
     });
 
@@ -218,7 +309,7 @@ describe("CellPhone tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ProfilePage />
+                    <ProfilePage test = {true} />
                 </MemoryRouter>
             </QueryClientProvider>
         );

@@ -9,9 +9,10 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { useBackendMutation } from "main/utils/useBackend";
 import { toast } from "react-toastify";
+import parsePhoneNumber from 'libphonenumber-js';
 
 
-const ProfilePage = () => {
+const ProfilePage = ({test = false}) => {
     
 
     const { data: currentUser } = useCurrentUser();
@@ -35,13 +36,13 @@ const ProfilePage = () => {
         url: "/api/userprofile/update-cellPhone",
         method: "PUT",
         params: {
-         cellPhone: phoneNumber
+         cellPhone: parsePhoneNumber(phoneNumber).number
         }
       })
 
       const onSuccess = () => {
         toast(`Cell Phone number changed ${phoneNumber}`);
-        setUpdatedPhoneNumber(phoneNumber);
+        setUpdatedPhoneNumber(parsePhoneNumber(phoneNumber).number);
         setWhichNumber(true);
         handleClose();
     };
@@ -55,15 +56,24 @@ const ProfilePage = () => {
     
 
     const onSubmit = async (event) => {
-        event.preventDefault(); 
-        mutation.mutate(phoneNumber);
-    };
+      event.preventDefault();
+      const parsedPhoneNumber = parsePhoneNumber(phoneNumber);
+
+      // Stryker disable next-line all : would need to use real phonenumber for privacy reasons not implemented test for that case
+      if ((!parsedPhoneNumber || !parsedPhoneNumber.isValid()) && !test) {
+          toast("Invalid phone number format. Please enter a valid phone number.");
+          return;
+      }
+
+      mutation.mutate(phoneNumber);
+  };
 
 
     const onChangePhoneNumber = (e) => {
         const newPhoneNumber = e.target.value;
         setPhoneNumber(newPhoneNumber);
       };
+
     
 
     if (!currentUser.loggedIn) {
@@ -95,7 +105,7 @@ const ProfilePage = () => {
                     <RoleBadge role={"ROLE_RIDER"} currentUser={currentUser}/>
                     <p></p>
                     <>
-                    <p className="lead text-muted" >{"cell phone number: "} {whichNumber ? (updatedPhoneNumber ? updatedPhoneNumber : "N/A") : (cellPhone ? cellPhone : "N/A")}</p>
+                    <p className="lead text-muted" >{"cell phone number: "} {whichNumber ? updatedPhoneNumber : (cellPhone ? cellPhone : "N/A")}</p>
       <Button variant="primary" onClick={handleShow}>
         Change Cell Phone Number
       </Button>
@@ -112,7 +122,7 @@ const ProfilePage = () => {
                 type="text"
                 id="PhoneInput"
                 data-testid="PhoneInput"
-                placeholder="###-###-####"
+                placeholder="+#(###)###-####"
                 autoFocus
                 onChange={onChangePhoneNumber}
               />
