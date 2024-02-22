@@ -65,9 +65,10 @@ import java.util.List;
 <span class="fc" id="L65">        riderApplication.setUpdated_date(currentDate);</span>
 <span class="fc" id="L66">        riderApplication.setDescription(description);</span>
 <span class="fc" id="L67">        riderApplication.setNotes(&quot;&quot;);</span>
+<span class="fc" id="L68">        riderApplication.setEmail(getCurrentUser().getUser().getEmail());</span>
 
-<span class="fc" id="L69">        RiderApplication savedApplication = riderApplicationRepository.save(riderApplication);</span>
-<span class="fc" id="L70">        return savedApplication;</span>
+<span class="fc" id="L70">        RiderApplication savedApplication = riderApplicationRepository.save(riderApplication);</span>
+<span class="fc" id="L71">        return savedApplication;</span>
     };
 
     @Operation(summary = &quot;Get all rider requests owned by the current user&quot;)
@@ -76,8 +77,8 @@ import java.util.List;
     public Iterable&lt;RiderApplication&gt; allApplications()
     {
         Iterable&lt;RiderApplication&gt; applications;
-<span class="fc" id="L79">        applications = riderApplicationRepository.findAllByUserId(getCurrentUser().getUser().getId());</span>
-<span class="fc" id="L80">        return applications;</span>
+<span class="fc" id="L80">        applications = riderApplicationRepository.findAllByUserId(getCurrentUser().getUser().getId());</span>
+<span class="fc" id="L81">        return applications;</span>
     };
 
     @Operation(summary = &quot;Get a single rider application but only if owned by the current user&quot;)
@@ -89,9 +90,9 @@ import java.util.List;
                     @RequestParam Long id)
     {
         RiderApplication application;
-<span class="fc" id="L92">        application = riderApplicationRepository.findByIdAndUserId(id, getCurrentUser().getUser().getId())</span>
-<span class="fc" id="L93">                    .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
-<span class="fc" id="L94">        return application;</span>
+<span class="fc" id="L93">        application = riderApplicationRepository.findByIdAndUserId(id, getCurrentUser().getUser().getId())</span>
+<span class="fc" id="L94">                    .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
+<span class="fc" id="L95">        return application;</span>
     };    
 
     @Operation(summary = &quot;Edit an existing rider application but only if it is owned by the current user and the application is in the correct status&quot;)
@@ -105,26 +106,26 @@ import java.util.List;
     {
         RiderApplication application;
 
-<span class="fc" id="L108">        application = riderApplicationRepository.findByIdAndUserId(id, getCurrentUser().getUser().getId())</span>
-<span class="fc" id="L109">                    .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
+<span class="fc" id="L109">        application = riderApplicationRepository.findByIdAndUserId(id, getCurrentUser().getUser().getId())</span>
+<span class="fc" id="L110">                    .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
 
-<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (&quot;pending&quot;.equals(application.getStatus()))</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (&quot;pending&quot;.equals(application.getStatus()))</span>
         {
             // Get the current date
-<span class="fc" id="L114">            LocalDate localDate = LocalDate.now();</span>
-<span class="fc" id="L115">            Date currentDate = Date.valueOf(localDate);</span>
+<span class="fc" id="L115">            LocalDate localDate = LocalDate.now();</span>
+<span class="fc" id="L116">            Date currentDate = Date.valueOf(localDate);</span>
 
-<span class="fc" id="L117">            application.setPerm_number(incoming.getPerm_number());</span>
-<span class="fc" id="L118">            application.setUpdated_date(currentDate);</span>
-<span class="fc" id="L119">            application.setDescription(incoming.getDescription());</span>
+<span class="fc" id="L118">            application.setPerm_number(incoming.getPerm_number());</span>
+<span class="fc" id="L119">            application.setUpdated_date(currentDate);</span>
+<span class="fc" id="L120">            application.setDescription(incoming.getDescription());</span>
 
-<span class="fc" id="L121">            riderApplicationRepository.save(application);</span>
-<span class="fc" id="L122">            return ResponseEntity.ok(application);</span>
+<span class="fc" id="L122">            riderApplicationRepository.save(application);</span>
+<span class="fc" id="L123">            return ResponseEntity.ok(application);</span>
         }
         else
         {
-<span class="fc" id="L126">            String errorMessage = &quot;RiderApplication with \&quot;&quot; + application.getStatus() + &quot;\&quot; status cannot be updated&quot;;</span>
-<span class="fc" id="L127">            return ResponseEntity.badRequest().body(errorMessage);</span>
+<span class="fc" id="L127">            String errorMessage = &quot;RiderApplication with \&quot;&quot; + application.getStatus() + &quot;\&quot; status cannot be updated&quot;;</span>
+<span class="fc" id="L128">            return ResponseEntity.badRequest().body(errorMessage);</span>
         }
     }; 
 
@@ -139,25 +140,25 @@ import java.util.List;
     {
         RiderApplication application;
 
-<span class="fc" id="L142">        application = riderApplicationRepository.findByIdAndUserId(id, getCurrentUser().getUser().getId())</span>
-<span class="fc" id="L143">                    .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
+<span class="fc" id="L143">        application = riderApplicationRepository.findByIdAndUserId(id, getCurrentUser().getUser().getId())</span>
+<span class="fc" id="L144">                    .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
         
-<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (&quot;pending&quot;.equals(application.getStatus()))</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (&quot;pending&quot;.equals(application.getStatus()))</span>
         {
             // Get the current date
-<span class="fc" id="L148">            LocalDate localDate = LocalDate.now();</span>
-<span class="fc" id="L149">            Date currentDate = Date.valueOf(localDate);</span>
+<span class="fc" id="L149">            LocalDate localDate = LocalDate.now();</span>
+<span class="fc" id="L150">            Date currentDate = Date.valueOf(localDate);</span>
 
-<span class="fc" id="L151">            application.setStatus(&quot;cancelled&quot;);</span>
-<span class="fc" id="L152">            application.setUpdated_date(currentDate);</span>
-<span class="fc" id="L153">            application.setCancelled_date(currentDate);</span>
-<span class="fc" id="L154">            riderApplicationRepository.save(application);</span>
+<span class="fc" id="L152">            application.setStatus(&quot;cancelled&quot;);</span>
+<span class="fc" id="L153">            application.setUpdated_date(currentDate);</span>
+<span class="fc" id="L154">            application.setCancelled_date(currentDate);</span>
+<span class="fc" id="L155">            riderApplicationRepository.save(application);</span>
 
-<span class="fc" id="L156">            return genericMessage(&quot;Application with id %s is cancelled&quot;.formatted(id));</span>
+<span class="fc" id="L157">            return genericMessage(&quot;Application with id %s is cancelled&quot;.formatted(id));</span>
         }
         else
         {
-<span class="fc" id="L160">            return genericMessage(&quot;Application with \&quot;%s\&quot; status cannot be cancelled&quot;.formatted(application.getStatus()));</span>
+<span class="fc" id="L161">            return genericMessage(&quot;Application with \&quot;%s\&quot; status cannot be cancelled&quot;.formatted(application.getStatus()));</span>
         }
     };
 
@@ -170,8 +171,8 @@ import java.util.List;
     public Iterable&lt;RiderApplication&gt; allApplicationsAdmin()
     {
         Iterable&lt;RiderApplication&gt; applications;
-<span class="fc" id="L173">        applications = riderApplicationRepository.findAll();</span>
-<span class="fc" id="L174">        return applications;</span>
+<span class="fc" id="L174">        applications = riderApplicationRepository.findAll();</span>
+<span class="fc" id="L175">        return applications;</span>
     };
 
     @Operation(summary = &quot;Get all pending rider applications&quot;)
@@ -180,9 +181,9 @@ import java.util.List;
     public Iterable&lt;RiderApplication&gt; allPendingApplications()
     {
         Iterable&lt;RiderApplication&gt; pendingApplications;
-<span class="fc" id="L183">        pendingApplications = riderApplicationRepository.findAllByStatus(&quot;pending&quot;);</span>
+<span class="fc" id="L184">        pendingApplications = riderApplicationRepository.findAllByStatus(&quot;pending&quot;);</span>
 
-<span class="fc" id="L185">        return pendingApplications;</span>
+<span class="fc" id="L186">        return pendingApplications;</span>
     };
 
     @Operation(summary = &quot;Get a specific rider application&quot;)
@@ -194,9 +195,9 @@ import java.util.List;
                             @RequestParam Long id)
     {
         RiderApplication application;
-<span class="fc" id="L197">        application = riderApplicationRepository.findById(id)</span>
-<span class="fc" id="L198">                .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
-<span class="fc" id="L199">        return application;</span>
+<span class="fc" id="L198">        application = riderApplicationRepository.findById(id)</span>
+<span class="fc" id="L199">                .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
+<span class="fc" id="L200">        return application;</span>
     };
 
     @Operation(summary = &quot;Update the status/notes field of an application&quot;)
@@ -216,21 +217,21 @@ import java.util.List;
                             @RequestParam String notes)
     {
         RiderApplication application;
-<span class="fc" id="L219">        application = riderApplicationRepository.findById(id)</span>
-<span class="fc" id="L220">                .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
+<span class="fc" id="L220">        application = riderApplicationRepository.findById(id)</span>
+<span class="fc" id="L221">                .orElseThrow(() -&gt; new EntityNotFoundException(RiderApplication.class, id));</span>
 
-<span class="fc bfc" id="L222" title="All 2 branches covered.">        if (!status.isEmpty())</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if (!status.isEmpty())</span>
         {
-<span class="fc" id="L224">            application.setStatus(status);</span>
+<span class="fc" id="L225">            application.setStatus(status);</span>
         }
 
-<span class="fc bfc" id="L227" title="All 2 branches covered.">        if (!notes.isEmpty())</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        if (!notes.isEmpty())</span>
         {
-<span class="fc" id="L229">            application.setNotes(notes);</span>
+<span class="fc" id="L230">            application.setNotes(notes);</span>
         }      
         
-<span class="fc" id="L232">        riderApplicationRepository.save(application);</span>
-<span class="fc" id="L233">        return application;</span>
+<span class="fc" id="L233">        riderApplicationRepository.save(application);</span>
+<span class="fc" id="L234">        return application;</span>
     };
 
 }

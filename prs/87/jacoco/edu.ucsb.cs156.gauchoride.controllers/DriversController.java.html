@@ -40,14 +40,9 @@ import io.swagger.v3.oas.annotations.Parameter;
             throws JsonProcessingException {
 
 <span class="fc" id="L42">                Iterable&lt;User&gt; drivers=userRepository.findByDriver(true);</span>
-
-                
-                
-                
-
-                
-<span class="fc" id="L49">        String body = mapper.writeValueAsString(drivers);</span>
-<span class="fc" id="L50">        return ResponseEntity.ok().body(body);</span>
+                 
+<span class="fc" id="L44">        String body = mapper.writeValueAsString(drivers);</span>
+<span class="fc" id="L45">        return ResponseEntity.ok().body(body);</span>
     }
 
 
