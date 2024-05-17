@@ -49,7 +49,7 @@ describe("RideAssignDriverForm tests", () => {
         expect(await screen.findByText(/Assign Driver/)).toBeInTheDocument();
 
         expectedHeaders.forEach((headerText) => {
-            const header = screen.getByText(headerText);
+            const header = waitFor(() => screen.getByText(headerText));
             expect(header).toBeInTheDocument();
         });
 
