@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 @Tag(name = "Driver Information")
 @RequestMapping("/api/drivers")
 @RestController
-public class DriversController extends ApiController{
+public class DriversController extends ApiController {
     @Autowired
     UserRepository userRepository;
 
@@ -36,19 +36,19 @@ public class DriversController extends ApiController{
     ObjectMapper mapper;
 
     @Operation(summary = "Get a list of all drivers")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_DRIVER') || hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_DRIVER')")
     @GetMapping("/all")
     public ResponseEntity<String> drivers()
             throws JsonProcessingException {
 
-                Iterable<User> drivers=userRepository.findByDriver(true);
+        Iterable<User> drivers = userRepository.findByDriver(true);
 
         String body = mapper.writeValueAsString(drivers);
         return ResponseEntity.ok().body(body);
     }
 
     @Operation(summary = "Get user by id")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_DRIVER') || hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_DRIVER')")
     @GetMapping("/get")
     public DriverInfo driver(
             @Parameter(name = "id", description = "Long, id number of user to get", example = "1", required = true) @RequestParam Long id)
@@ -58,7 +58,7 @@ public class DriversController extends ApiController{
 
         DriverInfo driverInfo = new DriverInfo();
 
-        if(user.getDriver()){
+        if (user.getDriver()) {
             driverInfo.setIsDriver(true);
             driverInfo.setEmail(user.getEmail());
             driverInfo.setFamilyName(user.getFamilyName());
