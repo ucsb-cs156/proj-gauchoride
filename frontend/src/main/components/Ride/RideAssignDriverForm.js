@@ -1,12 +1,59 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom';
-
+import { useBackend } from 'main/utils/useBackend';
 
 
 function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "Assign Driver" }) {
     const navigate = useNavigate();
+    
+    const { data: drivers, _error2, _status2 } =
+        useBackend(
+            // Stryker disable next-line all : don't test internal caching of React Query
+            [`/api/drivers/all`],
+            {  // Stryker disable next-line all : GET is the default, so changing this to "" doesn't introduce a bug
+                method: "GET",
+                url: `/api/drivers/all`
+                // Stryker restore all
+            },
+            []
+        );
+
+    const { data: shifts, _error1, _status1 } =
+        useBackend(
+            // Stryker disable next-line all : don't test internal caching of React Query
+            [`/api/shift/all`],
+            {  // Stryker disable next-line all : GET is the default, so changing this to "" doesn't introduce a bug
+                method: "GET",
+                url: `/api/shift/all`
+                // Stryker restore all
+            },
+            []
+        );
+
+    const [driverShift, setDriverShift] = useState([]);
+
+    useEffect(() => {
+        if (drivers && shifts && drivers.length > 0 && shifts.length > 0) {
+            setDriverShift([]);
+            var driverMap = new Map();
+
+            drivers.forEach(driver => {
+                driverMap.set(driver.id, driver.fullName);
+            });
+
+            shifts.forEach(shift => {
+                setDriverShift(prevState => [...prevState, { 
+                    id: shift.id, 
+                    driverName: driverMap.get(shift.driverID),
+                    day: shift.day,
+                    shiftStart: shift.shiftStart,
+                    shiftEnd: shift.shiftEnd,
+                }]);
+            });
+        }
+    }, [drivers, shifts]);
     
     // Stryker disable all
     const {
@@ -17,7 +64,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
         { defaultValues: initialContents }
     );
     // Stryker enable all
-   
+
     const testIdPrefix = "RideAssignDriverForm";
 
 
@@ -41,22 +88,30 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
 
             
 
+            {driverShift && driverShift.length !== 0 &&
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="shiftId">Shift Id</Form.Label>
-                <Form.Control
+                <Form.Control 
+                    as="select" 
+                    type="select"
                     data-testid={testIdPrefix + "-shiftId"}
                     id="shiftId"
-                    type="text"
-                    isInvalid={Boolean(errors.pickupBuilding)}
+                    isInvalid={Boolean(errors.shiftId)}
                     {...register("shiftId", {
-                        required: "Shift Id Up Building is required."
+                        required: "Shift Id is required."
                     })}
-                    defaultValue={initialContents?.pickupBuilding} 
-                />
+                    defaultValue={initialContents?.shiftId}
+                >
+                    {driverShift.map((shift) => (
+                        <option key={shift.id.toString()} value={shift.id.toString()}>
+                            {shift.id.toString() + " - " + shift.driverName + " - " + shift.day + " - " + shift.shiftStart + "-" + shift.shiftEnd}
+                        </option>
+                    ))}
+                </Form.Control>
                 <Form.Control.Feedback type="invalid">
-                    {errors.pickupBuilding?.message}
+                    {errors.shiftId?.message}
                 </Form.Control.Feedback>
-            </Form.Group>
+            </Form.Group>}
 
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="day">Day of Week</Form.Label>
