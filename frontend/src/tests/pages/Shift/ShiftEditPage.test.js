@@ -135,7 +135,7 @@ describe("ShiftEditPage tests", () => {
             const { getByText : getByText1 } = within(screen.getByTestId("ShiftForm-driverID-1"));
             expect(getByText1("1 - undefined")).toBeInTheDocument();
 
-            const { getByText : getByText2 } = within(screen.getByTestId("ShiftForm-driverBackupID-1"));
+            const { getByText :getByText2 } = within(screen.getByTestId("ShiftForm-driverBackupID-1"));
             expect(getByText2("1 - undefined")).toBeInTheDocument();
         });
 
