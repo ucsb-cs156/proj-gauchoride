@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
+import driverFixtures from "fixtures/driverFixtures";
 
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
@@ -38,6 +39,7 @@ describe("ShiftCreatePage tests", () => {
         axiosMock.reset();
         axiosMock.resetHistory();
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
         axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
     });
 
@@ -82,7 +84,7 @@ describe("ShiftCreatePage tests", () => {
         )
 
         await waitFor(() => {
-            expect(screen.getByLabelText("Day of the Week")).toBeInTheDocument();
+            expect(screen.getByLabelText("Driver ID")).toBeInTheDocument();
         });
 
         // Test for Day input

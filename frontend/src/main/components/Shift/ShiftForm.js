@@ -115,7 +115,6 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                 </Form.Control.Feedback>
             </Form.Group>
 
-            {drivers &&
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="driverID">Driver ID</Form.Label>
                 <Form.Control
@@ -124,23 +123,16 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     name="driverID"
                     as="select"
                     type="select"
-                    isInvalid={Boolean(errors.driverID)}
-                    {...register("driverID", {
-                        required: "Driver ID is required."
-                    })}
+                    {...register("driverID")}
                 >
                     {drivers && drivers.map(driver => (
-                        <option key={driver.id} value={driver.id}>
+                        <option key={driver.id} data-testid={testIdPrefix + "-driverID-" + driver.id} value={driver.id}>
                             {driver.id + " - " + driver.fullName}
                         </option>
                     ))}
                 </Form.Control>
-                <Form.Control.Feedback type="invalid">
-                    {errors.driverID?.message}
-                </Form.Control.Feedback>
-            </Form.Group>}
+            </Form.Group>
 
-            {drivers &&
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="driverBackupID">Driver Backup ID</Form.Label>
                 <Form.Control
@@ -149,21 +141,15 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     name="driverBackupID"
                     as="select"
                     type="select"
-                    isInvalid={Boolean(errors.driverBackupID)}
-                    {...register("driverBackupID", {
-                        required: "Driver Backup ID is required."
-                    })}
+                    {...register("driverBackupID")}
                 >
                     {drivers && drivers.map(driver => (
-                        <option key={driver.id} value={driver.id}>
+                        <option key={driver.id} data-testid={testIdPrefix + "-driverBackupID-" + driver.id} value={driver.id}>
                             {driver.id + " - " + driver.fullName}
                         </option>
                     ))}
                 </Form.Control>
-                <Form.Control.Feedback type="invalid">
-                    {errors.driverBackupID?.message}
-                </Form.Control.Feedback>
-            </Form.Group>}
+            </Form.Group>
 
             <Button
                 type="submit"
