@@ -132,11 +132,11 @@ describe("ShiftEditPage tests", () => {
             expect(driverField).toHaveValue("1");
             expect(backupDriverField).toHaveValue("2");
 
-            var { getByText } = within(screen.getByTestId("ShiftForm-driverID-1"));
-            expect(getByText("1 - undefined")).toBeInTheDocument();
+            const { getByText : getByText1 } = within(screen.getByTestId("ShiftForm-driverID-1"));
+            expect(getByText1("1 - undefined")).toBeInTheDocument();
 
-            var { getByText } = within(screen.getByTestId("ShiftForm-driverBackupID-1"));
-            expect(getByText("1 - undefined")).toBeInTheDocument();
+            const { getByText : getByText2 } = within(screen.getByTestId("ShiftForm-driverBackupID-1"));
+            expect(getByText2("1 - undefined")).toBeInTheDocument();
         });
 
         test("Changes when you click Update", async () => {
