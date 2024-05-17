@@ -154,6 +154,17 @@ export default function RideTable({
             accessor: 'day',
         },
         {
+            Header: 'Assigned?',
+            accessor: 'assigned',
+            Cell: ({ value }) => {
+                if (!value) {
+                    return 'unassigned';
+                } else {
+                    return 'assigned';
+                }
+            },
+        },
+        {
             Header: 'Course #',
             accessor: 'course',
         },
