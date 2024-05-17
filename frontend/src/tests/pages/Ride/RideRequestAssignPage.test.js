@@ -131,7 +131,7 @@ describe("RideRequestAssignPage tests", () => {
 
             await findByTestId("RideAssignDriverForm-day");
             
-            const shiftIdField = waitFor(() => getByTestId("RideAssignDriverForm-shiftId"))
+            const shiftIdField = await waitFor(() => getByTestId("RideAssignDriverForm-shiftId"))
             const dayField = getByTestId("RideAssignDriverForm-day");
             const startTimeField = getByTestId("RideAssignDriverForm-start");
             const endTimeField = getByTestId("RideAssignDriverForm-end");
@@ -169,7 +169,7 @@ describe("RideRequestAssignPage tests", () => {
 
             await findByTestId("RideAssignDriverForm-day");
 
-            const shiftIdField = waitFor(() => getByTestId("RideAssignDriverForm-shiftId"))
+            const shiftIdField = await waitFor(() => getByTestId("RideAssignDriverForm-shiftId"))
             const dayField = getByTestId("RideAssignDriverForm-day");
             const startTimeField = getByTestId("RideAssignDriverForm-start");
             const endTimeField = getByTestId("RideAssignDriverForm-end");

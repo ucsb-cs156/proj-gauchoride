@@ -31,8 +31,8 @@ describe("RideAssignDriverForm tests", () => {
         expect(await screen.findByText(/Assign Driver/)).toBeInTheDocument();
 
         expectedHeaders.forEach((headerText) => {
-            const header = screen.getByText(headerText);
-            expect(header).toBeInTheDocument();
+            const header = waitFor(() => screen.getByText(headerText));
+            waitFor(() => expect(header).toBeInTheDocument());
           });
 
     });
@@ -50,7 +50,7 @@ describe("RideAssignDriverForm tests", () => {
 
         expectedHeaders.forEach((headerText) => {
             const header = waitFor(() => screen.getByText(headerText));
-            expect(header).toBeInTheDocument();
+            waitFor(() => expect(header).toBeInTheDocument());
         });
 
         expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();

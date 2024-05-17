@@ -17,7 +17,6 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                 url: `/api/drivers/all`
                 // Stryker restore all
             },
-            []
         );
 
     const { data: shifts, _error1, _status1 } =
@@ -29,11 +28,11 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                 url: `/api/shift/all`
                 // Stryker restore all
             },
-            []
         );
 
     const [driverShift, setDriverShift] = useState([]);
 
+    // Stryker disable all
     useEffect(() => {
         if (drivers && shifts && drivers.length > 0 && shifts.length > 0) {
             setDriverShift([]);
@@ -54,6 +53,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
             });
         }
     }, [drivers, shifts]);
+    // Stryker enable all
     
     // Stryker disable all
     const {
