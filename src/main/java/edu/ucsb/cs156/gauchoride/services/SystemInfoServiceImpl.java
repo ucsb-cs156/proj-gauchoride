@@ -22,7 +22,7 @@ public class SystemInfoServiceImpl extends SystemInfoService {
   @Value("${app.showSwaggerUILink:false}")
   private boolean showSwaggerUILink;
 
-  @Value("${app.sourceRepo:https://github.com/ucsb-cs156/proj-gauchoride}")
+  @Value("${app.sourceRepo:https://github.com/ucsb-cs156/proj-gauchoride-s24-5pm-5}")
   private String sourceRepo;
 
   @Value("${git.commit.message.short:unknown}")
