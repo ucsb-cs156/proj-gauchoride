@@ -126,7 +126,7 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
                 )
               }
               {
-                currentUser.loggedIn == true && !hasRole(currentUser, "ROLE_RIDER") && (
+                currentUser.loggedIn === true && !hasRole(currentUser, "ROLE_RIDER") && (
                   <Nav.Link id ="appnavbar-applytobearider-link" data-testid="appnavbar-applytoberider" as={Link} to="/apply/rider">Apply to be a Rider</Nav.Link>
                 )
               }
