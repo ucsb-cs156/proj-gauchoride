@@ -22,6 +22,7 @@ public class SystemInfoServiceImpl extends SystemInfoService {
   @Value("${app.showSwaggerUILink:false}")
   private boolean showSwaggerUILink;
 
+  @Value("${app.sourceRepo:https://github.com/ucsb-cs156/proj-gauchoride}")
   private String sourceRepo;
 
   @Value("${git.commit.message.short:unknown}")
@@ -38,6 +39,9 @@ public class SystemInfoServiceImpl extends SystemInfoService {
     SystemInfo si = SystemInfo.builder()
     .springH2ConsoleEnabled(this.springH2ConsoleEnabled)
     .showSwaggerUILink(this.showSwaggerUILink)
+    .sourceRepo(this.sourceRepo)
+    .commitMessage(this.commitMessage)
+    .commitId(this.commitId)
     .githubUrl(githubUrl(this.sourceRepo, this.commitId))
     .build();
   log.info("getSystemInfo returns {}",si);

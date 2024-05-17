@@ -16,5 +16,6 @@ public class SystemInfo {
   private Boolean showSwaggerUILink;
   private String sourceRepo;
   private String githubUrl;
+  private String commitMessage;
   private String commitId;
 }
