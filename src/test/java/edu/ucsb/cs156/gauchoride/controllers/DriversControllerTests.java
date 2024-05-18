@@ -42,6 +42,14 @@ public class DriversControllerTests extends ControllerTestCase {
         .andExpect(status().is(403));
   }
 
+
+@WithMockUser(roles = { "USER" })
+  @Test
+  public void returns_no_info_for_non_admin() throws Exception {
+    mockMvc.perform(get("/api/drivers/all"))
+        .andExpect(status().is(403));
+  }
+
   @Test
   public void users__logged_out_get() throws Exception {
     mockMvc.perform(get("/api/drivers/get?id=42"))
