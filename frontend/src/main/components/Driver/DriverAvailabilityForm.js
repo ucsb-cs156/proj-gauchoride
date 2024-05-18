@@ -124,6 +124,8 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     {...register("notes", {
                         required: "Notes are required."
                     })}
+                    placeholder="e.g. Busy on Monday"  
+                    defaultValue={initialContents?.notes} 
                 />
                 <Form.Control.Feedback type="invalid">
                     {errors.notes?.message}
