@@ -60,16 +60,16 @@ describe("DriverAvailabilityForm tests", () => {
         expect(screen.getByText(`driverId`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-day`)).toBeInTheDocument();
-        expect(screen.getByText(`day`)).toBeInTheDocument();
+        expect(screen.getByText(`Day of Week`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-startTime`)).toBeInTheDocument();
-        expect(screen.getByText(`startTime`)).toBeInTheDocument();
+        expect(screen.getByText(`Availability Start`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-endTime`)).toBeInTheDocument();
-        expect(screen.getByText(`endTime`)).toBeInTheDocument();
+        expect(screen.getByText(`Availability End`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-notes`)).toBeInTheDocument();
-        expect(screen.getByText(`notes`)).toBeInTheDocument();
+        expect(screen.getByText(`Notes`)).toBeInTheDocument();
     });
 
 
@@ -105,7 +105,7 @@ describe("DriverAvailabilityForm tests", () => {
         await screen.findByText(/driverId is required./);
         expect(screen.getByText(/Day is required./)).toBeInTheDocument();
         expect(screen.getByText(/Availability Start is required./)).toBeInTheDocument();
-        expect(screen.getByText(/Availability End required./)).toBeInTheDocument();
+        expect(screen.getByText(/Availability End is required./)).toBeInTheDocument();
         expect(screen.getByText(/Notes are required./)).toBeInTheDocument();
 
     });
@@ -130,9 +130,9 @@ describe("DriverAvailabilityForm tests", () => {
         const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
 
         fireEvent.change(driverIdField, { target: { value: 'test' } });
-        fireEvent.change(dayField, { target: { value: 'test' } });
-        fireEvent.change(startTimeField, { target: { value: 'test' } });
-        fireEvent.change(endTimeField, { target: { value: 'test' } });
+        fireEvent.change(dayField, { target: { value: 'Monday' } });
+        fireEvent.change(startTimeField, { target: { value: '3:30PM' } });
+        fireEvent.change(endTimeField, { target: { value: '3:30PM' } });
         fireEvent.change(notesField, { target: { value: 'test' } });
         fireEvent.click(submitButton);
 
@@ -141,7 +141,7 @@ describe("DriverAvailabilityForm tests", () => {
         expect(screen.queryByText(/driverId is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Day is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Availability Start is required./)).not.toBeInTheDocument();
-        expect(screen.queryByText(/Availability End required./)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Availability End is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Notes are required./)).not.toBeInTheDocument();
 
 
