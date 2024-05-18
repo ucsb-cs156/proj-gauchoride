@@ -53,7 +53,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
             });
         }
     }, [drivers, shifts]);
-    // Stryker enable all
+    // Stryker restore all
     
     // Stryker disable all
     const {
