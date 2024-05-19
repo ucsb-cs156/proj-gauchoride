@@ -39,7 +39,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
             var driverMap = new Map();
 
             drivers.forEach(driver => {
-                driverMap.set(driver.id, (driver.familyName)? driver.givenName + " " + driver.familyName : driver.givenName);
+                driverMap.set(driver.id, driver.givenName + " " + driver.familyName);
             });
 
             shifts.forEach(shift => {
@@ -86,7 +86,6 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                 </Form.Group>
             )}
 
-            {driverShift &&
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="shiftId">Shift Id</Form.Label>
                 <Form.Control 
@@ -97,13 +96,13 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                     {...register("shiftId")}
                     defaultValue={initialContents?.shiftId}
                 >
-                    {driverShift.map((shift) => (
+                    {driverShift && driverShift.map((shift) => (
                         <option key={shift.id.toString()} data-testid={testIdPrefix + "-shiftId-" + shift.id.toString()} value={shift.id.toString()}>
-                            {shift.id.toString() + " - " + shift.driverName + " - " + shift.day + " - " + shift.shiftStart + "-" + shift.shiftEnd}
+                            {shift.id.toString() + " - " + shift.driverName + " - " + shift.day + " " + shift.shiftStart + "-" + shift.shiftEnd}
                         </option>
                     ))}
                 </Form.Control>
-            </Form.Group>}
+            </Form.Group>
 
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="day">Day of Week</Form.Label>

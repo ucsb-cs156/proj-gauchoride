@@ -71,8 +71,9 @@ describe("RideAssignDriverForm tests", () => {
         expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();
         expect(screen.getByText(`Id`)).toBeInTheDocument();
 
+        expect(await waitFor(() => screen.findByTestId(`${testId}-shiftId-1`))).toBeInTheDocument();
         const { getByText } = within(screen.getByTestId(`${testId}-shiftId-1`));
-        expect(getByText("1 - undefined")).toBeInTheDocument();
+        expect(getByText("1 - gName1 fName1 - Monday 08:00AM-11:00AM")).toBeInTheDocument();
     });
 
 
