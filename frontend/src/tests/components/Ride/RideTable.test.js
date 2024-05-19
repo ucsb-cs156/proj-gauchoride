@@ -152,10 +152,10 @@ describe("RideTable tests", () => {
     });
 
     const assigned = getByTestId(`${testId}-cell-row-0-col-shiftId`);
-    expect(assigned).toHaveTextContent('assigned');
+    expect(assigned).toHaveTextContent(/^assigned$/);
 
     const unassigned = getByTestId(`${testId}-cell-row-2-col-shiftId`);
-    expect(unassigned).toHaveTextContent('unassigned');
+    expect(unassigned).toHaveTextContent(/^unassigned$/);
 
     expect(getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("2");
     expect(getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("3");
