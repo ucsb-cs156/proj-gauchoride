@@ -62,7 +62,7 @@ const rideFixtures = {
             "pickupRoom": "125",
             "course": "CMPSC156",
             "notes": "2 people",   
-            "shiftId": "10"
+            "shiftId": "0"
         },
         
     ],
