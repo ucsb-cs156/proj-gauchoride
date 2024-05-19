@@ -39,7 +39,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
             var driverMap = new Map();
 
             drivers.forEach(driver => {
-                driverMap.set(driver.id, driver.fullName);
+                driverMap.set(driver.id, (driver.familyName)? driver.givenName + " " + driver.familyName : driver.givenName);
             });
 
             shifts.forEach(shift => {
@@ -86,9 +86,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                 </Form.Group>
             )}
 
-            
-
-            {driverShift && driverShift.length !== 0 &&
+            {driverShift &&
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="shiftId">Shift Id</Form.Label>
                 <Form.Control 
@@ -96,21 +94,15 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                     type="select"
                     data-testid={testIdPrefix + "-shiftId"}
                     id="shiftId"
-                    isInvalid={Boolean(errors.shiftId)}
-                    {...register("shiftId", {
-                        required: "Shift Id is required."
-                    })}
+                    {...register("shiftId")}
                     defaultValue={initialContents?.shiftId}
                 >
                     {driverShift.map((shift) => (
-                        <option key={shift.id.toString()} value={shift.id.toString()}>
+                        <option key={shift.id.toString()} data-testid={testIdPrefix + "-shiftId-" + shift.id.toString()} value={shift.id.toString()}>
                             {shift.id.toString() + " - " + shift.driverName + " - " + shift.day + " - " + shift.shiftStart + "-" + shift.shiftEnd}
                         </option>
                     ))}
                 </Form.Control>
-                <Form.Control.Feedback type="invalid">
-                    {errors.shiftId?.message}
-                </Form.Control.Feedback>
             </Form.Group>}
 
             <Form.Group className="mb-3" >
