@@ -137,8 +137,8 @@ describe("RideTable tests", () => {
 
     );
 
-    const expectedHeaders = ['id','Day', 'Course #', 'Pick Up Time', 'Drop Off Time', 'Pick Up Building', 'Pick Up Room', 'Drop Off Building', 'Drop Off Room', 'Notes'];
-    const expectedFields = ['id', 'day', 'course', 'startTime', 'endTime', 'pickupBuilding', 'pickupRoom', 'dropoffBuilding','dropoffRoom', 'notes'];
+    const expectedHeaders = ['id','Day', 'Assigned?', 'Course #', 'Pick Up Time', 'Drop Off Time', 'Pick Up Building', 'Pick Up Room', 'Drop Off Building', 'Drop Off Room', 'Notes'];
+    const expectedFields = ['id', 'day', 'assigned', 'course', 'startTime', 'endTime', 'pickupBuilding', 'pickupRoom', 'dropoffBuilding','dropoffRoom', 'notes'];
     const testId = "RideTable";
 
     expectedHeaders.forEach((headerText) => {
