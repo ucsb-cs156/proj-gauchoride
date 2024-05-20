@@ -13,7 +13,7 @@ export default function DriverAvailabilityIndexPage() {
     const { data: availabilities, error: _error, status: _status } =
         useBackend(
             // Stryker disable all : hard to test for query caching
-            ["/api/driverAvailability"],
+            ["/api/driverAvailability/admin/all"],
             { method: "GET", url: "/api/driverAvailability/admin/all" },
             []
             // Stryker restore all 
