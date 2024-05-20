@@ -179,9 +179,9 @@ describe("AppNavbar tests", () => {
         await waitFor(() => expect(screen.queryByText(/^Drivers$/)).not.toBeInTheDocument());
     });
 
-    test("renders shift table links correctly for rider", async () => {
+    test("renders shift table links correctly for driver", async () => {
 
-        const currentUser = currentUserFixtures.riderOnly;
+        const currentUser = currentUserFixtures.driverOnly;
         const doLogin = jest.fn();
 
         const { getByText , getByTestId } = render(
