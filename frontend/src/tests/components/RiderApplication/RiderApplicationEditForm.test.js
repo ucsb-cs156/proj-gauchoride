@@ -73,8 +73,6 @@ describe("RiderApplicationEditForm tests", () => {
 
     });
 
-});
-
     test("renders correctly when passing in initialContents with status declined", async () => {
         render(
             <QueryClientProvider client={queryClient}>
