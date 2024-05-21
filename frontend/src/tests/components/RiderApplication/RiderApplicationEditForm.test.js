@@ -19,30 +19,38 @@ describe("RiderApplicationEditForm tests", () => {
     const expectedHeaders = ["Email", "Description"];
     const testId = "RiderApplicationEditForm";
 
-    test('handleAction submits data and navigates', async () => {
+    const renderWithProviders = (ui) => {
+        return render(
+            <QueryClientProvider client={queryClient}>
+                <Router>
+                    {ui}
+                </Router>
+            </QueryClientProvider>
+        );
+    };
+
+    test('handleAction submits data and navigates when approving', async () => {
         const mockSubmitAction = jest.fn();
     
-        render(
-            <QueryClientProvider client={queryClient}>
-                <RiderApplicationEditForm
-                    initialContents={{ id: 1,
-                        userId: 'user123',
-                        status: 'pending',
-                        email: 'test@example.com',
-                        created_date: '2024-03-06',
-                        updated_date: '2024-03-06',
-                        cancelled_date: null,
-                        notes: 'This is a note.',
-                        perm_number: '1234567',
-                        description: 'This is a test description.', }}
-                    submitAction={mockSubmitAction}
-                    email="test@example.com"
-                />
-            </QueryClientProvider>
+        renderWithProviders(
+            <RiderApplicationEditForm
+                initialContents={{ id: 1,
+                    userId: 'user123',
+                    status: 'pending',
+                    email: 'test@example.com',
+                    created_date: '2024-03-06',
+                    updated_date: '2024-03-06',
+                    cancelled_date: null,
+                    notes: 'This is a note.',
+                    perm_number: '1234567',
+                    description: 'This is a test description.', }}
+                submitAction={mockSubmitAction}
+                email="test@example.com"
+            />
         );
     
         // Trigger the button click
-        fireEvent.click(screen.getByTestId(`${testId}-approve`));
+        fireEvent.click(screen.getByTestId('RiderApplicationEditForm-approve'));
     
         // Check if submitAction is called with the correct arguments
         expect(mockSubmitAction).toHaveBeenCalledWith(
@@ -53,15 +61,73 @@ describe("RiderApplicationEditForm tests", () => {
         await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
     });
 
-    // Add other test cases...
+    test('handleAction submits data and navigates when denying', async () => {
+        const mockSubmitAction = jest.fn();
+    
+        renderWithProviders(
+            <RiderApplicationEditForm
+                initialContents={{ id: 1,
+                    userId: 'user123',
+                    status: 'pending',
+                    email: 'test@example.com',
+                    created_date: '2024-03-06',
+                    updated_date: '2024-03-06',
+                    cancelled_date: null,
+                    notes: 'This is a note.',
+                    perm_number: '1234567',
+                    description: 'This is a test description.', }}
+                submitAction={mockSubmitAction}
+                email="test@example.com"
+            />
+        );
+    
+        // Trigger the button click
+        fireEvent.click(screen.getByTestId('RiderApplicationEditForm-deny'));
+    
+        // Check if submitAction is called with the correct arguments
+        expect(mockSubmitAction).toHaveBeenCalledWith(
+            expect.objectContaining({ status: 'declined' })
+        );
+    
+        // Check if navigate is called with the correct argument
+        await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
+    });
+
+    test('handleAction submits data and navigates when expiring', async () => {
+        const mockSubmitAction = jest.fn();
+    
+        renderWithProviders(
+            <RiderApplicationEditForm
+                initialContents={{ id: 1,
+                    userId: 'user123',
+                    status: 'accepted',
+                    email: 'test@example.com',
+                    created_date: '2024-03-06',
+                    updated_date: '2024-03-06',
+                    cancelled_date: null,
+                    notes: 'This is a note.',
+                    perm_number: '1234567',
+                    description: 'This is a test description.', }}
+                submitAction={mockSubmitAction}
+                email="test@example.com"
+            />
+        );
+    
+        // Trigger the button click
+        fireEvent.click(screen.getByTestId('RiderApplicationEditForm-expire'));
+    
+        // Check if submitAction is called with the correct arguments
+        expect(mockSubmitAction).toHaveBeenCalledWith(
+            expect.objectContaining({ status: 'expired' })
+        );
+    
+        // Check if navigate is called with the correct argument
+        await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
+    });
 
     test("renders correctly with no initialContents", async () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Router>
-                    <RiderApplicationEditForm />
-                </Router>
-            </QueryClientProvider>
+        renderWithProviders(
+            <RiderApplicationEditForm />
         );
 
         expect(await screen.findByText(/Return/)).toBeInTheDocument();
@@ -73,11 +139,22 @@ describe("RiderApplicationEditForm tests", () => {
 
     });
 
+    test("renders correctly when passing in initialContents", async () => {
+        renderWithProviders(
+            <RiderApplicationEditForm initialContents={riderApplicationFixtures.oneRiderApplication} />
+        );
+
+        expect(await screen.findByText(/Return/)).toBeInTheDocument();
+
+        expectedHeaders.forEach((headerText) => {
+            const header = screen.getByText(headerText);
+            expect(header).toBeInTheDocument();
+        });
+    });
+
     test("renders correctly when passing in initialContents with status declined", async () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Router>
-                    <RiderApplicationEditForm initialContents={{ id: 1,
+        renderWithProviders(
+            <RiderApplicationEditForm initialContents={{ id: 1,
                     userId: 'user123',
                     status: 'declined',
                     email: 'test@example.com',
@@ -87,8 +164,6 @@ describe("RiderApplicationEditForm tests", () => {
                     notes: 'This is a note.',
                     perm_number: '1234567',
                     description: 'This is a test description.', }} />
-                </Router>
-            </QueryClientProvider>
         );
 
         expect(await screen.findByText(/Return/)).toBeInTheDocument();
@@ -100,10 +175,8 @@ describe("RiderApplicationEditForm tests", () => {
     });
 
     test("renders correctly when passing in initialContents with status cancelled", async () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Router>
-                    <RiderApplicationEditForm initialContents={{ id: 1,
+        renderWithProviders(
+            <RiderApplicationEditForm initialContents={{ id: 1,
                     userId: 'user123',
                     status: 'cancelled',
                     email: 'test@example.com',
@@ -113,8 +186,6 @@ describe("RiderApplicationEditForm tests", () => {
                     notes: 'This is a note.',
                     perm_number: '1234567',
                     description: 'This is a test description.', }} />
-                </Router>
-            </QueryClientProvider>
         );
 
         expect(await screen.findByText(/Return/)).toBeInTheDocument();
@@ -126,10 +197,8 @@ describe("RiderApplicationEditForm tests", () => {
     });
 
     test("renders correctly when passing in initialContents with status expired", async () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Router>
-                    <RiderApplicationEditForm initialContents={{ id: 1,
+        renderWithProviders(
+            <RiderApplicationEditForm initialContents={{ id: 1,
                     userId: 'user123',
                     status: 'expired',
                     email: 'test@example.com',
@@ -139,8 +208,6 @@ describe("RiderApplicationEditForm tests", () => {
                     notes: 'This is a note.',
                     perm_number: '1234567',
                     description: 'This is a test description.', }} />
-                </Router>
-            </QueryClientProvider>
         );
 
         expect(await screen.findByText(/Return/)).toBeInTheDocument();
@@ -151,14 +218,9 @@ describe("RiderApplicationEditForm tests", () => {
         });
     });
 
-
     test("that navigate(-1) is called when Cancel is clicked", async () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Router>
-                    <RiderApplicationEditForm />
-                </Router>
-            </QueryClientProvider>
+        renderWithProviders(
+            <RiderApplicationEditForm />
         );
         expect(await screen.findByTestId(`${testId}-cancel`)).toBeInTheDocument();
         const cancelButton = screen.getByTestId(`${testId}-cancel`);
