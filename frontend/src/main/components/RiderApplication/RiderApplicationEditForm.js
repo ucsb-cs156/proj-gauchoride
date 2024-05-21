@@ -43,13 +43,13 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
     );
 
     const handleApprove = () => {
-        const updatedData = { ...initialContents, status: 'accepted' , notes: getValues("notes")};
+        const updatedData = { ...initialContents, status: 'accepted' , notes: getValues("notes") };
         handleAction(updatedData, -1);
         toggleRiderMutation.mutate(initialContents.userId);
-    }
+    };
 
     const handleDeny = () => {
-        const updatedData = { ...initialContents, status: 'declined' , notes: getValues("notes")};
+        const updatedData = { ...initialContents, status: 'declined' , notes: getValues("notes") };
         handleAction(updatedData, -1);
     };
 
