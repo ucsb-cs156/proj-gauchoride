@@ -377,6 +377,9 @@ const currentUserFixtures = {
             ]
         },
     },
+    notLoggedIn: {
+        loggedIn: false,
+    }
 };
 
 export { currentUserFixtures, apiCurrentUserFixtures };
