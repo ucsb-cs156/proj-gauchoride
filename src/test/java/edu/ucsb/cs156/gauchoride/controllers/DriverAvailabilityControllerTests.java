@@ -71,7 +71,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability1 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Tuesday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -81,7 +81,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         // act
         MvcResult response = mockMvc.perform(
-                        post("/api/driverAvailability/new?driverId=1&day=03/05/2024&startTime=10:30AM&endTime=2:30PM&notes=End for late lunch")
+                        post("/api/driverAvailability/new?driverId=1&day=Tuesday&startTime=10:30AM&endTime=2:30PM&notes=End for late lunch")
                                         .with(csrf()))
                         .andExpect(status().isOk()).andReturn();
 
@@ -124,7 +124,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability1 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Tuesday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -132,7 +132,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability2 = DriverAvailability.builder()
                         .driverId(2)
-                        .day("12/24/2024")
+                        .day("Monday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
                         .notes("Early Shift")
@@ -187,7 +187,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Tuesday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -260,7 +260,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability_original = DriverAvailability.builder()
                         .driverId(DriverId)
-                        .day("03/05/2024")
+                        .day("Tuesday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -268,7 +268,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability_edited = DriverAvailability.builder()
                         .driverId(7)
-                        .day("12/24/2024")
+                        .day("Monday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
                         .notes("Early Shift")
@@ -302,7 +302,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
             DriverAvailability availability_edited = DriverAvailability.builder()
                         .driverId(DriverId)
-                        .day("12/24/2024")
+                        .day("Tuesday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
                         .notes("Early Shift")
@@ -358,7 +358,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability = DriverAvailability.builder()
                 .driverId(1)
-                .day("12/24/2024")
+                .day("Monday")
                 .startTime("5:00AM")
                 .endTime("12:00PM")
                 .notes("Early Shift")
@@ -431,7 +431,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Tuesday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -511,7 +511,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability1 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("02/29/2024")
+                        .day("Tuesday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -519,7 +519,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability2 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Monday")
                         .startTime("12:30PM")
                         .endTime("5:30PM")
                         .notes("Last shift of the day")
