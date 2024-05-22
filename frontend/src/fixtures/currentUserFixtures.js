@@ -379,6 +379,9 @@ const currentUserFixtures = {
     },
     notLoggedIn: {
         loggedIn: false,
+        root: {
+            rolesList: []
+        },
     }
 };
 
