@@ -97,7 +97,7 @@ describe("RiderApplicationEditForm tests", () => {
                 <RiderApplicationEditForm
                     initialContents={{ id: 1,
                         userId: 'user123',
-                        status: 'pending',
+                        status: 'accepted',
                         email: 'test@example.com',
                         created_date: '2024-03-06',
                         updated_date: '2024-03-06',
@@ -275,10 +275,8 @@ describe("RiderApplicationEditForm tests", () => {
              </QueryClientProvider>
         );
     
-        // Trigger the button click
         fireEvent.click(screen.getByTestId('RiderApplicationEditForm-approve'));
     
-       // Check if submitAction is called with the correct arguments
         expect(mockSubmitAction).toHaveBeenCalledWith(
             expect.objectContaining({ status: 'accepted' })
         );
@@ -287,7 +285,6 @@ describe("RiderApplicationEditForm tests", () => {
        expect(axiosMock.history.post[0].url).toBe("/api/admin/users/toggleRider");
        expect(axiosMock.history.post[0].params).toEqual({id:"user123"});
 
-       // Check if navigate is called with the correct argument
        await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
     });
 });
