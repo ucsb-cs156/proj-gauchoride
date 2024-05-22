@@ -1,6 +1,7 @@
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useBackend } from 'main/utils/useBackend';
 
 function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
     // Stryker disable all
@@ -12,6 +13,15 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
     // Stryker restore all
     const navigate = useNavigate();
     const testIdPrefix = "ShiftForm";
+
+    const { data: drivers, error: _error, status: _status } =
+        useBackend(
+            // Stryker disable all : hard to test for query caching
+            ["/api/drivers/all"],
+            { method: "GET", url: "/api/drivers/all" },
+            []
+            // Stryker restore all 
+        );
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
@@ -107,12 +117,19 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     data-testid={testIdPrefix + "-driverID"}
                     id="driverID"
                     name="driverID"
-                    type="number"
+                    as="select"
+                    type="select"
                     isInvalid={Boolean(errors.driverID)}
                     {...register("driverID", {
                         required: "Driver ID is required."
                     })}
-                />
+                >
+                    {drivers && drivers.map(driver => (
+                        <option key={driver.id} value={driver.id}>
+                            {driver.id + " - " + driver.fullName}
+                        </option>
+                    ))}
+                </Form.Control>
                 <Form.Control.Feedback type="invalid">
                     {errors.driverID?.message}
                 </Form.Control.Feedback>
@@ -124,12 +141,19 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     data-testid={testIdPrefix + "-driverBackupID"}
                     id="driverBackupID"
                     name="driverBackupID"
-                    type="number"
+                    as="select"
+                    type="select"
                     isInvalid={Boolean(errors.driverBackupID)}
                     {...register("driverBackupID", {
                         required: "Driver Backup ID is required."
                     })}
-                />
+                >
+                    {drivers && drivers.map(driver => (
+                        <option key={driver.id} value={driver.id}>
+                            {driver.id + " - " + driver.fullName}
+                        </option>
+                    ))}
+                </Form.Control>
                 <Form.Control.Feedback type="invalid">
                     {errors.driverBackupID?.message}
                 </Form.Control.Feedback>

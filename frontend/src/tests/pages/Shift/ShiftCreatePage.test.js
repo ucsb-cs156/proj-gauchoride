@@ -8,6 +8,7 @@ import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
+import driverFixtures from "fixtures/driverFixtures";
 
 const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
@@ -39,6 +40,7 @@ describe("ShiftCreatePage tests", () => {
         axiosMock.resetHistory();
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
         axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
     });
 
     const queryClient = new QueryClient();
