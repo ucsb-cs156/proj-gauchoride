@@ -3,10 +3,13 @@ import { useParams } from "react-router-dom";
 import { useBackend } from "main/utils/useBackend";
 import DriverInfo from "main/components/Driver/DriverInfo";
 import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 export default function DriverInfoPage() {
     let { id } = useParams();
 
+    const navigate = useNavigate();
+    
     const { data: info, _error, _status } =
       useBackend(
         // Stryker disable next-line all : don't test internal caching of React Query
@@ -26,7 +29,7 @@ export default function DriverInfoPage() {
             return (
                 <Button
                     variant="primary"
-                    onClick={() => navigate(-1)}
+                    onClick={()=>{navigate(-1)}}
                 >
                     Return
                 </Button>
