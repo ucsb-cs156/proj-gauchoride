@@ -67,12 +67,9 @@ export default function DriverAvailabilityTable({
         ButtonColumn("Delete", "danger", deleteCallback, "DriverAvailabilityTable")
     ];
 
-    const buttonColumnsAdmin = [
-        ...columns,
-    ];
     // Stryker restore all 
 
-    const columnsToDisplay = (hasRole(currentUser, "ROLE_ADMIN")) ? buttonColumnsAdmin : (hasRole(currentUser, "ROLE_DRIVER")) ? buttonColumnsDriver : columns;
+    const columnsToDisplay = (hasRole(currentUser, "ROLE_DRIVER")) ? buttonColumnsDriver : columns;
 
     return <OurTable
         data={Availability}
