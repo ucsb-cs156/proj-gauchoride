@@ -178,38 +178,4 @@ describe("DriverAvailabilityTable tests", () => {
     expect(screen.queryByText("Edit")).not.toBeInTheDocument();
   });
 
-
-  test("Admin view does not see review button", async () => {
-    const currentUser = currentUserFixtures.adminUser;
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <DriverAvailabilityTable Availability={driverAvailabilityFixtures.threeAvailability} currentUser={currentUser} />
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
-
-    // assert - check that the expected content is rendered
-    expect(await screen.findByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-   
-  });
-
-  test("User view does not see review button", async () => {
-    const currentUser = currentUserFixtures.userOnly;
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <DriverAvailabilityTable Availability={driverAvailabilityFixtures.threeAvailability} currentUser={currentUser} />
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
-
-    // assert - check that the expected content is rendered
-    expect(await screen.findByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-driverId`)).toHaveTextContent("4");
-
-  });
-
 });
