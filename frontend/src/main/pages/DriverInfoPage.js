@@ -26,7 +26,7 @@ export default function DriverInfoPage() {
             return (
                 <Button
                     variant="primary"
-                    href="/shift/"
+                    onClick={() => navigate(-1)}
                 >
                     Return
                 </Button>
