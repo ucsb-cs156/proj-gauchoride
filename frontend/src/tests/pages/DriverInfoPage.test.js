@@ -102,7 +102,7 @@ describe("DriverInfoPage tests", () => {
 
     });
 
-    test("that return button is clicked", async () => {
+    test("that return button is on screen", async () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
@@ -111,8 +111,10 @@ describe("DriverInfoPage tests", () => {
             </QueryClientProvider>
         );
 
-        expect(await screen.getByText("Return")).toBeInTheDocument();
-
+        await waitFor(() => {
+            expect(screen.getByText("Return")).toBeInTheDocument();
+        });
+       
         const returnButton = screen.getByText("Return");
 
         fireEvent.click(returnButton);
