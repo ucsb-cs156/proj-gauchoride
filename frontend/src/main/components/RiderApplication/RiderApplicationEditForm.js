@@ -38,7 +38,7 @@ function RiderApplicationEditForm({ initialContents, submitAction, email }) {
         {},
         ["/api/admin/users"]
     );
-    // Stryker enable all
+    // Stryker restore all
 
     const toggleRiderCallback = async (id) => {
         toggleRiderMutation.mutate(id);
