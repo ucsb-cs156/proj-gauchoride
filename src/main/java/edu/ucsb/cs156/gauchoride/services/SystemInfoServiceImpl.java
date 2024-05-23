@@ -27,10 +27,10 @@ public class SystemInfoServiceImpl extends SystemInfoService {
   @Value("${app.showSwaggerUILink:false}")
   private boolean showSwaggerUILink;
 
-  @Value("${app.startQtrYYYYQ:20221}")
+  @Value("${app.startQtrYYYYQ:20242}")
   private String startQtrYYYYQ;
 
-  @Value("${app.endQtrYYYYQ:20222}")
+  @Value("${app.endQtrYYYYQ:20243}")
   private String endQtrYYYYQ;
 
   @Value("${app.sourceRepo:https://github.com/ucsb-cs156/proj-gauchoride-s24-5pm-6}")

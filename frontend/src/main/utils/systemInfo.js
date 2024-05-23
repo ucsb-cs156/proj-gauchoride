@@ -12,9 +12,7 @@ export function useSystemInfo() {
         console.error("Error invoking axios.get: ", e);
         return {
           springH2ConsoleEnabled: false,
-          showSwaggerUILink: false,
-          startQtrYYYYQ: "20221",
-          endQtrYYYYQ: "20222",
+          showSwaggerUILink: false
         };
       }
     },
@@ -22,9 +20,7 @@ export function useSystemInfo() {
       initialData: {
         initialData: true,
         springH2ConsoleEnabled: false,
-        showSwaggerUILink: false,
-        startQtrYYYYQ: "20221",
-        endQtrYYYYQ: "20222",
+        showSwaggerUILink: false
       },
     },
   );
