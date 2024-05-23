@@ -709,15 +709,6 @@ describe("AppNavbar tests", () => {
         const applyLink = screen.queryByTestId("appnavbar-applytoberider");
         expect(applyLink).not.toBeInTheDocument();
     });
-    
-    function isParticipant(currentUser) {
-        return (
-          hasRole(currentUser, "ROLE_ADMIN")
-          || hasRole(currentUser, "ROLE_DRIVER")
-          || hasRole(currentUser, "ROLE_MEMBER")
-          || hasRole(currentUser, "ROLE_USER")
-        );
-      }
       
     test('Apply to be a rider should appear for logged in users without ROLE_RIDER', async () => {
         const currentUser = currentUserFixtures.userOnly;
