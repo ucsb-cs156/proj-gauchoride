@@ -6,6 +6,8 @@ import { currentUserFixtures } from "fixtures/currentUserFixtures";
 
 import AppNavbar from "main/components/Nav/AppNavbar";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
+import { hasRole } from "main/utils/currentUser";
+
 
 describe("AppNavbar tests", () => {
 
@@ -690,11 +692,12 @@ describe("AppNavbar tests", () => {
         expect(applyLink).not.toBeInTheDocument();
     });
 
-    test("Apply to be a Rider link does not appear for not logged in users", async () => {
+    test('Apply to be a rider should not appear for users who are not logged in', async () => {
         const currentUser = currentUserFixtures.notMember;
         const doLogin = jest.fn();
 
-        const { getByText } = render(
+
+        const { queryByText } = render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
                     <AppNavbar currentUser={currentUser} doLogin={doLogin} />
@@ -702,10 +705,35 @@ describe("AppNavbar tests", () => {
             </QueryClientProvider>
         );
 
-        await waitFor(() => expect(getByText("GauchoRide")).toBeInTheDocument());
-        const applyLink = screen.queryByTestId("Apply to be a Rider");
+        await waitFor(() => expect(queryByText("GauchoRide")).toBeInTheDocument());
+        const applyLink = screen.queryByTestId("appnavbar-applytoberider");
         expect(applyLink).not.toBeInTheDocument();
     });
+    
+    function isParticipant(currentUser) {
+        return (
+          hasRole(currentUser, "ROLE_ADMIN")
+          || hasRole(currentUser, "ROLE_DRIVER")
+          || hasRole(currentUser, "ROLE_MEMBER")
+          || hasRole(currentUser, "ROLE_USER")
+        );
+      }
+      
+    test('Apply to be a rider should appear for logged in users without ROLE_RIDER', async () => {
+        const currentUser = currentUserFixtures.userOnly;
+        const doLogin = jest.fn();
 
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AppNavbar currentUser={currentUser} doLogin={doLogin} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => expect(screen.queryByText("Welcome, Phillip Conrad")).toBeInTheDocument());
+        const applyLink = screen.queryByTestId("appnavbar-applytoberider");
+        expect(applyLink).toBeInTheDocument();
+    });
 });
 
