@@ -157,11 +157,6 @@ describe("AdminUsersPage tests", () => {
         expect(queryByTestId(`${testId}-cell-row-0-col-id`)).toBeInTheDocument();
         expect(queryByTestId(`${testId}-cell-row-0-col-id`)).toBeInTheDocument();
         expect(queryByTestId(`${testId}-cell-row-0-col-id`)).toBeInTheDocument();
-        
-        const id1 = screen.getByTestId(`${testId}-cell-row-0-col-id`)
-        const id2 = screen.getByTestId(`${testId}-cell-row-1-col-id`)
-        const id3 = screen.getByTestId(`${testId}-cell-row-2-col-id`)
-        
     });
 
 });
