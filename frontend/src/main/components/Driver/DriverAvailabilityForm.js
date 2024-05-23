@@ -40,6 +40,8 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     {...register("driverId", {
                         required: "driverId is required.",
                     })}
+                    placeholder="Enter a valid ID"   
+                    defaultValue={initialContents?.driverId}  
                 />
                 <Form.Control.Feedback type="invalid">
                     {errors.driverId?.message}
@@ -48,7 +50,7 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
 
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="day">day</Form.Label>
-                <Form.Control
+                <Form.Select
                     data-testid={testIdPrefix + "-day"}
                     id="day"
                     type="text"
@@ -56,7 +58,16 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     {...register("day", {
                         required: "day is required."
                     })}
-                />
+                    >
+                    <option value="">Select a Day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                    </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {errors.day?.message}
                 </Form.Control.Feedback>
@@ -70,8 +81,14 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     type="text"
                     isInvalid={Boolean(errors.startTime)}
                     {...register("startTime", {
-                        required: "startTime is required."
+                        required: "startTime is required.",
+                        pattern: {
+                            value: /^(0?[1-9]|1[0-2]):[0-5][0-9](AM|PM)$/,
+                            message: "Please enter time in the format HH:MM AM/PM (e.g., 3:30PM)."
+                          }
                     })}
+                    placeholder="Enter time in the format HH:MM AM/PM (e.g. 3:30PM)"   
+                    defaultValue={initialContents?.startTime}   
                 />
                 <Form.Control.Feedback type="invalid">
                     {errors.startTime?.message}
@@ -86,8 +103,14 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     type="text"
                     isInvalid={Boolean(errors.endTime)}
                     {...register("endTime", {
-                        required: "endTime is required."
+                        required: "endTime is required.",
+                        pattern: {
+                            value: /^(0?[1-9]|1[0-2]):[0-5][0-9](AM|PM)$/,
+                            message: "Please enter time in the format HH:MM AM/PM (e.g., 3:30PM)."
+                          }
                     })}
+                    placeholder="Enter time in the format HH:MM AM/PM (e.g. 3:30PM)"   
+                    defaultValue={initialContents?.endTime}   
                 />
                 <Form.Control.Feedback type="invalid">
                     {errors.endTime?.message}
@@ -104,6 +127,8 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     {...register("notes", {
                         required: "notes is required."
                     })}
+                    placeholder="Enter some text for notes"   
+                    defaultValue={initialContents?.notes}  
                 />
                 <Form.Control.Feedback type="invalid">
                     {errors.notes?.message}
