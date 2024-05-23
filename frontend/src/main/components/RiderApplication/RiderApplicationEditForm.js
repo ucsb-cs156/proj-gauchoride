@@ -14,7 +14,7 @@ function RiderApplicationEditForm({ initialContents, submitAction, email }) {
         handleSubmit,
         getValues
     } = useForm({ defaultValues: initialContents });
-    // Stryker enable all
+    // Stryker restore all
 
     const testIdPrefix = "RiderApplicationEditForm";
 
@@ -38,7 +38,6 @@ function RiderApplicationEditForm({ initialContents, submitAction, email }) {
         {},
         ["/api/admin/users"]
     );
-    // Stryker restore all
 
     const toggleRiderCallback = async (id) => {
         toggleRiderMutation.mutate(id);
@@ -65,6 +64,7 @@ function RiderApplicationEditForm({ initialContents, submitAction, email }) {
         submitAction(data);
         navigate(navigation);
     };
+    // Stryker restore all
 
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
