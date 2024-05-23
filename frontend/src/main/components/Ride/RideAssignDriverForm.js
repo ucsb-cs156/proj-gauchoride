@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "Assign Driver" }) {
+function RideAssignDriverForm({ initialContents, submitAction, shifts, drivers, buttonLabel = "Assign Driver" }) {
     const navigate = useNavigate();
     
     // Stryker disable all
@@ -44,15 +44,26 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="shiftId">Shift Id</Form.Label>
                 <Form.Control
+                    as = "select"
                     data-testid={testIdPrefix + "-shiftId"}
                     id="shiftId"
                     type="text"
                     isInvalid={Boolean(errors.pickupBuilding)}
                     {...register("shiftId", {
-                        required: "Shift Id Up Building is required."
+                        required: "Shift Id is required."
                     })}
-                    defaultValue={initialContents?.pickupBuilding} 
-                />
+                >
+                {shifts && drivers && shifts.map(shift => {
+                    // Find the driver object with matching ID
+                    const driver = drivers.find(driver => driver.id === shift.driverID);
+                    // If driver is found, render option with driver's givenName
+                    return (
+                        <option key={shift.id} value={shift.driverID}>
+                            {`${shift.id} - ${driver ? driver.givenName : 'Unknown'} ${driver ? driver.familyName : 'Driver'} - ${shift.shiftStart} - ${shift.shiftEnd}`}
+                        </option>
+                    );
+                })}
+                </Form.Control>
                 <Form.Control.Feedback type="invalid">
                     {errors.pickupBuilding?.message}
                 </Form.Control.Feedback>

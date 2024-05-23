@@ -4,6 +4,7 @@ import RideAssignDriverForm from "main/components/Ride/RideAssignDriverForm";
 import { Navigate } from 'react-router-dom'
 import { useBackend, useBackendMutation } from "main/utils/useBackend";
 
+
 import { toast } from "react-toastify";
 
 export default function RideRequestAssignPage() {
@@ -21,6 +22,22 @@ export default function RideRequestAssignPage() {
         }
       }
     );
+  
+  const {data: shiftsData} = useBackend(
+    ['/api/shift/all'],
+    {
+      method: "GET",
+      url: '/api/shift/all',
+    }
+  );
+
+  const {data: driverName} = useBackend(
+    ['/api/drivers/all'],
+    {
+      method: "GET",
+      url: '/api/drivers/all',
+    }
+  );
 
 
   const objectToAxiosPutParams = (ride) => ({
@@ -60,7 +77,7 @@ export default function RideRequestAssignPage() {
             <div className="pt-2">
                 <h1>Assign Driver to Ride Request</h1>
                 {ride &&
-                <RideAssignDriverForm initialContents={ride} submitAction={onSubmit} buttonLabel="Assign Driver" />
+                <RideAssignDriverForm initialContents={ride} shifts={shiftsData} drivers = {driverName} submitAction={onSubmit} buttonLabel="Assign Driver" />
                 }
             </div>
         </BasicLayout>
