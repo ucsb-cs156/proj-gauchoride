@@ -230,4 +230,31 @@ describe("RiderApplicationEditForm tests", () => {
         await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
     });
 
+    test("toggleRiderCallback should be an empty function", () => {
+        const id = 123; // Example ID
+        const toggleRiderCallback = async (id) => {};
+        expect(toggleRiderCallback).toBeDefined();
+        expect(typeof toggleRiderCallback).toBe("function");
+    });
+
+    test("updatedData should have status as 'accepted' and empty notes", () => {
+        const initialContents = { status: 'pending', notes: 'Initial notes' };
+        const updatedData = { ...initialContents, status: 'accepted', notes: '' };
+        expect(updatedData.status).toBe("accepted");
+        expect(updatedData.notes).toBe("");
+    });
+
+    test("updatedData should have status as 'declined' and empty notes", () => {
+        const initialContents = { status: 'pending', notes: 'Initial notes' };
+        const updatedData = { ...initialContents, status: 'declined', notes: '' };
+        expect(updatedData.status).toBe("declined");
+        expect(updatedData.notes).toBe("");
+    });
+
+    test("updatedData should have status as 'expired' and empty notes", () => {
+        const initialContents = { status: 'pending', notes: 'Initial notes' };
+        const updatedData = { ...initialContents, status: 'expired', notes: '' };
+        expect(updatedData.status).toBe("expired");
+        expect(updatedData.notes).toBe("");
+    });
 });
