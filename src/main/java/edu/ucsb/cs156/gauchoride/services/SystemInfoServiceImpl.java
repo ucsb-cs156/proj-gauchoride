@@ -14,6 +14,9 @@ import edu.ucsb.cs156.gauchoride.models.SystemInfo;
 @Slf4j
 @Service("systemInfo")
 @ConfigurationProperties
+@PropertySources(
+        @PropertySource("classpath:git.properties")
+)
 public class SystemInfoServiceImpl extends SystemInfoService {
   
   @Value("${spring.h2.console.enabled:false}")
