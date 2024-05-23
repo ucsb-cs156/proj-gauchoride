@@ -40,7 +40,7 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     {...register("driverId", {
                         required: "driverId is required.",
                     })}
-                    placeholder="Enter a valid ID"   
+                    placeholder="e.g. 1"   
                     defaultValue={initialContents?.driverId}  
                 />
                 <Form.Control.Feedback type="invalid">
@@ -127,7 +127,7 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     {...register("notes", {
                         required: "notes is required."
                     })}
-                    placeholder="Enter some text for notes"   
+                    placeholder="e.g. I am mostly available on Tuesday and Thursdays."  
                     defaultValue={initialContents?.notes}  
                 />
                 <Form.Control.Feedback type="invalid">
