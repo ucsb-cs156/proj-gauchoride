@@ -110,6 +110,48 @@ describe("DriverAvailabilityForm tests", () => {
 
     });
 
+    test("enter wrong time format", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Router>
+                    <DriverAvailabilityForm />
+                </Router>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByText(/Create/)).toBeInTheDocument();
+        const submitButton = screen.getByText(/Create/);
+        const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
+        const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
+        fireEvent.change(startTimeField, { target: { value: 'BAD' } });
+        fireEvent.change(endTimeField, { target: { value: 'BAD' } });
+        fireEvent.click(submitButton);
+
+        await screen.findByText(/driverId is required./);
+        expect(screen.getByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
+        expect(screen.getByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
+        expect(screen.getByText(/Day is required./)).toBeInTheDocument();
+        expect(screen.getByText(/Notes are required./)).toBeInTheDocument();
+
+        fireEvent.change(startTimeField, { target: { value: 'BAD 3:30PM' } });
+        fireEvent.change(endTimeField, { target: { value: 'BAD 3:30PM' } });
+        await screen.findByText(/driverId is required./);
+        expect(screen.getByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
+        expect(screen.getByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
+        
+        fireEvent.change(startTimeField, { target: { value: 'BAD 3:30PM BAD' } });
+        fireEvent.change(endTimeField, { target: { value: 'BAD 3:30PM BAD' } });
+        await screen.findByText(/driverId is required./);
+        expect(screen.getByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
+        expect(screen.getByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
+
+        fireEvent.change(startTimeField, { target: { value: '3:30PM BAD' } });
+        fireEvent.change(endTimeField, { target: { value: '3:30PM BAD' } });
+        await screen.findByText(/driverId is required./);
+        expect(screen.getByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
+        expect(screen.getByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
+    });
+
     test("No Error messsages on good input", async () => {
 
         const mockSubmitAction = jest.fn();
@@ -142,6 +184,8 @@ describe("DriverAvailabilityForm tests", () => {
         expect(screen.queryByText(/Day is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Availability Start is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Availability End is required./)).not.toBeInTheDocument();
+        expect(screen.queryByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).not.toBeInTheDocument();
+        expect(screen.queryByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).not.toBeInTheDocument();
         expect(screen.queryByText(/Notes are required./)).not.toBeInTheDocument();
 
 

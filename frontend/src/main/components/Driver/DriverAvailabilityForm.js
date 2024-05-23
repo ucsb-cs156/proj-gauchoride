@@ -81,7 +81,7 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                         required: "Availability Start is required.",
                         pattern: {
                             value: /^(0?[1-9]|1[0-2]):[0-5][0-9](AM|PM)$/,
-                            message: "Please enter time in the format HH:MM AM/PM (e.g., 3:30PM)."
+                            message: "Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM)."
                           }
                     })}
                     placeholder="Enter time in the format HH:MM AM/PM (e.g. 3:30PM)"
@@ -103,7 +103,7 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                         required: "Availability End is required.",
                         pattern: {
                             value: /^(0?[1-9]|1[0-2]):[0-5][0-9](AM|PM)$/,
-                            message: "Please enter time in the format HH:MM AM/PM (e.g., 3:30PM)."
+                            message: "Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM)."
                           }
                     })}
                     placeholder="Enter time in the format HH:MM AM/PM (e.g. 3:30PM)"
