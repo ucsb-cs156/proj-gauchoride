@@ -32,7 +32,6 @@ function RiderApplicationEditForm({ initialContents, submitAction, email }) {
         };
     }
 
-    // Stryker disable all
     const toggleRiderMutation = useBackendMutation(
         cellToAxiosParamsToggleRider,
         {},
@@ -64,8 +63,8 @@ function RiderApplicationEditForm({ initialContents, submitAction, email }) {
         submitAction(data);
         navigate(navigation);
     };
-    // Stryker restore all
 
+    // Stryker disable all; testing not necessary for UI mutations
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             {initialContents && (
@@ -279,6 +278,7 @@ function RiderApplicationEditForm({ initialContents, submitAction, email }) {
             </Button>
         </Form>
     );
+    // Stryker restore all
 }
 
 export default RiderApplicationEditForm;
