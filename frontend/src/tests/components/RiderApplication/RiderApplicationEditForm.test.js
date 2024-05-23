@@ -230,31 +230,42 @@ describe("RiderApplicationEditForm tests", () => {
         await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
     });
 
-    test("toggleRiderCallback should be an empty function", () => {
-        const id = 123; // Example ID
-        const toggleRiderCallback = async (id) => {};
-        expect(toggleRiderCallback).toBeDefined();
-        expect(typeof toggleRiderCallback).toBe("function");
+    test('cellToAxiosParamsToggleRider returns the expected object', () => {
+        const id = 123;
+        const result = cellToAxiosParamsToggleRider(id);
+        expect(result).toEqual({
+            url: "/api/admin/users/toggleRider",
+            method: "POST",
+            params: {
+                id: id
+            }
+        });
+    });
+    
+    test('toggleRiderCallback calls mutate with the correct id', async () => {
+        const id = 123;
+        const mockMutate = jest.fn();
+        toggleRiderMutation.mutate = mockMutate;
+    
+        await toggleRiderCallback(id);
+    
+        expect(mockMutate).toHaveBeenCalledWith(id);
     });
 
-    test("updatedData should have status as 'accepted' and empty notes", () => {
-        const initialContents = { status: 'pending', notes: 'Initial notes' };
-        const updatedData = { ...initialContents, status: 'accepted', notes: '' };
-        expect(updatedData.status).toBe("accepted");
-        expect(updatedData.notes).toBe("");
-    });
+    test('handleApprove submits data, calls toggleRiderCallback, and navigates', async () => {
+        const id = 123;
+        const mockSubmitAction = jest.fn();
+        const mockToggleRiderCallback = jest.fn();
+        const mockNavigate = jest.fn();
 
-    test("updatedData should have status as 'declined' and empty notes", () => {
-        const initialContents = { status: 'pending', notes: 'Initial notes' };
-        const updatedData = { ...initialContents, status: 'declined', notes: '' };
-        expect(updatedData.status).toBe("declined");
-        expect(updatedData.notes).toBe("");
-    });
+        submitAction.mockImplementation(mockSubmitAction);
+        toggleRiderCallback.mockImplementation(mockToggleRiderCallback);
+        navigate.mockImplementation(mockNavigate);
 
-    test("updatedData should have status as 'expired' and empty notes", () => {
-        const initialContents = { status: 'pending', notes: 'Initial notes' };
-        const updatedData = { ...initialContents, status: 'expired', notes: '' };
-        expect(updatedData.status).toBe("expired");
-        expect(updatedData.notes).toBe("");
+        await handleApprove();
+
+        expect(mockSubmitAction).toHaveBeenCalled();
+        expect(mockToggleRiderCallback).toHaveBeenCalledWith(initialContents.userId);
+        expect(mockNavigate).toHaveBeenCalledWith(-1);
     });
 });
