@@ -690,5 +690,37 @@ describe("AppNavbar tests", () => {
         expect(applyLink).not.toBeInTheDocument();
     });
 
+    test("Apply to be a rider should not appear for not logged-in users", async () => {
+        const currentUser = currentUserFixtures.notLoggedIn;
+
+        const { getByText } = render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AppNavbar currentUser={currentUser} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => expect(getByText("Log In")).toBeInTheDocument());
+        const applyLink = screen.queryByTestId("appnavbar-applytoberider");
+        expect(applyLink).not.toBeInTheDocument();
+    });
+
+    test("Apply to be a rider should appear for logged-in users", async () => {
+        const currentUser = currentUserFixtures.memberOnly;
+        const doLogin = jest.fn();
+
+        const { getByText } = render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AppNavbar currentUser={currentUser} doLogin={doLogin} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => expect(getByText("Welcome, Phill Conrad")).toBeInTheDocument());
+        const applyLink = screen.queryByTestId("appnavbar-applytoberider");
+        expect(applyLink).toBeInTheDocument();
+    });
 });
 
