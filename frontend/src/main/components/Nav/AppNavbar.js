@@ -91,7 +91,7 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
               }
 
               {
-               !hasRole(currentUser, "ROLE_RIDER") && isParticipant(currentUser) && (
+               (hasRole(currentUser, "ROLE_DRIVER") || hasRole(currentUser, "ROLE_ADMIN")) && (
                   <NavDropdown title="Shifts" id="appnavbar-shift-dropdown" data-testid="appnavbar-shift-dropdown" >
                     <NavDropdown.Item data-testid="appnavbar-shift-dropdown-shifts" as={Link} to="/shift/">Shifts</NavDropdown.Item>
                     <NavDropdown.Item data-testid="appnavbar-availability-dropdown-availabilities" as={Link} to="/availability/">Availability</NavDropdown.Item>
@@ -114,7 +114,7 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
                 )
               }
               {
-                !hasRole(currentUser, "ROLE_RIDER") && isParticipant(currentUser) && (
+                (hasRole(currentUser, "ROLE_DRIVER") || hasRole(currentUser, "ROLE_ADMIN")) && (
                   <Nav.Link id ="appnavbar-driver-link" data-testid="appnavbar-driver" as={Link} to="/drivers/list">Drivers Page</Nav.Link>
                 )
               }
