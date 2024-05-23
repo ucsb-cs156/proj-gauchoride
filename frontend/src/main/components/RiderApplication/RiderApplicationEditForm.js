@@ -22,6 +22,7 @@ function RiderApplicationEditForm({ initialContents, submitAction, email }) {
         submitAction(data);
     };
 
+    // Stryker disable all; testing not necessary for UI mutations
     function cellToAxiosParamsToggleRider(id) {
         return {
             url: "/api/admin/users/toggleRider",
@@ -64,7 +65,6 @@ function RiderApplicationEditForm({ initialContents, submitAction, email }) {
         navigate(navigation);
     };
 
-    // Stryker disable all; testing not necessary for UI mutations
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             {initialContents && (

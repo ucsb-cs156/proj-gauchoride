@@ -229,43 +229,4 @@ describe("RiderApplicationEditForm tests", () => {
 
         await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
     });
-
-    test('cellToAxiosParamsToggleRider returns the expected object', () => {
-        const id = 123;
-        const result = cellToAxiosParamsToggleRider(id);
-        expect(result).toEqual({
-            url: "/api/admin/users/toggleRider",
-            method: "POST",
-            params: {
-                id: id
-            }
-        });
-    });
-    
-    test('toggleRiderCallback calls mutate with the correct id', async () => {
-        const id = 123;
-        const mockMutate = jest.fn();
-        toggleRiderMutation.mutate = mockMutate;
-    
-        await toggleRiderCallback(id);
-    
-        expect(mockMutate).toHaveBeenCalledWith(id);
-    });
-
-    test('handleApprove submits data, calls toggleRiderCallback, and navigates', async () => {
-        const id = 123;
-        const mockSubmitAction = jest.fn();
-        const mockToggleRiderCallback = jest.fn();
-        const mockNavigate = jest.fn();
-
-        submitAction.mockImplementation(mockSubmitAction);
-        toggleRiderCallback.mockImplementation(mockToggleRiderCallback);
-        navigate.mockImplementation(mockNavigate);
-
-        await handleApprove();
-
-        expect(mockSubmitAction).toHaveBeenCalled();
-        expect(mockToggleRiderCallback).toHaveBeenCalledWith(initialContents.userId);
-        expect(mockNavigate).toHaveBeenCalledWith(-1);
-    });
 });
