@@ -6,7 +6,7 @@ export default function Footer() {
   const [repoUrl, setRepoUrl] = useState("");
   useEffect(() => { 
     fetch("/api/systemInfo")
-      .then((res) => res.json())
+      // .then((res) => res.json())
       .then((data) => {
         setRepoUrl(data.sourceRepo);
       });

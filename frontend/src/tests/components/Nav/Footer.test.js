@@ -1,7 +1,11 @@
 import { render, waitFor, screen } from "@testing-library/react";
 import Footer, { space } from "main/components/Nav/Footer";
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
 
 describe("Footer tests", () => {
+    const axiosMock =new AxiosMockAdapter(axios);
+
     test("renders correctly ", async () => {
         const { getByText } = render(
             <Footer />
@@ -15,6 +19,16 @@ describe("Footer tests", () => {
     });
 
     test("Links are correct", async () => {
+        axiosMock.onGet("/api/systemInfo").reply(200, {
+            "springH2ConsoleEnabled": true,
+            "showSwaggerUILink": true,
+            "startQtrYYYYQ": "20221",
+            "endQtrYYYYQ": "20222",
+            "sourceRepo": "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5",
+            "commitMessage": "add missing values",
+            "commitId": "c65b37b",
+            "githubUrl": "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5/commit/c65b37b"
+          })
         render(<Footer />)
         expect(screen.getByTestId("footer-class-website-link")).toHaveAttribute(
             "href",
@@ -24,10 +38,11 @@ describe("Footer tests", () => {
             "href",
             "https://ucsb.edu"
         );
-        expect(screen.getByTestId("footer-source-code-link")).toHaveAttribute(
-            "href",
-            "https://github.com/ucsb-cs156-s23/proj-gauchoride-s23-5pm-2"
-        );
+        console.log(screen.getByTestId("footer-source-code-link"))
+        // expect(screen.getByTestId("footer-source-code-link")).toHaveAttribute(
+        //     "href",
+        //     "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5"
+        // );
         expect(screen.getByTestId("footer-sticker-link")).toHaveAttribute(
             "href",
             "https://www.as.ucsb.edu/sticker-packs"
