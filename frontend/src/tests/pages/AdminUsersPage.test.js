@@ -32,7 +32,7 @@ describe("AdminUsersPage tests", () => {
 
     test("renders without crashing on three users", async () => {
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/admin/users").reply(200, usersFixtures.threeUsers);
+        axiosMock.onGet("/api/admin/users").reply(200, usersFixtures.threeUsersUnsorted);
 
         const { getByText } = render(
             <QueryClientProvider client={queryClient}>
@@ -43,8 +43,6 @@ describe("AdminUsersPage tests", () => {
         );
 
         await waitFor(() => expect(getByText("Users")).toBeInTheDocument());
-
-
     });
 
     test("renders empty table when backend unavailable", async () => {
@@ -71,7 +69,7 @@ describe("AdminUsersPage tests", () => {
     test("usertable toggle admin tests", async ()=>{
         setupAdminUser();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/admin/users").reply(200, usersFixtures.threeUsers);
+        axiosMock.onGet("/api/admin/users").reply(200, usersFixtures.threeUsersUnsorted);
         axiosMock.onPost("/api/admin/users/toggleAdmin").reply(200, "User with id 1 has toggled admin status");
         const { getByText} = render(
             <QueryClientProvider client={queryClient}>
@@ -97,7 +95,7 @@ describe("AdminUsersPage tests", () => {
     test("usertable toggle driver tests", async ()=>{
         setupAdminUser();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/admin/users").reply(200, usersFixtures.threeUsers);
+        axiosMock.onGet("/api/admin/users").reply(200, usersFixtures.threeUsersUnsorted);
         axiosMock.onPost("/api/admin/users/toggleDriver").reply(200, "User with id 1 has toggled driver status");
         const { getByText} = render(
             <QueryClientProvider client={queryClient}>
@@ -122,7 +120,7 @@ describe("AdminUsersPage tests", () => {
     test("usertable toggle rider tests", async ()=>{
         setupAdminUser();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/admin/users").reply(200, usersFixtures.threeUsers);
+        axiosMock.onGet("/api/admin/users").reply(200, usersFixtures.threeUsersUnsorted);
         axiosMock.onPost("/api/admin/users/toggleRider").reply(200, "User with id 1 has toggled rider status");
         const { getByText} = render(
             <QueryClientProvider client={queryClient}>
@@ -141,9 +139,29 @@ describe("AdminUsersPage tests", () => {
         await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
         expect(axiosMock.history.post[0].url).toBe("/api/admin/users/toggleRider");
         expect(axiosMock.history.post[0].params).toEqual({id:1});
-
-
     })
+
+    test("Testing sort for user id", async () => {
+        const queryClient = new QueryClient();
+        axiosMock.onGet("/api/admin/users").reply(200, usersFixtures.threeUsersUnsorted);
+
+        const { getByText, queryByTestId } = render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AdminUsersPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => expect(getByText("Users")).toBeInTheDocument());
+        expect(queryByTestId(`${testId}-cell-row-0-col-id`)).toBeInTheDocument();
+        expect(queryByTestId(`${testId}-cell-row-0-col-id`)).toBeInTheDocument();
+        expect(queryByTestId(`${testId}-cell-row-0-col-id`)).toBeInTheDocument();
+        
+        const id1 = screen.getByTestId(`${testId}-cell-row-0-col-id`)
+        const id2 = screen.getByTestId(`${testId}-cell-row-1-col-id`)
+        const id3 = screen.getByTestId(`${testId}-cell-row-2-col-id`)
+        
+    });
+
 });
-
-
