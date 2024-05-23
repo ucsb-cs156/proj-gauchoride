@@ -1,8 +1,16 @@
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
-
 export const space = " ";
 
 export default function Footer() {
+  const [repoUrl, setRepoUrl] = useState("");
+  useEffect(() => { 
+    fetch("/api/systemInfo")
+      .then((res) => res.json())
+      .then((data) => {
+        setRepoUrl(data.sourceRepo);
+      });
+  }, []);
   return (
     <footer className="bg-light pt-3 pt-md-4 pb-4 pb-md-5">
       <Container>
@@ -26,7 +34,8 @@ export default function Footer() {
           {space}
           <a
             data-testid="footer-source-code-link"
-            href={"https://github.com/ucsb-cs156-s23/proj-gauchoride-s23-5pm-2"}
+            href={repoUrl}
+            // use api/systemInfo to get the repo URL
             target="_blank"
             rel="noopener noreferrer"
           >
