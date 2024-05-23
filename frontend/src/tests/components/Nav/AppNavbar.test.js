@@ -690,5 +690,22 @@ describe("AppNavbar tests", () => {
         expect(applyLink).not.toBeInTheDocument();
     });
 
+    test("Apply to be a Rider link does not appear for not logged in users", async () => {
+        const currentUser = currentUserFixtures.notMember;
+        const doLogin = jest.fn();
+
+        const { getByText } = render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AppNavbar currentUser={currentUser} doLogin={doLogin} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => expect(getByText("GauchoRide")).toBeInTheDocument());
+        const applyLink = screen.queryByTestId("Apply to be a Rider");
+        expect(applyLink).not.toBeInTheDocument();
+    });
+
 });
 
