@@ -16,7 +16,7 @@ jest.mock('react-router-dom', () => ({
 describe("DriverAvailabilityForm tests", () => {
     const queryClient = new QueryClient();
 
-    const expectedHeaders = ["driverId", "Day of Week", "Availability Start", "Availability End", "Notes"];
+    const expectedHeaders = ["Day of Week", "Availability Start", "Availability End", "Notes"];
     const testId = "DriverAvailabilityForm";
 
     test("renders correctly with no initialContents", async () => {
@@ -55,9 +55,6 @@ describe("DriverAvailabilityForm tests", () => {
 
         expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();
         expect(screen.getByText(`id`)).toBeInTheDocument();
-
-        expect(await screen.findByTestId(`${testId}-driverId`)).toBeInTheDocument();
-        expect(screen.getByText(`driverId`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-day`)).toBeInTheDocument();
         expect(screen.getByText(`Day of Week`)).toBeInTheDocument();
@@ -102,8 +99,7 @@ describe("DriverAvailabilityForm tests", () => {
         const submitButton = screen.getByText(/Create/);
         fireEvent.click(submitButton);
 
-        await screen.findByText(/driverId is required./);
-        expect(screen.getByText(/Day is required./)).toBeInTheDocument();
+        await waitFor(() => expect(screen.getByText(/Day is required./)).toBeInTheDocument());
         expect(screen.getByText(/Availability Start is required./)).toBeInTheDocument();
         expect(screen.getByText(/Availability End is required./)).toBeInTheDocument();
         expect(screen.getByText(/Notes are required./)).toBeInTheDocument();
@@ -120,16 +116,14 @@ describe("DriverAvailabilityForm tests", () => {
                 <DriverAvailabilityForm submitAction={mockSubmitAction} />
             </Router>
         );
-        await screen.findByTestId("DriverAvailabilityForm-driverId");
+        await screen.findByTestId("DriverAvailabilityForm-day");
 
-        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
         const dayField = screen.getByTestId("DriverAvailabilityForm-day");
         const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
         const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
         const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
         const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
 
-        fireEvent.change(driverIdField, { target: { value: 'test' } });
         fireEvent.change(dayField, { target: { value: 'Monday' } });
         fireEvent.change(startTimeField, { target: { value: '3:30PM' } });
         fireEvent.change(endTimeField, { target: { value: '3:30PM' } });
@@ -138,7 +132,6 @@ describe("DriverAvailabilityForm tests", () => {
 
         await waitFor(() => expect(mockSubmitAction).toHaveBeenCalled());
 
-        expect(screen.queryByText(/driverId is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Day is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Availability Start is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Availability End is required./)).not.toBeInTheDocument();

@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 
+import edu.ucsb.cs156.gauchoride.entities.User;
+import edu.ucsb.cs156.gauchoride.models.CurrentUser;
+import edu.ucsb.cs156.gauchoride.services.CurrentUserService;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.ucsb.cs156.gauchoride.entities.DriverAvailability;
 import edu.ucsb.cs156.gauchoride.errors.EntityNotFoundException;
 import edu.ucsb.cs156.gauchoride.repositories.DriverAvailabilityRepository;
@@ -38,7 +42,6 @@ public class DriverAvailabilityController extends ApiController{
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @PostMapping("/new")
     public DriverAvailability postDriverAvailability(
-            @Parameter(name="driverId") @RequestParam long driverId,
             @Parameter(name="day") @RequestParam String day,
             @Parameter(name="startTime") @RequestParam String startTime,
             @Parameter(name="endTime") @RequestParam String endTime,
@@ -48,8 +51,10 @@ public class DriverAvailabilityController extends ApiController{
 
         log.info("notes={}", notes);
 
+        Long UserId = getCurrentUser().getUser().getId();
+
         DriverAvailability driverAvailability = new DriverAvailability();
-        driverAvailability.setDriverId(driverId);
+        driverAvailability.setDriverId(UserId);
         driverAvailability.setDay(day);
         driverAvailability.setStartTime(startTime);
         driverAvailability.setEndTime(endTime);
