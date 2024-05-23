@@ -11,7 +11,7 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
     } = useForm(
         { defaultValues: initialContents || {}, }
     );
-    // Stryker enable all
+    // Stryker restore all
     const navigate = useNavigate();
 
     const testIdPrefix = "DriverAvailabilityForm";
