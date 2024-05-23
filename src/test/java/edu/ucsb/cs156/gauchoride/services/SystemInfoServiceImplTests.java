@@ -35,11 +35,14 @@ class SystemInfoServiceImplTests {
     SystemInfo si = systemInfoService.getSystemInfo();
     assertTrue(si.getSpringH2ConsoleEnabled());
     assertTrue(si.getShowSwaggerUILink());
+
+    // added for git commit info feature
     assertTrue(si.getGithubUrl().startsWith(si.getSourceRepo()));
     assertTrue(si.getGithubUrl().endsWith(si.getCommitId()));
     assertTrue(si.getGithubUrl().contains("/commit/"));
   }
 
+  // added test for git commit info feature
   @Test
   void test_githubUrl() {
     assertEquals(

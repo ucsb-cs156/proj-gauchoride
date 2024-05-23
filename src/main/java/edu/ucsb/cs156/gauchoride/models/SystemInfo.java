@@ -14,6 +14,7 @@ public class SystemInfo {
   private Boolean springH2ConsoleEnabled;
   private Boolean showSwaggerUILink;
 
+  // added for git commit info
   private String sourceRepo; // user configured URL of the source repository for footer
   private String commitMessage;
   private String commitId;

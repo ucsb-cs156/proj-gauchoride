@@ -302,6 +302,8 @@
                         </configuration>
                     </plugin>
 
+                    <!--end of things added-->
+
 
                 </plugins>
             </build>

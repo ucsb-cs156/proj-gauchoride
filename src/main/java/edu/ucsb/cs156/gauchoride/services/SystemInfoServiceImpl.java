@@ -36,10 +36,14 @@ public class SystemInfoServiceImpl extends SystemInfoService {
     return commit != null && repo != null ? repo + "/commit/" + commit : null;
   }
 
+  // end of new things added
+
   public SystemInfo getSystemInfo() {
     SystemInfo si = SystemInfo.builder()
         .springH2ConsoleEnabled(this.springH2ConsoleEnabled)
         .showSwaggerUILink(this.showSwaggerUILink)
+
+        // added for git commit info feature
         .sourceRepo(this.sourceRepo)
         .commitMessage(this.commitMessage)
         .commitId(this.commitId)
