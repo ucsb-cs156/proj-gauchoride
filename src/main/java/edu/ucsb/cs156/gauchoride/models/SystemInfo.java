@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Builder;
 import lombok.AccessLevel;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,4 +13,9 @@ import lombok.AccessLevel;
 public class SystemInfo {
   private Boolean springH2ConsoleEnabled;
   private Boolean showSwaggerUILink;
+
+  private String sourceRepo; // user configured URL of the source repository for footer
+  private String commitMessage;
+  private String commitId;
+  private String githubUrl; // URL to the commit in the source repository
 }
