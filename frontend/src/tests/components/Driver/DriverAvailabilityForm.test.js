@@ -130,9 +130,9 @@ describe("DriverAvailabilityForm tests", () => {
         const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
 
         fireEvent.change(driverIdField, { target: { value: 'test' } });
-        fireEvent.change(dayField, { target: { value: 'test' } });
-        fireEvent.change(startTimeField, { target: { value: 'test' } });
-        fireEvent.change(endTimeField, { target: { value: 'test' } });
+        fireEvent.change(dayField, { target: { value: 'Tuesday' } });
+        fireEvent.change(startTimeField, { target: { value: '3:15PM' } });
+        fireEvent.change(endTimeField, { target: { value: '4:15PM' } });
         fireEvent.change(notesField, { target: { value: 'test' } });
         fireEvent.click(submitButton);
 
