@@ -4,6 +4,8 @@ package edu.ucsb.cs156.gauchoride.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Service;
 
 import edu.ucsb.cs156.gauchoride.models.SystemInfo;
@@ -13,6 +15,9 @@ import edu.ucsb.cs156.gauchoride.models.SystemInfo;
 
 @Slf4j
 @Service("systemInfo")
+@PropertySources(
+        @PropertySource("classpath:git.properties")
+)
 @ConfigurationProperties
 public class SystemInfoServiceImpl extends SystemInfoService {
   
