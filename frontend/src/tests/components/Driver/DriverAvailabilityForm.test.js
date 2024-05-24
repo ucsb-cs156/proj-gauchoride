@@ -143,8 +143,7 @@ describe("DriverAvailabilityForm tests", () => {
         expect(screen.queryByText(/Start Time is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/End Time is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Notes is required./)).not.toBeInTheDocument();
-
-
+        expect(screen.queryByText("Please enter time in the format HH:MM AM/PM (e.g., 3:30PM).")).not.toBeInTheDocument();
     });
 
 
