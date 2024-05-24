@@ -122,7 +122,6 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     type="text"
                     isInvalid={Boolean(errors.notes)}
                     {...register("notes", {
-                        // required: "Notes are required."
                     })}
                     placeholder="e.g. Busy on Monday"  
                     defaultValue={initialContents?.notes} 
