@@ -47,7 +47,6 @@ function RideAssignDriverForm({ initialContents, submitAction, shifts, drivers, 
                     as = "select"
                     data-testid={testIdPrefix + "-shiftId"}
                     id="shiftId"
-                    type="text"
                     isInvalid={Boolean(errors.shiftId)}
                     {...register("shiftId", {
                         required: "Shift Id is required."
