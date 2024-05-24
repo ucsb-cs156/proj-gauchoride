@@ -48,7 +48,7 @@ function RideAssignDriverForm({ initialContents, submitAction, shifts, drivers, 
                     data-testid={testIdPrefix + "-shiftId"}
                     id="shiftId"
                     type="text"
-                    isInvalid={Boolean(errors.pickupBuilding)}
+                    isInvalid={Boolean(errors.shiftId)}
                     {...register("shiftId", {
                         required: "Shift Id is required."
                     })}
@@ -58,7 +58,7 @@ function RideAssignDriverForm({ initialContents, submitAction, shifts, drivers, 
                     const driver = drivers.find(driver => driver.id === shift.driverID);
                     // If driver is found, render option with driver's givenName
                     return (
-                        <option key={shift.id} value={shift.driverID}>
+                        <option key={shift.id} value={shift.id}>
                             {`${shift.id} - ${driver ? driver.givenName : 'Unknown'} ${driver ? driver.familyName : 'Driver'} - ${shift.shiftStart} - ${shift.shiftEnd}`}
                         </option>
                     );
