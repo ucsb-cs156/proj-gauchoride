@@ -147,10 +147,9 @@ describe("DriverAvailabilityForm tests", () => {
     });
 
 
-    test("Error messsages on bad input", async () => {
+    test("Error messages on missing inputs", async () => {
 
         const mockSubmitAction = jest.fn();
-
 
         render(
             <Router  >
@@ -166,6 +165,41 @@ describe("DriverAvailabilityForm tests", () => {
         const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
         const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
 
+        fireEvent.change(driverIdField, { target: { value: '' } });
+        fireEvent.change(dayField, { target: { value: '' } });
+        fireEvent.change(startTimeField, { target: { value: '' } });
+        fireEvent.change(endTimeField, { target: { value: '' } });
+        fireEvent.change(notesField, { target: { value: '' } });
+        fireEvent.click(submitButton);
+
+        expect(await screen.findByText(/Driver Id is required./)).toBeInTheDocument();
+        expect(screen.queryByText(/Day is required./)).toBeInTheDocument();
+        expect(screen.queryByText(/Start Time is required./)).toBeInTheDocument();
+        expect(screen.queryByText(/End Time is required./)).toBeInTheDocument();
+        expect(screen.queryByText(/Notes is required./)).toBeInTheDocument();
+
+    });
+
+   
+    test("Error messages on bad time format", async () => {
+        const mockSubmitAction = jest.fn();
+
+        render(
+            <Router>
+                <DriverAvailabilityForm submitAction={mockSubmitAction} />
+            </Router>
+        );
+
+        await screen.findByTestId("DriverAvailabilityForm-driverId");
+
+        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
+        const dayField = screen.getByTestId("DriverAvailabilityForm-day");
+        const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
+        const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
+        const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
+        const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
+
+        // Invalid start time format
         fireEvent.change(driverIdField, { target: { value: 'test' } });
         fireEvent.change(dayField, { target: { value: 'Tuesday' } });
         fireEvent.change(startTimeField, { target: { value: '315PM' } });
@@ -173,6 +207,76 @@ describe("DriverAvailabilityForm tests", () => {
         fireEvent.change(notesField, { target: { value: 'test' } });
         fireEvent.click(submitButton);
 
-        await waitFor(() => expect(screen.getByText("Please enter time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument());
+        await waitFor(() => {
+            const startTimeError = screen.getByTestId("DriverAvailabilityForm-startTime").parentElement.querySelector('.invalid-feedback');
+            expect(startTimeError).toHaveTextContent("Please enter time in the format HH:MM AM/PM (e.g., 3:30PM).");
+        });
+    });
+
+    test("Error messages on bad time format - extra characters at beginning", async () => {
+        const mockSubmitAction = jest.fn();
+
+        render(
+            <Router>
+                <DriverAvailabilityForm submitAction={mockSubmitAction} />
+            </Router>
+        );
+
+        await screen.findByTestId("DriverAvailabilityForm-driverId");
+
+        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
+        const dayField = screen.getByTestId("DriverAvailabilityForm-day");
+        const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
+        const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
+        const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
+        const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
+
+        // Invalid start time format
+        fireEvent.change(driverIdField, { target: { value: 'test' } });
+        fireEvent.change(dayField, { target: { value: 'Tuesday' } });
+        fireEvent.change(startTimeField, { target: { value: 'a3:15PM' } });
+        fireEvent.change(endTimeField, { target: { value: 'a4:15PM' } });
+        fireEvent.change(notesField, { target: { value: 'test' } });
+        fireEvent.click(submitButton);
+
+        await waitFor(() => {
+            const startTimeError = screen.getByTestId("DriverAvailabilityForm-startTime").parentElement.querySelector('.invalid-feedback');
+            const endTimeError = screen.getByTestId("DriverAvailabilityForm-endTime").parentElement.querySelector('.invalid-feedback');
+            expect(startTimeError).toHaveTextContent("Please enter time in the format HH:MM AM/PM (e.g., 3:30PM).");
+            expect(endTimeError).toHaveTextContent("Please enter time in the format HH:MM AM/PM (e.g., 3:30PM).");
+        });
+    });
+
+    test("Error messages on bad time format - extra characters at end", async () => {
+        const mockSubmitAction = jest.fn();
+
+        render(
+            <Router>
+                <DriverAvailabilityForm submitAction={mockSubmitAction} />
+            </Router>
+        );
+
+        await screen.findByTestId("DriverAvailabilityForm-driverId");
+
+        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
+        const dayField = screen.getByTestId("DriverAvailabilityForm-day");
+        const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
+        const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
+        const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
+        const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
+
+        fireEvent.change(driverIdField, { target: { value: 'test' } });
+        fireEvent.change(dayField, { target: { value: 'Tuesday' } });
+        fireEvent.change(startTimeField, { target: { value: '3:15PMa' } });
+        fireEvent.change(endTimeField, { target: { value: '4:15PMa' } });
+        fireEvent.change(notesField, { target: { value: 'test' } });
+        fireEvent.click(submitButton);
+
+        await waitFor(() => {
+            const startTimeError = screen.getByTestId("DriverAvailabilityForm-startTime").parentElement.querySelector('.invalid-feedback');
+            const endTimeError = screen.getByTestId("DriverAvailabilityForm-endTime").parentElement.querySelector('.invalid-feedback');
+            expect(startTimeError).toHaveTextContent("Please enter time in the format HH:MM AM/PM (e.g., 3:30PM).");
+            expect(endTimeError).toHaveTextContent("Please enter time in the format HH:MM AM/PM (e.g., 3:30PM).");
+        });
     });
 });
