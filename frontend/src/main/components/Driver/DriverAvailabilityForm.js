@@ -47,31 +47,45 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
             </Form.Group>
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="day">day</Form.Label>
-                <Form.Control
+                <Form.Label htmlFor="day">Day of Week</Form.Label>
+                <Form.Select
                     data-testid={testIdPrefix + "-day"}
                     id="day"
-                    type="text"
                     isInvalid={Boolean(errors.day)}
                     {...register("day", {
-                        required: "day is required."
+                        required: "Day is required.",
                     })}
-                />
+                >
+                <option value="">Select a Day</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {errors.day?.message}
                 </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="startTime">startTime</Form.Label>
+                <Form.Label htmlFor="startTime">Availability Start</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-startTime"}
                     id="startTime"
                     type="text"
                     isInvalid={Boolean(errors.startTime)}
                     {...register("startTime", {
-                        required: "startTime is required."
+                        required: "Availability Start is required.",
+                        pattern: {
+                            value: /^(0?[1-9]|1[0-2]):[0-5][0-9](AM|PM)$/,
+                            message: "Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM)."
+                          }
                     })}
+                    placeholder="Enter time in the format HH:MM AM/PM (e.g. 3:30PM)"
+                    defaultValue={initialContents?.startTime}
                 />
                 <Form.Control.Feedback type="invalid">
                     {errors.startTime?.message}
@@ -79,15 +93,21 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
             </Form.Group>
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="endTime">endTime</Form.Label>
+                <Form.Label htmlFor="endTime">Availability End</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-endTime"}
                     id="endTime"
                     type="text"
                     isInvalid={Boolean(errors.endTime)}
                     {...register("endTime", {
-                        required: "endTime is required."
+                        required: "Availability End is required.",
+                        pattern: {
+                            value: /^(0?[1-9]|1[0-2]):[0-5][0-9](AM|PM)$/,
+                            message: "Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM)."
+                          }
                     })}
+                    placeholder="Enter time in the format HH:MM AM/PM (e.g. 3:30PM)"
+                    defaultValue={initialContents?.endTime}
                 />
                 <Form.Control.Feedback type="invalid">
                     {errors.endTime?.message}
@@ -95,15 +115,16 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
             </Form.Group>
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="notes">notes</Form.Label>
+                <Form.Label htmlFor="notes">Notes</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-notes"}
                     id="notes"
                     type="text"
                     isInvalid={Boolean(errors.notes)}
                     {...register("notes", {
-                        required: "notes is required."
                     })}
+                    placeholder="e.g. Busy on Monday"  
+                    defaultValue={initialContents?.notes} 
                 />
                 <Form.Control.Feedback type="invalid">
                     {errors.notes?.message}
