@@ -158,7 +158,7 @@ describe("RideRequestAssignPage tests", () => {
         });
 
         test("Dropdown is populated correctly", async () => {
-            const { findByTestId, findAllByRole } = render(
+            const {findByTestId} = render(
                 <QueryClientProvider client={queryClient}>
                     <MemoryRouter>
                         <RideRequestAssignPage />
@@ -191,6 +191,7 @@ describe("RideRequestAssignPage tests", () => {
 
             await findByTestId("RideAssignDriverForm-day");
 
+            const shiftIdField = getByTestId("RideAssignDriverForm-shiftId")
             const dayField = getByTestId("RideAssignDriverForm-day");
             const startTimeField = getByTestId("RideAssignDriverForm-start");
             const endTimeField = getByTestId("RideAssignDriverForm-end");
@@ -202,6 +203,7 @@ describe("RideRequestAssignPage tests", () => {
             const notesField = getByTestId("RideAssignDriverForm-notes");
             const submitButton = getByTestId("RideAssignDriverForm-submit");
 
+            expect(shiftIdField).toHaveValue("1");
             expect(dayField).toHaveValue("Tuesday");
             expect(startTimeField).toHaveValue("5:00PM");
             expect(endTimeField).toHaveValue("7:30PM");
