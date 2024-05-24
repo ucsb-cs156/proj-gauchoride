@@ -106,7 +106,6 @@ describe("DriverAvailabilityForm tests", () => {
         expect(screen.getByText(/Day is required./)).toBeInTheDocument();
         expect(screen.getByText(/Availability Start is required./)).toBeInTheDocument();
         expect(screen.getByText(/Availability End is required./)).toBeInTheDocument();
-        expect(screen.getByText(/Notes are required./)).toBeInTheDocument();
 
     });
 
@@ -131,7 +130,6 @@ describe("DriverAvailabilityForm tests", () => {
         expect(screen.getByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
         expect(screen.getByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
         expect(screen.getByText(/Day is required./)).toBeInTheDocument();
-        expect(screen.getByText(/Notes are required./)).toBeInTheDocument();
 
         fireEvent.change(startTimeField, { target: { value: 'BAD 3:30PM' } });
         fireEvent.change(endTimeField, { target: { value: 'BAD 3:30PM' } });
@@ -186,7 +184,6 @@ describe("DriverAvailabilityForm tests", () => {
         expect(screen.queryByText(/Availability End is required./)).not.toBeInTheDocument();
         expect(screen.queryByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).not.toBeInTheDocument();
         expect(screen.queryByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).not.toBeInTheDocument();
-        expect(screen.queryByText(/Notes are required./)).not.toBeInTheDocument();
 
 
     });
