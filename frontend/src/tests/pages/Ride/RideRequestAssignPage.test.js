@@ -191,7 +191,6 @@ describe("RideRequestAssignPage tests", () => {
 
             await findByTestId("RideAssignDriverForm-day");
 
-            // const shiftIdField = getByTestId("RideAssignDriverForm-shiftId")
             const dayField = getByTestId("RideAssignDriverForm-day");
             const startTimeField = getByTestId("RideAssignDriverForm-start");
             const endTimeField = getByTestId("RideAssignDriverForm-end");
@@ -203,7 +202,6 @@ describe("RideRequestAssignPage tests", () => {
             const notesField = getByTestId("RideAssignDriverForm-notes");
             const submitButton = getByTestId("RideAssignDriverForm-submit");
 
-            // expect(shiftIdField).toHaveValue("1");
             expect(dayField).toHaveValue("Tuesday");
             expect(startTimeField).toHaveValue("5:00PM");
             expect(endTimeField).toHaveValue("7:30PM");
@@ -217,7 +215,6 @@ describe("RideRequestAssignPage tests", () => {
 
             expect(submitButton).toBeInTheDocument();
             
-            // fireEvent.change(shiftIdField, { target: { value: '3' } })
             fireEvent.change(dayField, { target: { value: 'Monday' } })
             fireEvent.change(startTimeField, { target: { value: '3:30PM' } })
             fireEvent.change(endTimeField, { target: { value: "4:30PM" } })
@@ -236,9 +233,6 @@ describe("RideRequestAssignPage tests", () => {
 
             expect(axiosMock.history.put.length).toBe(1); // times called
             expect(axiosMock.history.put[0].params).toEqual({ id: 17 });
-            // expect(axiosMock.history.put[0].data).toBe(JSON.stringify({
-            //     shiftId: "3",
-            // })); // posted object
 
         });
 
