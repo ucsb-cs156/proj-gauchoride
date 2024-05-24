@@ -146,4 +146,34 @@ describe("DriverAvailabilityForm tests", () => {
 
 
     });
+
+
+    test("Error messsages on bad input", async () => {
+
+        const mockSubmitAction = jest.fn();
+
+
+        render(
+            <Router  >
+                <DriverAvailabilityForm submitAction={mockSubmitAction} />
+            </Router>
+        );
+        await screen.findByTestId("DriverAvailabilityForm-driverId");
+
+        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
+        const dayField = screen.getByTestId("DriverAvailabilityForm-day");
+        const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
+        const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
+        const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
+        const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
+
+        fireEvent.change(driverIdField, { target: { value: 'test' } });
+        fireEvent.change(dayField, { target: { value: 'Tuesday' } });
+        fireEvent.change(startTimeField, { target: { value: '315PM' } });
+        fireEvent.change(endTimeField, { target: { value: '4:15PM' } });
+        fireEvent.change(notesField, { target: { value: 'test' } });
+        fireEvent.click(submitButton);
+
+        await waitFor(() => expect(screen.getByText("Please enter time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument());
+    });
 });
