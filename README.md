@@ -89,3 +89,7 @@ On Heroku:
 * The SQL database is a postgres database provisioned automatically by Heroku
 * You can reset it with `heroku pg:reset --app app-name-goes-here`
 * More info and instructions for access the SQL prompt are at [docs/postgres-database.md](/docs/postgres-database.md)
+
+# Important step for Dokku deployment
+* Run this command to keep the git directory in the Dokku app:
+```dokku git:set appname keep-git-dir true```
