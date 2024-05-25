@@ -29,7 +29,8 @@ describe("Footer tests", () => {
             "commitId": "c65b37b",
             "githubUrl": "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5/commit/c65b37b"
           })
-        render(<Footer />)
+        const systemInfo = { sourceRepo: "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5"};
+        render(<Footer systemInfo={systemInfo} />)
         expect(screen.getByTestId("footer-class-website-link")).toHaveAttribute(
             "href",
             "https://ucsb-cs156.github.io"
