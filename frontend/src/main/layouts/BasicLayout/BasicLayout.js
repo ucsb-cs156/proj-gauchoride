@@ -14,6 +14,7 @@ export default function BasicLayout({ children }) {
   return (
     <div className="d-flex flex-column min-vh-100">
       <AppNavbar currentUser={currentUser} systemInfo={systemInfo} doLogout={doLogout} />
+      <Footer systemInfo={systemInfo} />
       <Container expand="xl" className="pt-4 flex-grow-1">
         {children}
       </Container>
