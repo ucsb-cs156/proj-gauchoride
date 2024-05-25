@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 export const space = " ";
 
-export default function Footer() {
-  const [repoUrl, setRepoUrl] = useState("");
-  useEffect(() => { 
-    fetch("/api/systemInfo")
-      // .then((res) => res.json())
-      .then((data) => {
-        setRepoUrl(data.sourceRepo);
-      });
-  }, []);
+export default function Footer(syst) {
   return (
     <footer className="bg-light pt-3 pt-md-4 pb-4 pb-md-5">
       <Container>
