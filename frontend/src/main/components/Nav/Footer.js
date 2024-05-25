@@ -26,7 +26,6 @@ export default function Footer({systemInfo}) {
           <a
             data-testid="footer-source-code-link"
             href={repoUrl}
-            // use api/systemInfo to get the repo URL
             target="_blank"
             rel="noopener noreferrer"
           >
