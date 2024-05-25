@@ -122,26 +122,26 @@ describe("DriverAvailabilityForm tests", () => {
         fireEvent.change(endTimeField, { target: { value: 'BAD' } });
         fireEvent.click(submitButton);
 
-        await screen.findByText(/driverId is required./);
+        await screen.findByText(/Day is required./);
         expect(screen.getByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
         expect(screen.getByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
         expect(screen.getByText(/Day is required./)).toBeInTheDocument();
 
         fireEvent.change(startTimeField, { target: { value: 'BAD 3:30PM' } });
         fireEvent.change(endTimeField, { target: { value: 'BAD 3:30PM' } });
-        await screen.findByText(/driverId is required./);
+        await screen.findByText(/Day is required./);
         expect(screen.getByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
         expect(screen.getByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
         
         fireEvent.change(startTimeField, { target: { value: 'BAD 3:30PM BAD' } });
         fireEvent.change(endTimeField, { target: { value: 'BAD 3:30PM BAD' } });
-        await screen.findByText(/driverId is required./);
+        await screen.findByText(/Day is required./);
         expect(screen.getByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
         expect(screen.getByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
 
         fireEvent.change(startTimeField, { target: { value: '3:30PM BAD' } });
         fireEvent.change(endTimeField, { target: { value: '3:30PM BAD' } });
-        await screen.findByText(/driverId is required./);
+        await screen.findByText(/Day is required./);
         expect(screen.getByText("Please enter start time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
         expect(screen.getByText("Please enter end time in the format HH:MM AM/PM (e.g., 3:30PM).")).toBeInTheDocument();
     });
