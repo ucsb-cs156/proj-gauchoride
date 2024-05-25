@@ -40,10 +40,10 @@ describe("Footer tests", () => {
             "https://ucsb.edu"
         );
         console.log(screen.getByTestId("footer-source-code-link"))
-        // expect(screen.getByTestId("footer-source-code-link")).toHaveAttribute(
-        //     "href",
-        //     "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5"
-        // );
+        expect(screen.getByTestId("footer-source-code-link")).toHaveAttribute(
+             "href",
+             "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5"
+         );
         expect(screen.getByTestId("footer-sticker-link")).toHaveAttribute(
             "href",
             "https://www.as.ucsb.edu/sticker-packs"
