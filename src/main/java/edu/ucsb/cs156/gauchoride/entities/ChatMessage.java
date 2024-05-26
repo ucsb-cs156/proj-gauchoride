@@ -1,11 +1,11 @@
 package edu.ucsb.cs156.gauchoride.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import org.hibernate.annotations.CreationTimestamp;
-import javax.persistence.GeneratedValue;
+import jakarta.persistence.GeneratedValue;
 
 import java.time.LocalDateTime;
 import lombok.Data;

@@ -1,6 +1,5 @@
 package edu.ucsb.cs156.gauchoride.controllers;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.extern.slf4j.Slf4j;
