@@ -74,7 +74,7 @@ describe("RiderApplicationEditPageAdmin tests", () => {
             axiosMock.resetHistory();
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
-            axiosMock.onGet("/api/riderApplication", { params: { id: 17 } }).reply(200, {
+            axiosMock.onGet("/api/rider/admin", { params: { id: 17 } }).reply(200, {
                 id: 17,
                 perm_number: "1234567",
                 status: "pending",
@@ -85,7 +85,7 @@ describe("RiderApplicationEditPageAdmin tests", () => {
                 description: "",
                 notes: ""
             });
-            axiosMock.onPut('/api/riderApplication').reply(200, {
+            axiosMock.onPut('/api/rider/admin').reply(200, {
                 id: 17,
                 perm_number: "7654321",
                 status: "pending",
@@ -186,12 +186,10 @@ describe("RiderApplicationEditPageAdmin tests", () => {
             expect(mockNavigate).toBeCalledWith({ "to": "/admin/applications/riders" });
 
             expect(axiosMock.history.put.length).toBe(1); // times called
-            expect(axiosMock.history.put[0].params).toEqual({ id: 17 });
+            expect(axiosMock.history.put[0].params).toEqual({ id: 17, status: "pending", notes: "approving"});
             expect(axiosMock.history.put[0].data).toBe(JSON.stringify({
                 perm_number: "1234567",
                 description: "",
-                notes: "approving",
-                status: "pending",
             })); // posted object
 
         });
