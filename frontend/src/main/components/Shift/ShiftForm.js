@@ -9,6 +9,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
         register,
         formState: { errors },
         handleSubmit,
+        watch,
     } = useForm({ defaultValues: initialContents || {} });
     // Stryker restore all
     const navigate = useNavigate();
@@ -22,6 +23,14 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
             []
             // Stryker restore all 
         );
+    
+    const selectedMainDriver = watch("driverID");
+    const validateBackupDriver = (value) => {
+        if (value === selectedMainDriver) {
+            return "Backup driver cannot be the same as the main driver.";
+        }
+        return true;
+    };
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
@@ -43,7 +52,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
 
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="day">Day of the Week</Form.Label>
-                <Form.Control 
+                <Form.Select 
                     as="select"
                     data-testid={testIdPrefix + "-day"}
                     id="day"
@@ -61,7 +70,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     <option value="Friday">Friday</option>
                     <option value="Saturday">Saturday</option>
                     <option value="Sunday">Sunday</option>
-                </Form.Control>
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {errors.day?.message}
                 </Form.Control.Feedback>
@@ -113,7 +122,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
 
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="driverID">Driver ID</Form.Label>
-                <Form.Control
+                <Form.Select
                     data-testid={testIdPrefix + "-driverID"}
                     id="driverID"
                     name="driverID"
@@ -130,7 +139,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                             {driver.id + " - " + driver.fullName}
                         </option>
                     ))}
-                </Form.Control>
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {errors.driverID?.message}
                 </Form.Control.Feedback>
@@ -138,7 +147,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
 
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="driverBackupID">Driver Backup ID</Form.Label>
-                <Form.Control
+                <Form.Select
                     data-testid={testIdPrefix + "-driverBackupID"}
                     id="driverBackupID"
                     name="driverBackupID"
@@ -146,7 +155,8 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     type="select"
                     isInvalid={Boolean(errors.driverBackupID)}
                     {...register("driverBackupID", {
-                        required: "Driver Backup ID is required."
+                        required: "Driver Backup ID is required.",
+                        validate: validateBackupDriver
                     })}
                 >
                     <option value="">Select a driver</option>
@@ -155,7 +165,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                             {driver.id + " - " + driver.fullName}
                         </option>
                     ))}
-                </Form.Control>
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {errors.driverBackupID?.message}
                 </Form.Control.Feedback>
