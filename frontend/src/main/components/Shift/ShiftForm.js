@@ -124,6 +124,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                         required: "Driver ID is required."
                     })}
                 >
+                    <option value="">Select a driver</option>
                     {drivers && drivers.map(driver => (
                         <option key={driver.id} value={driver.id}>
                             {driver.id + " - " + driver.fullName}
@@ -148,6 +149,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                         required: "Driver Backup ID is required."
                     })}
                 >
+                    <option value="">Select a driver</option>
                     {drivers && drivers.map(driver => (
                         <option key={driver.id} value={driver.id}>
                             {driver.id + " - " + driver.fullName}
