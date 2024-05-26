@@ -12,7 +12,7 @@ const rideFixtures = {
         "pickupRoom" : "111",
         "course": "CMPSC111",
         "notes": "",
-        "shiftId": "2"
+        "shiftId": 2
       }
     ],
     threeRidesTable:
@@ -30,7 +30,7 @@ const rideFixtures = {
             "pickupRoom": "124",
             "course": "CMPSC64",
             "notes": "N/A",
-            "shiftId": "2"
+            "shiftId": 10
         },
 
         {
@@ -46,7 +46,7 @@ const rideFixtures = {
             "pickupRoom": "125",
             "course": "CMPSC138",
             "notes": "Hi",
-            "shiftId": "100"
+            "shiftId": 0
         },
 
         {
@@ -62,7 +62,7 @@ const rideFixtures = {
             "pickupRoom": "125",
             "course": "CMPSC156",
             "notes": "2 people",   
-            "shiftId": "10"
+            "shiftId": 10
         },
         
     ],
@@ -79,7 +79,7 @@ const rideFixtures = {
             "pickupRoom": "125",
             "course": "CMPSC64",
             "notes": "3rides1",
-            "shiftId": "2"
+            "shiftId": 2
         },
 
         {
@@ -93,7 +93,7 @@ const rideFixtures = {
             "pickupRoom": "125",
             "course": "CMPSC138",
             "notes": "3rides2",
-            "shiftId": "7"
+            "shiftId": 7
         },
 
         {
@@ -107,7 +107,7 @@ const rideFixtures = {
             "pickupRoom": "125",
             "course": "CMPSC156",
             "notes": "3rides3",
-            "shiftId": "3"
+            "shiftId": 3
         },
         
     ]
