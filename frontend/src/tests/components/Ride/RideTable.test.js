@@ -137,8 +137,8 @@ describe("RideTable tests", () => {
 
     );
 
-    const expectedHeaders = ['id','Day', 'Course #', 'Pick Up Time', 'Drop Off Time', 'Pick Up Building', 'Pick Up Room', 'Drop Off Building', 'Drop Off Room', 'Notes'];
-    const expectedFields = ['id', 'day', 'course', 'startTime', 'endTime', 'pickupBuilding', 'pickupRoom', 'dropoffBuilding','dropoffRoom', 'notes'];
+    const expectedHeaders = ['id','Day', 'Course #', 'Pick Up Time', 'Drop Off Time', 'Pick Up Building', 'Pick Up Room', 'Drop Off Building', 'Drop Off Room', 'Status', 'Notes'];
+    const expectedFields = ['id', 'day', 'course', 'startTime', 'endTime', 'pickupBuilding', 'pickupRoom', 'dropoffBuilding','dropoffRoom', 'status', 'notes'];
     const testId = "RideTable";
 
     expectedHeaders.forEach((headerText) => {
@@ -293,5 +293,4 @@ describe("RideTable tests", () => {
     await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith('/ride/assigndriver/2'));
 
   });
-
 });
