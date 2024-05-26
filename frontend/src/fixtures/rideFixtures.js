@@ -30,7 +30,8 @@ const rideFixtures = {
             "pickupRoom": "124",
             "course": "CMPSC64",
             "notes": "N/A",
-            "shiftId": "2"
+            "shiftId": "2",
+            "status": "Unassigned"
         },
 
         {
@@ -46,7 +47,8 @@ const rideFixtures = {
             "pickupRoom": "125",
             "course": "CMPSC138",
             "notes": "Hi",
-            "shiftId": "100"
+            "shiftId": "100",
+            "status": "Unassigned"
         },
 
         {
@@ -62,7 +64,8 @@ const rideFixtures = {
             "pickupRoom": "125",
             "course": "CMPSC156",
             "notes": "2 people",   
-            "shiftId": "10"
+            "shiftId": "10",
+            "status": "Unassigned"
         },
         
     ],

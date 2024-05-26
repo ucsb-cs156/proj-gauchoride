@@ -184,6 +184,10 @@ export default function RideTable({
         {
             Header: 'Notes',
             accessor: 'notes',
+        },
+        {
+            Header: 'Status',
+            accessor: 'status'
         }
     ];
 
