@@ -72,14 +72,7 @@ public class SecurityConfig {
 
   @Autowired
   UserRepository userRepository;
-
-  // @Override
-  // protected void configure(HttpSecurity http) throws Exception {
-  //   http.authorizeRequests(authorize -> authorize
-  //       .anyRequest().permitAll())
-  //       .exceptionHandling(handlingConfigurer -> handlingConfigurer
-  //           .authenticationEntryPoint(new Http403ForbiddenEntryPoint()))
-  // https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html#csrf-integration-javascript-spa
+  
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
