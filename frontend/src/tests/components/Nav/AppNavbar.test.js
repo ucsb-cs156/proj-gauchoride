@@ -179,9 +179,9 @@ describe("AppNavbar tests", () => {
         await waitFor(() => expect(screen.queryByText(/^Drivers$/)).not.toBeInTheDocument());
     });
 
-    test("renders shift table links correctly for rider", async () => {
+    test("renders shift table links correctly for driver", async () => {
 
-        const currentUser = currentUserFixtures.riderOnly;
+        const currentUser = currentUserFixtures.driverOnly;
         const doLogin = jest.fn();
 
         const { getByText , getByTestId } = render(
@@ -195,6 +195,24 @@ describe("AppNavbar tests", () => {
         await waitFor(() => expect(getByText("Welcome, Phillip Conrad")).toBeInTheDocument());
         const shiftMenu = getByTestId("appnavbar-shift-dropdown");
         expect(shiftMenu).toBeInTheDocument();        
+    });
+
+    test("not render shift table links for rider", async () => {
+
+        const currentUser = currentUserFixtures.riderOnly;
+        const doLogin = jest.fn();
+
+        const { getByText } = render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AppNavbar currentUser={currentUser} doLogin={doLogin} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => expect(getByText("Welcome, Phillip Conrad")).toBeInTheDocument());
+        const shiftMenu = screen.queryByTestId("appnavbar-shift-dropdown");
+        expect(shiftMenu).not.toBeInTheDocument();        
     });
 
     test("not render shift table links for regular user", async () => {
@@ -566,7 +584,7 @@ describe("AppNavbar tests", () => {
 
     });
 
-    test("Driver page link should appear for a user that is not a driver", async () => {
+    test("Driver page link should appear for a user that is a driver", async () => {
         const currentUser = currentUserFixtures.driverOnly;
         const doLogin = jest.fn();
 
@@ -581,6 +599,23 @@ describe("AppNavbar tests", () => {
         await waitFor(() => expect(getByText("Welcome, Phillip Conrad")).toBeInTheDocument());
         const driverLink = screen.queryByTestId("appnavbar-driver");
         expect(driverLink).toBeInTheDocument();      
+    });
+
+    test("Driver page link should NOT appear for a user that is a rider", async () => {
+        const currentUser = currentUserFixtures.riderOnly;
+        const doLogin = jest.fn();
+
+        const { getByText } = render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AppNavbar currentUser={currentUser} doLogin={doLogin} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => expect(getByText("Welcome, Phillip Conrad")).toBeInTheDocument());
+        const driverLink = screen.queryByTestId("appnavbar-driver");
+        expect(driverLink).not.toBeInTheDocument();      
     });
         
     test("renders RiderApplicationMember links correctly for member", async () => {
