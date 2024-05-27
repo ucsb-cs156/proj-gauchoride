@@ -19,17 +19,16 @@ describe("Footer tests", () => {
     });
 
     test("Links are correct", async () => {
-        axiosMock.onGet("/api/systemInfo").reply(200, {
-            "springH2ConsoleEnabled": true,
-            "showSwaggerUILink": true,
-            "startQtrYYYYQ": "20221",
-            "endQtrYYYYQ": "20222",
-            "sourceRepo": "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5",
-            "commitMessage": "add missing values",
-            "commitId": "c65b37b",
-            "githubUrl": "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5/commit/c65b37b"
-          })
-        const systemInfo = { sourceRepo: "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5"};
+        const systemInfo = {
+            springH2ConsoleEnabled: true,
+            showSwaggerUILink: true,
+            startQtrYYYYQ: "20221",
+            endQtrYYYYQ: "20222",
+            sourceRepo: "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5",
+            commitMessage: "add missing values",
+            commitId: "c65b37b",
+            githubUrl: "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-5/commit/c65b37b"
+          };
         render(<Footer systemInfo={systemInfo} />)
         expect(screen.getByTestId("footer-class-website-link")).toHaveAttribute(
             "href",
