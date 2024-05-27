@@ -1,10 +1,7 @@
 import { render, waitFor, screen } from "@testing-library/react";
 import Footer, { space } from "main/components/Nav/Footer";
-import axios from "axios";
-import AxiosMockAdapter from "axios-mock-adapter";
 
 describe("Footer tests", () => {
-    const axiosMock =new AxiosMockAdapter(axios);
 
     test("renders correctly ", async () => {
         const { getByText } = render(
