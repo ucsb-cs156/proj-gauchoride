@@ -118,11 +118,11 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
                   <Nav.Link id ="appnavbar-driver-link" data-testid="appnavbar-driver" as={Link} to="/drivers/list">Drivers Page</Nav.Link>
                 )
               }
-              {
-                !hasRole(currentUser, "ROLE_RIDER") && (
-                  <Nav.Link id ="appnavbar-applytobearider-link" data-testid="appnavbar-applytoberider" as={Link} to="/apply/rider">Apply to be a Rider</Nav.Link>
+             {
+                (!hasRole(currentUser, "ROLE_RIDER") && (currentUser.loggedIn)) && (
+                    <Nav.Link id="appnavbar-applytobearider-link" data-testid="appnavbar-applytoberider" as={Link} to="/apply/rider">Apply to be a Rider</Nav.Link>
                 )
-              }
+            }
 
             </Nav>
 
