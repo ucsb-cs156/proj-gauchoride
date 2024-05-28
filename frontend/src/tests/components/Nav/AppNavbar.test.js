@@ -735,7 +735,7 @@ describe("AppNavbar tests", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
-        
+
         await waitFor(() => expect(getByText("Log In")).toBeInTheDocument());
         const applyLink = screen.queryByTestId("appnavbar-applytoberider");
         expect(applyLink).not.toBeInTheDocument();
@@ -752,7 +752,7 @@ describe("AppNavbar tests", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
-        
+
         await waitFor(() => expect(getByText("Welcome, Phill Conrad")).toBeInTheDocument());
         const applyLink = screen.queryByTestId("appnavbar-applytoberider");
         expect(applyLink).toBeInTheDocument();
