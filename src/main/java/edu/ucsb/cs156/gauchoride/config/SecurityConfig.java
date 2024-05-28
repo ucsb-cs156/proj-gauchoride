@@ -1,17 +1,5 @@
 package edu.ucsb.cs156.gauchoride.config;
 
-// import java.net.MalformedURLException;
-// import java.net.URI;
-// import java.net.URISyntaxException;
-// import java.net.URL;
-// import java.util.ArrayList;
-// import java.util.HashSet;
-// import java.util.List;
-// import java.util.Map;
-// import java.util.Optional;
-// import java.util.Set;
-// import java.util.regex.Pattern;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,11 +9,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-
-
 import edu.ucsb.cs156.gauchoride.entities.User;
 import edu.ucsb.cs156.gauchoride.repositories.UserRepository;
-
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
