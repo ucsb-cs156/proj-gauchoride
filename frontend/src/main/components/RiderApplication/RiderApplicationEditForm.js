@@ -1,40 +1,62 @@
-import React from 'react'
+import React from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useBackendMutation } from 'main/utils/useBackend';
 
-function RiderApplicationEditForm({ initialContents, submitAction, email}) {
+function RiderApplicationEditForm({ initialContents, submitAction, email }) {
     const navigate = useNavigate();
-    
+
     // Stryker disable all
     const {
         register,
         formState: { errors },
         handleSubmit,
         getValues
-    } = useForm(
-        { defaultValues: initialContents }
-    );
-    // Stryker enable all
-   
+    } = useForm({ defaultValues: initialContents });
+    // Stryker restore all
+
     const testIdPrefix = "RiderApplicationEditForm";
 
     const onSubmit = async (data) => {
         submitAction(data);
     };
-    
-    const handleApprove = () => {
-        const updatedData = { ...initialContents, status: 'accepted' , notes: getValues("notes") };
-        handleAction(updatedData, -1);
+
+    // Stryker disable all; testing not necessary for UI mutations
+    function cellToAxiosParamsToggleRider(id) {
+        return {
+            url: "/api/admin/users/toggleRider",
+            method: "POST",
+            params: {
+                id: id
+            }
+        };
+    }
+
+    const toggleRiderMutation = useBackendMutation(
+        cellToAxiosParamsToggleRider,
+        {},
+        ["/api/admin/users"]
+    );
+
+    const toggleRiderCallback = async (id) => {
+        toggleRiderMutation.mutate(id);
+    };
+
+    const handleApprove = async () => {
+        const updatedData = { ...initialContents, status: 'accepted', notes: getValues("notes") };
+        submitAction(updatedData);
+        await toggleRiderCallback(initialContents.userId);
+        navigate(-1);
     };
 
     const handleDeny = () => {
-        const updatedData = { ...initialContents, status: 'declined' , notes: getValues("notes")};
+        const updatedData = { ...initialContents, status: 'declined', notes: getValues("notes") };
         handleAction(updatedData, -1);
     };
 
     const handleExpired = () => {
-        const updatedData = { ...initialContents, status: 'expired' , notes: getValues("notes") };
+        const updatedData = { ...initialContents, status: 'expired', notes: getValues("notes") };
         handleAction(updatedData, -1);
     };
 
@@ -42,13 +64,11 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
         submitAction(data);
         navigate(navigation);
     };
-    
+
     return (
-
         <Form onSubmit={handleSubmit(onSubmit)}>
-
             {initialContents && (
-                <Form.Group className="mb-3" >
+                <Form.Group className="mb-3">
                     <Form.Label htmlFor="id">Application Id</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-id"}
@@ -60,9 +80,8 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     />
                 </Form.Group>
             )}
-
             {initialContents && (
-                <Form.Group className="mb-3" >
+                <Form.Group className="mb-3">
                     <Form.Label htmlFor="userId">Applicant Id</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-userId"}
@@ -74,9 +93,8 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     />
                 </Form.Group>
             )}
-
             {initialContents && (
-                <Form.Group className="mb-3" >
+                <Form.Group className="mb-3">
                     <Form.Label htmlFor="status">Status</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-status"}
@@ -88,8 +106,7 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     />
                 </Form.Group>
             )}
-
-            <Form.Group className="mb-3" >
+            <Form.Group className="mb-3">
                 <Form.Label htmlFor="email">Email</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-email"}
@@ -100,9 +117,8 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     disabled
                 />
             </Form.Group>
-
             {initialContents && (
-                <Form.Group className="mb-3" >
+                <Form.Group className="mb-3">
                     <Form.Label htmlFor="created_date">Date Applied</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-created_date"}
@@ -114,9 +130,8 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     />
                 </Form.Group>
             )}
-            
             {initialContents && (
-                <Form.Group className="mb-3" >
+                <Form.Group className="mb-3">
                     <Form.Label htmlFor="updated_date">Date Updated</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-updated_date"}
@@ -128,9 +143,8 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     />
                 </Form.Group>
             )}
-
             {initialContents && (
-                <Form.Group className="mb-3" >
+                <Form.Group className="mb-3">
                     <Form.Label htmlFor="cancelled_date">Date Cancelled</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-cancelled_date"}
@@ -142,23 +156,8 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     />
                 </Form.Group>
             )}
-
             {initialContents && initialContents.status === 'declined' && (
-                <Form.Group className="mb-3" >
-                    <Form.Label htmlFor="notes">Notes</Form.Label>
-                    <Form.Control
-                        data-testid={testIdPrefix + "-notes"}
-                        id="notes"
-                        type="text"
-                        {...register("notes")}
-                        defaultValue={initialContents?.notes}
-                        disabled
-                    />
-                </Form.Group>
-            )} 
-
-            {initialContents && initialContents.status === 'cancelled' && (
-                <Form.Group className="mb-3" >
+                <Form.Group className="mb-3">
                     <Form.Label htmlFor="notes">Notes</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-notes"}
@@ -170,9 +169,8 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     />
                 </Form.Group>
             )}
-
-            {initialContents && initialContents.status === 'expired' && (
-                <Form.Group className="mb-3" >
+            {initialContents && initialContents.status === 'cancelled' && (
+                <Form.Group className="mb-3">
                     <Form.Label htmlFor="notes">Notes</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-notes"}
@@ -183,10 +181,22 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                         disabled
                     />
                 </Form.Group>
-            )}  
-
+            )}
+            {initialContents && initialContents.status === 'expired' && (
+                <Form.Group className="mb-3">
+                    <Form.Label htmlFor="notes">Notes</Form.Label>
+                    <Form.Control
+                        data-testid={testIdPrefix + "-notes"}
+                        id="notes"
+                        type="text"
+                        {...register("notes")}
+                        defaultValue={initialContents?.notes}
+                        disabled
+                    />
+                </Form.Group>
+            )}
             {initialContents && initialContents.status !== 'declined' && initialContents.status !== 'cancelled' && initialContents.status !== 'expired' && (
-                <Form.Group className="mb-3" >
+                <Form.Group className="mb-3">
                     <Form.Label htmlFor="notes">Notes</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-notes"}
@@ -196,8 +206,7 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                         defaultValue={initialContents?.notes}
                     />
                 </Form.Group>
-            )} 
-
+            )}
             {initialContents && (
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="perm_number">Perm Number</Form.Label>
@@ -211,10 +220,9 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     />
                 </Form.Group>
             )}
-
-            <Form.Group className="mb-3" >
+            <Form.Group className="mb-3">
                 <Form.Label htmlFor="description">Description</Form.Label>
-                <Form.Label style={{ display: 'block', fontSize: '80%', fontStyle: 'italic', color: '#888' }}>Please describe the mobility limitations that cause you to need to use the Gauchoride service.</Form.Label>                        
+                <Form.Label style={{ display: 'block', fontSize: '80%', fontStyle: 'italic', color: '#888' }}>Please describe the mobility limitations that cause you to need to use the Gauchoride service.</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-description"}
                     id="description"
@@ -226,27 +234,24 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     style={{ width: '100%', minHeight: '10rem', resize: 'vertical', verticalAlign: 'top' }}
                 />
             </Form.Group>
-            
             {initialContents && initialContents.status === 'pending' && (
                 <Button
-                    variant="success" // You can customize the variant based on your design
+                    variant="success"
                     onClick={handleApprove}
                     data-testid={testIdPrefix + "-approve"}
                 >
                     Approve
                 </Button>
             )}
-
             {initialContents && initialContents.status === 'pending' && (
                 <Button
-                    variant="danger" // You can customize the variant based on your design
+                    variant="danger"
                     onClick={handleDeny}
                     data-testid={testIdPrefix + "-deny"}
                 >
                     Deny
                 </Button>
             )}
-
             {initialContents && initialContents.status === 'pending' && (
                 <Button
                     type="submit"
@@ -255,7 +260,6 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     Save
                 </Button>
             )}
-
             {initialContents && initialContents.status === 'accepted' && (
                 <Button
                     variant="danger"
@@ -265,18 +269,16 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
                     Set Status to Expired
                 </Button>
             )}
-            
             <Button
-                variant="Secondary"
+                variant="secondary"
                 onClick={() => navigate(-1)}
                 data-testid={testIdPrefix + "-cancel"}
             >
                 Return
             </Button>
-
         </Form>
-
-    )
+    );
+    // Stryker restore all
 }
 
 export default RiderApplicationEditForm;

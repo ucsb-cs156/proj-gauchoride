@@ -184,6 +184,11 @@ export default function RideTable({
         {
             Header: 'Notes',
             accessor: 'notes',
+        },
+        {
+            Header: 'Assigned Status',
+            accessor: 'shiftId',
+            Cell: ({ value }) => (value === 0 ? 'Unassigned' : 'Assigned')
         }
     ];
 
