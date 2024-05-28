@@ -110,8 +110,6 @@ export default function UsersTable({ users }) {
         ButtonColumn("Toggle Rider", "danger", toggleRiderCallback, "UsersTable")
     ]
 
-    //const columnsToDisplay = showButtons ? buttonColumn : columns;
-
     users.sort((a, b) => {
         if (a.familyName === b.familyName) {
             if (a.givenName === b.givenName) {
