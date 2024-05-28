@@ -71,7 +71,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability1 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Monday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -81,7 +81,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         // act
         MvcResult response = mockMvc.perform(
-                        post("/api/driverAvailability/new?driverId=1&day=03/05/2024&startTime=10:30AM&endTime=2:30PM&notes=End for late lunch")
+                        post("/api/driverAvailability/new?driverId=1&day=Monday&startTime=10:30AM&endTime=2:30PM&notes=End for late lunch")
                                         .with(csrf()))
                         .andExpect(status().isOk()).andReturn();
 
@@ -124,7 +124,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability1 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Monday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -132,7 +132,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability2 = DriverAvailability.builder()
                         .driverId(2)
-                        .day("12/24/2024")
+                        .day("Monday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
                         .notes("Early Shift")
@@ -187,7 +187,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Monday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -260,7 +260,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability_original = DriverAvailability.builder()
                         .driverId(DriverId)
-                        .day("03/05/2024")
+                        .day("Monday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -268,7 +268,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability_edited = DriverAvailability.builder()
                         .driverId(7)
-                        .day("12/24/2024")
+                        .day("Monday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
                         .notes("Early Shift")
@@ -302,7 +302,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
             DriverAvailability availability_edited = DriverAvailability.builder()
                         .driverId(DriverId)
-                        .day("12/24/2024")
+                        .day("Monday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
                         .notes("Early Shift")
@@ -358,7 +358,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability = DriverAvailability.builder()
                 .driverId(1)
-                .day("12/24/2024")
+                .day("Monday")
                 .startTime("5:00AM")
                 .endTime("12:00PM")
                 .notes("Early Shift")
@@ -431,7 +431,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Monday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -511,7 +511,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability1 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("02/29/2024")
+                        .day("Monday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
                         .notes("End for late lunch")
@@ -519,7 +519,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability2 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
+                        .day("Monday")
                         .startTime("12:30PM")
                         .endTime("5:30PM")
                         .notes("Last shift of the day")
@@ -538,6 +538,76 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
         String expectedJson = mapper.writeValueAsString(expectedAvailabilities);
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
+    }
+    @WithMockUser(roles = { "DRIVER" })
+    @Test
+    public void a_driver_can_post_a_new_driverAvailability_with_day() throws Exception {
+        DriverAvailability availability1 = DriverAvailability.builder()
+                        .driverId(1)
+                        .day("Monday")
+                        .startTime("10:30AM")
+                        .endTime("2:30PM")
+                        .notes("End for late lunch")
+                        .build();
+    
+        when(driverAvailabilityRepository.save(any(DriverAvailability.class))).thenReturn(availability1);
+    
+        // act
+        MvcResult response = mockMvc.perform(
+                        post("/api/driverAvailability/new")
+                                        .param("driverId", "1")
+                                        .param("day", "Monday")
+                                        .param("startTime", "10:30AM")
+                                        .param("endTime", "2:30PM")
+                                        .param("notes", "End for late lunch")
+                                        .with(csrf()))
+                        .andExpect(status().isOk()).andReturn();
+    
+        // assert
+        verify(driverAvailabilityRepository, times(1)).save(any(DriverAvailability.class));
+        String expectedJson = mapper.writeValueAsString(availability1);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+    }
+    
+    @WithMockUser(roles = { "DRIVER" })
+    @Test
+    public void driver_can_edit_their_own_availability_with_day() throws Exception {
+        Long driverId = 1L;
+    
+        DriverAvailability availabilityOriginal = DriverAvailability.builder()
+                        .driverId(driverId)
+                        .day("Monday")
+                        .startTime("10:30AM")
+                        .endTime("2:30PM")
+                        .notes("End for late lunch")
+                        .build();
+    
+        DriverAvailability availabilityEdited = DriverAvailability.builder()
+                        .driverId(driverId)
+                        .day("Tuesday") // Changed day here
+                        .startTime("5:00AM")
+                        .endTime("12:00PM")
+                        .notes("Early Shift")
+                        .build();
+    
+        String requestBody = mapper.writeValueAsString(availabilityEdited);
+    
+        when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.of(availabilityOriginal));
+    
+        // act
+        MvcResult response = mockMvc.perform(
+        put("/api/driverAvailability?id=67")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding("utf-8")
+                            .content(requestBody)
+                            .with(csrf()))
+            .andExpect(status().isOk()).andReturn();
+        // assert
+        verify(driverAvailabilityRepository, times(1)).findById(eq(67L));
+        verify(driverAvailabilityRepository, times(1)).save(availabilityEdited);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(requestBody, responseString);
     }
 
 }
