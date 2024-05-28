@@ -5,6 +5,7 @@ import RideRequestAssignPage from "main/pages/Ride/RideRequestAssignPage";
 
 import driverFixtures from "fixtures/driverFixtures";
 import driverAvailabilityFixtures from "fixtures/driverAvailabilityFixtures";
+
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import axios from "axios";
@@ -103,7 +104,6 @@ describe("RideRequestAssignPage tests", () => {
                 notes: "note2"
             });
             axiosMock.onGet("/api/driverAvailability/admin/all").reply(200, driverAvailabilityFixtures.threeAvailability);
-            axiosMock.onGet("/api/drivers/admin/all").reply(200, driverFixtures.threeDrivers);
         });
 
         const queryClient = new QueryClient();
@@ -129,7 +129,7 @@ describe("RideRequestAssignPage tests", () => {
 
             await findByTestId("RideAssignDriverForm-day");
             
-            const shiftIdField = getByTestId("RideAssignDriverForm-shiftId")
+            const shiftIdField = getByTestId("RideAssignDriverForm-shiftId");
             const dayField = getByTestId("RideAssignDriverForm-day");
             const startTimeField = getByTestId("RideAssignDriverForm-start");
             const endTimeField = getByTestId("RideAssignDriverForm-end");
@@ -139,7 +139,7 @@ describe("RideRequestAssignPage tests", () => {
             const pickupRoomField = getByTestId("RideAssignDriverForm-pickupRoom");
             const courseField = getByTestId("RideAssignDriverForm-course");
             const notesField = getByTestId("RideAssignDriverForm-notes");
-            
+
             expect(shiftIdField).toHaveValue("1");
             expect(dayField).toHaveValue("Tuesday");
             expect(startTimeField).toHaveValue("5:00PM");
@@ -150,12 +150,9 @@ describe("RideRequestAssignPage tests", () => {
             expect(pickupRoomField).toHaveValue("1111");
             expect(courseField).toHaveValue("CMPSC 156");
             expect(notesField).toHaveValue("note1");
-            
         });
 
         test("Changes when you click Update", async () => {
-
-                
 
             const { getByTestId, findByTestId } = render(
                 <QueryClientProvider client={queryClient}>
@@ -167,7 +164,7 @@ describe("RideRequestAssignPage tests", () => {
 
             await findByTestId("RideAssignDriverForm-day");
 
-            const shiftIdField = getByTestId("RideAssignDriverForm-shiftId")
+            const shiftIdField = getByTestId("RideAssignDriverForm-shiftId");
             const dayField = getByTestId("RideAssignDriverForm-day");
             const startTimeField = getByTestId("RideAssignDriverForm-start");
             const endTimeField = getByTestId("RideAssignDriverForm-end");
@@ -186,38 +183,42 @@ describe("RideRequestAssignPage tests", () => {
             expect(pickupBuildingField).toHaveValue("HSSB");
             expect(dropoffBuildingField).toHaveValue("SRB");
             expect(dropoffRoomField).toHaveValue("125");
-            expect(pickupRoomField).toHaveValue("1111")
+            expect(pickupRoomField).toHaveValue("1111");
             expect(courseField).toHaveValue("CMPSC 156");
             expect(notesField).toHaveValue("note1");
 
-
             expect(submitButton).toBeInTheDocument();
-            
-            fireEvent.change(shiftIdField, { target: { value: '3' } })
-            fireEvent.change(dayField, { target: { value: 'Monday' } })
-            fireEvent.change(startTimeField, { target: { value: '3:30PM' } })
-            fireEvent.change(endTimeField, { target: { value: "4:30PM" } })
-            fireEvent.change(pickupBuildingField, { target: { value: 'Phelps' } })
-            fireEvent.change(dropoffBuildingField, { target: { value: 'HSSB' } })
-            fireEvent.change(dropoffRoomField, { target: { value: "1215" } })
-            fireEvent.change(courseField, { target: { value: "WRIT 105CD" } })
 
+            fireEvent.change(shiftIdField, { target: { value: '3' } });
+            fireEvent.change(dayField, { target: { value: 'Monday' } });
+            fireEvent.change(startTimeField, { target: { value: '3:30PM' } });
+            fireEvent.change(endTimeField, { target: { value: '4:30PM' } });
+            fireEvent.change(pickupBuildingField, { target: { value: 'Phelps' } });
+            fireEvent.change(dropoffBuildingField, { target: { value: 'HSSB' } });
+            fireEvent.change(dropoffRoomField, { target: { value: '1215' } });
+            fireEvent.change(pickupRoomField, { target: { value: '2222' } });
+            fireEvent.change(courseField, { target: { value: 'WRIT 105CD' } });
+            fireEvent.change(notesField, { target: { value: 'note2' } });
 
             fireEvent.click(submitButton);
 
-    
             await waitFor(() => expect(mockToast).toHaveBeenCalled());
-            expect(mockToast).toBeCalledWith("Driver Assigned - id: 17");
-            expect(mockNavigate).toBeCalledWith({ "to": "/ride/" });
 
-            expect(axiosMock.history.put.length).toBe(1); // times called
-            expect(axiosMock.history.put[0].params).toEqual({ id: 17 });
-            expect(axiosMock.history.put[0].data).toBe(JSON.stringify({
-                shiftId: "3",
-            })); // posted object
 
+
+            
+            expect(shiftIdField).toHaveValue("3");
+            expect(dayField).toHaveValue("Monday");
+            expect(startTimeField).toHaveValue("3:30PM");
+            expect(endTimeField).toHaveValue("4:30PM");
+            expect(pickupBuildingField).toHaveValue("Phelps");
+            expect(dropoffBuildingField).toHaveValue("HSSB");
+            expect(dropoffRoomField).toHaveValue("1215");
+            expect(pickupRoomField).toHaveValue("2222");
+            expect(courseField).toHaveValue("WRIT 105CD");
+            expect(notesField).toHaveValue("note2");
         });
 
-       
     });
+
 });

@@ -69,7 +69,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                 >
                     {driverAvailabilities && driverAvailabilities.map(availability => (
                         <option key={availability.id} value={availability.id}>
-                            {availability.id + " - " + getDriverFullName(availability.driverId) + "- " + availability.day + " " + availability.startTime + "-" + availability.endTime}
+                            {`${availability.id} - ${getDriverFullName(availability.driverId)} - ${availability.day} ${availability.startTime}-${availability.endTime}`}
                         </option>
                     ))}
                 </Form.Select>
