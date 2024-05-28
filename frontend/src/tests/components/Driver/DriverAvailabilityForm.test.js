@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 
-import DriverAvailabilityForm from "main/components/Driver/DriverAvailabilityForm"
+import DriverAvailabilityForm from "main/components/Driver/DriverAvailabilityForm";
 import { driverAvailabilityFixtures } from 'fixtures/driverAvailabilityFixtures';
 
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -16,7 +16,7 @@ jest.mock('react-router-dom', () => ({
 describe("DriverAvailabilityForm tests", () => {
     const queryClient = new QueryClient();
 
-    const expectedHeaders = ["driverId", "day", "startTime", "endTime", "notes"];
+    const expectedHeaders = ["Driver ID", "Day", "Start Time", "End Time", "Notes"];
     const testId = "DriverAvailabilityForm";
 
     test("renders correctly with no initialContents", async () => {
@@ -34,7 +34,6 @@ describe("DriverAvailabilityForm tests", () => {
             const header = screen.getByText(headerText);
             expect(header).toBeInTheDocument();
         });
-
     });
 
     test("renders correctly when passing in initialContents", async () => {
@@ -54,24 +53,23 @@ describe("DriverAvailabilityForm tests", () => {
         });
 
         expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();
-        expect(screen.getByText(`id`)).toBeInTheDocument();
+        expect(screen.getByText(`ID`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-driverId`)).toBeInTheDocument();
-        expect(screen.getByText(`driverId`)).toBeInTheDocument();
+        expect(screen.getByText(`Driver ID`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-day`)).toBeInTheDocument();
-        expect(screen.getByText(`day`)).toBeInTheDocument();
+        expect(screen.getByText(`Day`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-startTime`)).toBeInTheDocument();
-        expect(screen.getByText(`startTime`)).toBeInTheDocument();
+        expect(screen.getByText(`Start Time`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-endTime`)).toBeInTheDocument();
-        expect(screen.getByText(`endTime`)).toBeInTheDocument();
+        expect(screen.getByText(`End Time`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-notes`)).toBeInTheDocument();
-        expect(screen.getByText(`notes`)).toBeInTheDocument();
+        expect(screen.getByText(`Notes`)).toBeInTheDocument();
     });
-
 
     test("that navigate(-1) is called when Cancel is clicked", async () => {
         render(
@@ -102,21 +100,18 @@ describe("DriverAvailabilityForm tests", () => {
         const submitButton = screen.getByText(/Create/);
         fireEvent.click(submitButton);
 
-        await screen.findByText(/driverId is required./);
-        expect(screen.getByText(/day is required./)).toBeInTheDocument();
-        expect(screen.getByText(/startTime is required./)).toBeInTheDocument();
-        expect(screen.getByText(/endTime is required./)).toBeInTheDocument();
-        expect(screen.getByText(/notes is required./)).toBeInTheDocument();
-
+        await screen.findByText(/Driver ID is required./);
+        expect(screen.getByText(/Day is required./)).toBeInTheDocument();
+        expect(screen.getByText(/Start Time is required./)).toBeInTheDocument();
+        expect(screen.getByText(/End Time is required./)).toBeInTheDocument();
+        expect(screen.getByText(/Notes are required./)).toBeInTheDocument();
     });
 
-    test("No Error messsages on good input", async () => {
-
+    test("No Error messages on good input", async () => {
         const mockSubmitAction = jest.fn();
 
-
         render(
-            <Router  >
+            <Router>
                 <DriverAvailabilityForm submitAction={mockSubmitAction} />
             </Router>
         );
@@ -138,13 +133,10 @@ describe("DriverAvailabilityForm tests", () => {
 
         await waitFor(() => expect(mockSubmitAction).toHaveBeenCalled());
 
-        expect(screen.queryByText(/driverId is required./)).not.toBeInTheDocument();
-        expect(screen.queryByText(/day is required./)).not.toBeInTheDocument();
-        expect(screen.queryByText(/startTime is required./)).not.toBeInTheDocument();
-        expect(screen.queryByText(/endTime is required./)).not.toBeInTheDocument();
-        expect(screen.queryByText(/notes is required./)).not.toBeInTheDocument();
-
-
+        expect(screen.queryByText(/Driver ID is required./)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Day is required./)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Start Time is required./)).not.toBeInTheDocument();
+        expect(screen.queryByText(/End Time is required./)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Notes are required./)).not.toBeInTheDocument();
     });
-
 });
