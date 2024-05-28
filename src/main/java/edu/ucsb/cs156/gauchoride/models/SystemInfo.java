@@ -15,6 +15,8 @@ public class SystemInfo {
   private Boolean showSwaggerUILink;
 
   // added for git commit info
+  private String startQtrYYYYQ;
+  private String endQtrYYYYQ;
   private String sourceRepo; // user configured URL of the source repository for footer
   private String commitMessage;
   private String commitId;
