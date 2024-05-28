@@ -2,23 +2,36 @@ import React from 'react'
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom';
+import { useBackend } from 'main/utils/useBackend';
 
 
 
 function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "Assign Driver" }) {
     const navigate = useNavigate();
     
-    // Stryker disable all
-    const {
-        register,
-        formState: { errors },
-        handleSubmit,
-    } = useForm(
+    const { data: drivers, error: _error, status: _status } = useBackend(
+        ["/api/drivers/all"],
+        { method: "GET", url: "/api/drivers/all" },
+        []
+    );
+
+    const { data: driverAvailabilities, error: _availabilityError, status: _availabilityStatus } = useBackend(
+        ["/api/driverAvailability/admin/all"],
+        { method: "GET", url: "/api/driverAvailability/admin/all" },
+        []
+    );
+
+    const { register, formState: { errors }, handleSubmit } = useForm(
         { defaultValues: initialContents }
     );
-    // Stryker enable all
-   
+
     const testIdPrefix = "RideAssignDriverForm";
+
+    // Helper function to get driver full name by driverId
+    const getDriverFullName = (driverId) => {
+        const driver = drivers.find(driver => driver.id === driverId);
+        return driver ? `${driver.givenName} ${driver.familyName}` : '';
+    };
 
 
     return (
@@ -41,20 +54,27 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
 
             
 
-            <Form.Group className="mb-3" >
+            <Form.Group className="mb-3">
                 <Form.Label htmlFor="shiftId">Shift Id</Form.Label>
-                <Form.Control
+                <Form.Select
                     data-testid={testIdPrefix + "-shiftId"}
                     id="shiftId"
-                    type="text"
-                    isInvalid={Boolean(errors.pickupBuilding)}
+                    as="select"
+                    type="select"
+                    isInvalid={Boolean(errors.shiftId)}
                     {...register("shiftId", {
-                        required: "Shift Id Up Building is required."
+                        required: "Shift Id is required."
                     })}
-                    defaultValue={initialContents?.pickupBuilding} 
-                />
+                    defaultValue={initialContents?.shiftId}
+                >
+                    {driverAvailabilities && driverAvailabilities.map(availability => (
+                        <option key={availability.id} value={availability.id}>
+                            {availability.id + " - " + getDriverFullName(availability.driverId) + "- " + availability.day + " " + availability.startTime + "-" + availability.endTime}
+                        </option>
+                    ))}
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
-                    {errors.pickupBuilding?.message}
+                    {errors.shiftId?.message}
                 </Form.Control.Feedback>
             </Form.Group>
 

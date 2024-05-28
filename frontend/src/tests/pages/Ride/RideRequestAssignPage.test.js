@@ -3,6 +3,11 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import RideRequestAssignPage from "main/pages/Ride/RideRequestAssignPage";
 
+import driverFixtures from "fixtures/driverFixtures";
+import driverAvailabilityFixtures from "fixtures/driverAvailabilityFixtures";
+
+
+
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import axios from "axios";
@@ -38,12 +43,18 @@ describe("RideRequestAssignPage tests", () => {
     describe("when the backend doesn't return a todo", () => {
 
         const axiosMock = new AxiosMockAdapter(axios);
+        
+
+        // Mock API responses
+        
 
         beforeEach(() => {
             axiosMock.reset();
             axiosMock.resetHistory();
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+            axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
+            axiosMock.onGet("/api/driverAvailability/admin/all").reply(200, driverAvailabilityFixtures.threeAvailability);
             axiosMock.onGet("/api/ride_request", { params: { id: 17 } }).timeout();
         });
 
@@ -136,7 +147,7 @@ describe("RideRequestAssignPage tests", () => {
             const courseField = getByTestId("RideAssignDriverForm-course");
             const notesField = getByTestId("RideAssignDriverForm-notes");
             
-            expect(shiftIdField).toHaveValue("1");
+            expect(shiftIdField).toHaveValue("1 - gName1 fName1 - Monday 09:00AM-12:00PM");
             expect(dayField).toHaveValue("Tuesday");
             expect(startTimeField).toHaveValue("5:00PM");
             expect(endTimeField).toHaveValue("7:30PM");
@@ -175,7 +186,7 @@ describe("RideRequestAssignPage tests", () => {
             const notesField = getByTestId("RideAssignDriverForm-notes");
             const submitButton = getByTestId("RideAssignDriverForm-submit");
 
-            expect(shiftIdField).toHaveValue("1");
+            expect(shiftIdField).toHaveValue("1 - gName1 fName1 - Monday 09:00AM-12:00PM");
             expect(dayField).toHaveValue("Tuesday");
             expect(startTimeField).toHaveValue("5:00PM");
             expect(endTimeField).toHaveValue("7:30PM");
@@ -189,7 +200,7 @@ describe("RideRequestAssignPage tests", () => {
 
             expect(submitButton).toBeInTheDocument();
             
-            fireEvent.change(shiftIdField, { target: { value: '3' } })
+            fireEvent.change(shiftIdField, { target: { value: '3 - gName3 fName3 - Wednesday 02:00PM-04:00PM' } })
             fireEvent.change(dayField, { target: { value: 'Monday' } })
             fireEvent.change(startTimeField, { target: { value: '3:30PM' } })
             fireEvent.change(endTimeField, { target: { value: "4:30PM" } })
@@ -209,7 +220,7 @@ describe("RideRequestAssignPage tests", () => {
             expect(axiosMock.history.put.length).toBe(1); // times called
             expect(axiosMock.history.put[0].params).toEqual({ id: 17 });
             expect(axiosMock.history.put[0].data).toBe(JSON.stringify({
-                shiftId: "3",
+                shiftId: "3 - gName3 fName3 - Wednesday 02:00PM-04:00PM",
             })); // posted object
 
         });
