@@ -163,6 +163,22 @@ describe("AppNavbar tests", () => {
         await waitFor(() => expect(getByText(/Drivers/)).toBeInTheDocument());
     });
 
+    test("renders driver page link for admin", async () => {
+
+        const currentUser = currentUserFixtures.adminOnly;
+        const doLogin = jest.fn();
+
+        const { getByText } = render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AppNavbar currentUser={currentUser} doLogin={doLogin} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => expect(getByText(/Drivers/)).toBeInTheDocument());
+    });
+
     test("does NOT render driver page link for rider", async () => {
 
         const currentUser = currentUserFixtures.riderOnly;
