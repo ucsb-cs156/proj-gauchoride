@@ -1,4 +1,4 @@
-import { fireEvent, queryAllByTestId, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import RideRequestAssignPage from "main/pages/Ride/RideRequestAssignPage";
