@@ -38,7 +38,6 @@ public class DriverAvailabilityController extends ApiController{
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @PostMapping("/new")
     public DriverAvailability postDriverAvailability(
-            @Parameter(name="driverId") @RequestParam long driverId,
             @Parameter(name="day") @RequestParam String day,
             @Parameter(name="startTime") @RequestParam String startTime,
             @Parameter(name="endTime") @RequestParam String endTime,
@@ -49,7 +48,7 @@ public class DriverAvailabilityController extends ApiController{
         log.info("notes={}", notes);
 
         DriverAvailability driverAvailability = new DriverAvailability();
-        driverAvailability.setDriverId(driverId);
+        driverAvailability.setDriverId(getCurrentUser().getUser().getId());
         driverAvailability.setDay(day);
         driverAvailability.setStartTime(startTime);
         driverAvailability.setEndTime(endTime);
@@ -90,17 +89,12 @@ public class DriverAvailabilityController extends ApiController{
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @PutMapping("")
     public ResponseEntity<Object> updateDriverAvailability(
-                            @Parameter(name="id", description="long, Id of the driver availability to be edited", 
-                            required = true)
-                            @RequestParam Long id,
                             @RequestBody @Valid DriverAvailability incoming)
     {
         DriverAvailability availability;
+        availability = driverAvailabilityRepository.findById(getCurrentUser().getUser().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, getCurrentUser().getUser().getId()));
 
-        availability = driverAvailabilityRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
-
-        availability.setDriverId(incoming.getDriverId());
         availability.setDay(incoming.getDay());
         availability.setStartTime(incoming.getStartTime());
         availability.setEndTime(incoming.getEndTime());
