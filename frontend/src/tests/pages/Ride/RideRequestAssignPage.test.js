@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, queryAllByTestId, render, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import RideRequestAssignPage from "main/pages/Ride/RideRequestAssignPage";
@@ -102,7 +102,7 @@ describe("RideRequestAssignPage tests", () => {
             });
             axiosMock.onGet("/api/shift/all").reply(200, [
                 { id: 1, driverID: 101, shiftStart: '08:00', shiftEnd: '12:00', day: 'Monday' },
-                { id: 2, driverID: 102, shiftStart: '12:00', shiftEnd: '16:00', day: 'Tuesday' },
+                { id: 2, driverID: 106, shiftStart: '12:00', shiftEnd: '16:00', day: 'Tuesday' },
             ]);
             axiosMock.onGet("/api/drivers/all").reply(200, [
                 { id: 101, givenName: 'John', familyName: 'Doe' },
@@ -174,7 +174,7 @@ describe("RideRequestAssignPage tests", () => {
         
             expect(options).toHaveLength(2); // Check if all options are rendered
             expect(options[0]).toHaveTextContent("1 - John Doe - 08:00 - 12:00");
-            expect(options[1]).toHaveTextContent("2 - Jane Doe - 12:00 - 16:00");
+            expect(options[1]).toHaveTextContent("2 - Unknown Driver - 12:00 - 16:00");
         });
 
         test("Changes when you click Update", async () => {
