@@ -32,7 +32,7 @@ public class SystemInfoServiceImpl extends SystemInfoService {
   @Value("${app.endQtrYYYYQ:20222}")
   private String endQtrYYYYQ;
 
-  @Value("${app.sourceRepo:https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-7}")
+  @Value("${app.sourceRepo:https://github.com/ucsb-cs156/proj-gauchoride}")
   private String sourceRepo;
 
   @Value("${git.commit.message.short:unknown}")
