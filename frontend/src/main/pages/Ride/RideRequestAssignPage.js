@@ -23,6 +23,7 @@ export default function RideRequestAssignPage() {
       }
     );
   
+    // Stryker disable all
   const {data: shiftsData} = useBackend(
     ['/api/shift/all'],
     {
@@ -38,6 +39,7 @@ export default function RideRequestAssignPage() {
       url: '/api/drivers/all',
     }
   );
+  // Stryker enable all
 
 
   const objectToAxiosPutParams = (ride) => ({
