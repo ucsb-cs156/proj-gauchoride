@@ -3,6 +3,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 import ShiftForm from "main/components/Shift/ShiftForm";
 import { shiftFixtures } from "fixtures/shiftFixtures";
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
+import driverFixtures from "fixtures/driverFixtures";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -18,6 +21,13 @@ describe("ShiftForm tests", () => {
 
     const expectedHeaders = ["Day of the Week", "Shift Start","Shift End","Driver ID","Driver Backup ID"];
     const testId = "ShiftForm";
+    const axiosMock = new AxiosMockAdapter(axios);
+
+    beforeEach(() => {
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
+    });
 
     test("renders correctly with no initialContents", async () => {
         render(
