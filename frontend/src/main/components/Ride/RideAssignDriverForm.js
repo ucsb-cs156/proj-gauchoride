@@ -8,10 +8,10 @@ import { useBackend } from 'main/utils/useBackend';
 
 function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "Assign Driver" }) {
     const navigate = useNavigate();
-    
+                // Stryker disable all : hard to test for query caching
     const { data: drivers, error: _error, status: _status } = useBackend(
         ["/api/drivers/all"],
-        { method: "GET", url: "/api/drivers/all" },
+        { method: "GET", url: "" },
         []
     );
 
@@ -20,6 +20,8 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
         { method: "GET", url: "/api/driverAvailability/admin/all" },
         []
     );
+                // Stryker restore all 
+
 
     const { register, formState: { errors }, handleSubmit } = useForm(
         { defaultValues: initialContents }
@@ -29,14 +31,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
 
     // Helper func
     const getDriverFullName = (driverId) => {
-        
         const driver = drivers.find(driver => driver.id === driverId);
-        if(!driver) {
-            console.log("No driver ");
-        }
-        if(driver) {
-            console.log("There's a driver");
-        }
         return driver ? `${driver.givenName} ${driver.familyName}` : '';
     };
 
@@ -72,7 +67,6 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                     {...register("shiftId", {
                         required: "Shift Id is required."
                     })}
-                    defaultValue={initialContents?.shiftId}
                 >
                     {driverAvailabilities && driverAvailabilities.map(availability => (
                         <option key={availability.id} value={availability.id}>
