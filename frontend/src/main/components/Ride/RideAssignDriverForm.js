@@ -27,9 +27,16 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
 
     const testIdPrefix = "RideAssignDriverForm";
 
-    // Helper function to get driver full name by driverId
+    // Helper func
     const getDriverFullName = (driverId) => {
+        
         const driver = drivers.find(driver => driver.id === driverId);
+        if(!driver) {
+            console.log("No driver ");
+        }
+        if(driver) {
+            console.log("There's a driver");
+        }
         return driver ? `${driver.givenName} ${driver.familyName}` : '';
     };
 

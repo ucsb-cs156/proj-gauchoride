@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import RideRequestAssignPage from "main/pages/Ride/RideRequestAssignPage";
 
 import driverFixtures from "fixtures/driverFixtures";
-import driverAvailabilityFixtures from "fixtures/driverAvailabilityFixtures";
+import driverAvailabilityFixtures from "fixtures/driverAvailabilityFixturesSecond";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import axios from "axios";
@@ -67,6 +67,8 @@ describe("RideRequestAssignPage tests", () => {
         });
     });
 
+    
+
     describe("tests where backend is working normally", () => {
 
         const axiosMock = new AxiosMockAdapter(axios);
@@ -103,7 +105,7 @@ describe("RideRequestAssignPage tests", () => {
                 notes: "note2"
             });
             axiosMock.onGet("/api/driverAvailability/admin/all").reply(200, driverAvailabilityFixtures.threeAvailability);
-            axiosMock.onGet("/api/drivers/admin/all").reply(200, driverFixtures.threeDrivers);
+            axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
         });
 
         const queryClient = new QueryClient();
@@ -152,6 +154,8 @@ describe("RideRequestAssignPage tests", () => {
             expect(notesField).toHaveValue("note1");
             
         });
+
+        
 
         test("Changes when you click Update", async () => {
 
