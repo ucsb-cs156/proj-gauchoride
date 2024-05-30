@@ -10,7 +10,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
         register,
         formState: { errors },
         handleSubmit,
-        watch
+        watch,
     } = useForm({ defaultValues: initialContents || {} });
     // Stryker restore all
     const navigate = useNavigate();
@@ -32,6 +32,14 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
         const start = parse(shiftStart, format, new Date());
         const end = parse(shiftEnd, format, new Date());
         return isBefore(start, end) || "Shift end time must be later than shift start time.";
+    };
+
+    const selectedMainDriver = watch("driverID");
+    const validateBackupDriver = (value) => {
+        if (value === selectedMainDriver) {
+            return "Backup driver cannot be the same as the main driver.";
+        }
+        return true;
     };
 
     return (
@@ -159,6 +167,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     isInvalid={Boolean(errors.driverBackupID)}
                     {...register("driverBackupID", {
                         required: "Driver Backup ID is required.",
+                        validate: validateBackupDriver
                     })}
                 >
                     <option value="">Select a driver</option>

@@ -4,10 +4,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
@@ -21,6 +22,7 @@ public class Shift {
   private long id;
 
   @Schema(allowableValues = "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday")
+  @Column(name = "\"day\"")
   private String day;
 
   private String shiftStart; // format: HH:MM(A/P)M e.g. "11:00AM" or "01:37PM"
