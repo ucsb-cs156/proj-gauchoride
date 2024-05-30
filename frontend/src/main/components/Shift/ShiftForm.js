@@ -28,7 +28,6 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
     const shiftStart = watch("shiftStart");
 
     const validateShiftEnd = (shiftEnd) => {
-        if (!shiftStart || !shiftEnd) return true;
         const format = "hh:mma";
         const start = parse(shiftStart, format, new Date());
         const end = parse(shiftEnd, format, new Date());
