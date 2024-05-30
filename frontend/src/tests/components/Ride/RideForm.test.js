@@ -74,4 +74,37 @@ describe("RideForm tests", () => {
         await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
     });
 
+    test("validates that end time cannot be earlier than start time", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Router>
+                    <RideForm />
+                </Router>
+            </QueryClientProvider>
+        );
+
+        // Select a day
+        fireEvent.change(screen.getByTestId("RideForm-day"), { target: { value: "Monday" } });
+
+        // Set invalid times
+        fireEvent.change(screen.getByTestId("RideForm-start"), { target: { value: "11:00AM" } });
+        fireEvent.change(screen.getByTestId("RideForm-end"), { target: { value: "10:00AM" } });
+
+        // Try to submit the form
+        fireEvent.click(screen.getByTestId("RideForm-submit"));
+
+        // Check for the validation message
+        await waitFor(() => expect(screen.getByText("End time must be later than start time.")).toBeInTheDocument());
+
+        // Set valid times
+        fireEvent.change(screen.getByTestId("RideForm-start"), { target: { value: "11:00AM" } });
+        fireEvent.change(screen.getByTestId("RideForm-end"), { target: { value: "11:30AM" } });
+
+        // Try to submit the form again
+        fireEvent.click(screen.getByTestId("RideForm-submit"));
+
+        // Check that the validation message is not present
+        await waitFor(() => expect(screen.queryByText("End time must be later than start time.")).not.toBeInTheDocument());
+    });
+
 });
