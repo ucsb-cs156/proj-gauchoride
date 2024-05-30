@@ -114,7 +114,7 @@ public class DriverAvailabilityController extends ApiController{
     // Edits an availability of any user if the current user is an admin
     @Operation(summary = "Edit an existing driver availability if the current user is an admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("")
+    @PutMapping("/admin")
     public ResponseEntity<Object> updateAnyDriverAvailability(
                             @Parameter(name = "id", description = "Long, Id of the driver availability to get", 
                                         required = true)  
