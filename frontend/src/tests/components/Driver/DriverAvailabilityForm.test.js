@@ -180,6 +180,35 @@ describe("DriverAvailabilityForm tests", () => {
 
     });
 
+    test("Error message when end time is not later than start time", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Router>
+                    <DriverAvailabilityForm />
+                </Router>
+            </QueryClientProvider>
+        );
+
+        // Select the same driver for both driverID and driverBackupID
+        fireEvent.change(screen.getByTestId("DriverAvailabilityForm-startTime"), { target: { value: "11:00AM" } });
+        fireEvent.change(screen.getByTestId("DriverAvailabilityForm-endTime"), { target: { value: "10:00AM" } });
+
+        // Try to submit the form
+        fireEvent.click(screen.getByTestId("DriverAvailabilityForm-submit"));
+
+        // Check for the validation message
+        await waitFor(() => expect(screen.getByText("End time must be later than start time.")).toBeInTheDocument());
+
+        // Select different drivers for driverID and driverBackupID
+        fireEvent.change(screen.getByTestId("DriverAvailabilityForm-startTime"), { target: { value: "11:00AM" } });
+        fireEvent.change(screen.getByTestId("DriverAvailabilityForm-endTime"), { target: { value: "2:00PM" } });
+
+        // Try to submit the form again
+        fireEvent.click(screen.getByTestId("DriverAvailabilityForm-submit"));
+
+        // Check that the validation message is not present
+        await waitFor(() => expect(screen.queryByText("End time must be later than start time.")).not.toBeInTheDocument());
+    });
    
     test("Error messages on bad time format", async () => {
         const mockSubmitAction = jest.fn();
