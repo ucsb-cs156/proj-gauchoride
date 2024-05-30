@@ -71,7 +71,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                     type="select"
                     isInvalid={Boolean(errors.shiftId)}
                     {...register("shiftId", {
-                        required: "Shift Id is required."
+                        required: "Shift Id is required." 
                     })}
                     defaultValue={initialContents?.shiftId}
                 >
