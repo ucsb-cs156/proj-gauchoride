@@ -111,6 +111,28 @@ public class DriverAvailabilityController extends ApiController{
 
     }
 
+    // Edits an availability of any user if the current user is an admin
+    @Operation(summary = "Edit an existing driver availability if the current user is an admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("")
+    public ResponseEntity<Object> updateAnyDriverAvailability(
+                            @Parameter(name = "id", description = "Long, Id of the driver availability to get", 
+                                        required = true)  
+                            @RequestParam Long id,
+                            @RequestBody @Valid DriverAvailability incoming)
+    {
+        DriverAvailability availability = driverAvailabilityRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+
+        availability.setDay(incoming.getDay());
+        availability.setStartTime(incoming.getStartTime());
+        availability.setEndTime(incoming.getEndTime());
+        availability.setNotes(incoming.getNotes());
+
+        driverAvailabilityRepository.save(availability);
+        return ResponseEntity.ok(availability);
+    }
+
     //DELETE for driver Availability
     @Operation(summary= "Delete a driver availability")
     @PreAuthorize("hasRole('ROLE_DRIVER')")
