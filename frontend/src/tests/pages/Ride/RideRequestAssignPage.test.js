@@ -185,7 +185,7 @@ describe("RideRequestAssignPage tests", () => {
             const shift = shiftFixtures.threeShifts;
 
 
-            shift.forEach(driverShift => { 
+            shift.forEach(shift => { 
                 if(getDriverFullName(shift.driverID)!=='') {
                     console.log((shift.driverID));
                     const expectedOptionText = `${shift.id} - ${getDriverFullName(shift.driverID)} - ${shift.day} ${shift.shiftStart}-${shift.shiftEnd}`;
@@ -197,6 +197,7 @@ describe("RideRequestAssignPage tests", () => {
                     expect(screen.getByText(expectedOptionText)).toBeInTheDocument();
                 }
             });
+            //recommit
            
         });
 
