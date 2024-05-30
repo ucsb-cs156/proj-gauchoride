@@ -110,7 +110,7 @@ describe('SchedulerEvents tests', () => {
             }
 
             // Check if the event card has correct height
-            const card = screen.getByTestId('SchedulerEvent');
+            const card = screen.getByTestId('SchedulerEvent-1');
             expect(card).toHaveStyle(`height: ${expectedHeight}px`);
 
             if(expectedHeight >= 40) {

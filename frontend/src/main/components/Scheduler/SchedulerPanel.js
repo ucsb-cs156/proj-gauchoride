@@ -11,30 +11,33 @@ const hours = [
     '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'
 ];
 
-// min required data for event object
-//     {
-//         title: "Meeting with Team",
-//         day: "Tuesday",
-//         startTime: "2:00PM",
-//         endTime: "4:00PM"
-//     }
+// Example minimum required data for event object
+// {
+//     title: "Meeting with Team",
+//     day: "Tuesday",
+//     startTime: "2:00PM",
+//     endTime: "4:00PM"
+// }
 
+// Stryker disable next-line all : no need to test default colors
 export default function SchedulerPanel({ Events = [], eventColor="#d1ecf188", borderColor="#bee5eb"}) {
+
+    const testId = "SchedulerPanel";
 
     return (
         <Container fluid style={styles.schedulerPanel}>
             <Row style={styles.headerRow}>
                 <Col style={styles.timeColumn}></Col>
                 {daysOfWeek.map(day => (
-                    <Col key={day} style={styles.dayColumn}>
+                    <Col key={day} style={styles.dayColumn} data-testid={`${testId}-${day}-column`}>
                         <Card style={styles.dayCard}>
                             <Card.Body>
-                                <Card.Title style={styles.dayTitle}>{day}</Card.Title>
+                                <Card.Title style={styles.dayTitle} data-testid={`${testId}-${day}-title`}>{day}</Card.Title>
                             </Card.Body>
                             {Events
                                 .filter(event => event.day === day)
                                 .map(event => (
-                                <SchedulerEvents key={event.id} event={event} eventColor={eventColor} borderColor={borderColor} />
+                                <SchedulerEvents key={event.id} event={event} eventColor={eventColor} borderColor={borderColor}/>
                             ))}
                         </Card>
                     </Col>
@@ -42,18 +45,21 @@ export default function SchedulerPanel({ Events = [], eventColor="#d1ecf188", bo
             </Row>
             <Row>
                 <Col style={styles.timeColumn}>
-                    <div style={{...styles.timeSlot, height: "30px", border: "0"}}></div>
+                    {/* Stryker disable next-line all : no test needed for styling */
+                    <div style={{...styles.timeSlot, height: "30px", border: "0"}}></div>}
                     {hours.map((hour, index) => (
-                        <div key={index} style={{...styles.timeSlot, border: "0"}}>
-                            <span style={styles.hourLabel}>{hour}</span>
+                        /* Stryker disable next-line all : no test needed for styling */
+                        <div key={index} style={{...styles.timeSlot, border: "0"}} data-testid={`${testId}-${hour.replace(' ', '-')}-title`}>
+                            <span style={styles.hourLabel} data-testid={`${testId}-${hour.replace(' ', '-')}-label`}>{hour}</span>
                         </div>
                     ))}
                 </Col>
                 {daysOfWeek.map(day => (
                     <Col key={day} style={styles.dayColumn}>
-                        <div style={{...styles.timeSlot, height: "30px"}}></div>
+                        {/* Stryker disable next-line all : no test needed for styling */
+                        <div style={{...styles.timeSlot, height: "30px"}}></div>}
                         {hours.slice(0, hours.length-1).map(hour => (
-                            <div key={hour} style={styles.timeSlot}>
+                            <div key={hour} style={styles.timeSlot} data-testid={`${testId}-base-slot`}>
                                 <Card style={styles.eventCard}/>
                             </div>
                         ))}
@@ -64,6 +70,7 @@ export default function SchedulerPanel({ Events = [], eventColor="#d1ecf188", bo
     );
 }
 
+// Stryker disable all: no need to test styles
 const styles = {
     schedulerPanel: {
         backgroundColor: "#fff",
@@ -115,3 +122,4 @@ const styles = {
         transform: "translateY(-50%)",
     }
 };
+// Stryker restore all
