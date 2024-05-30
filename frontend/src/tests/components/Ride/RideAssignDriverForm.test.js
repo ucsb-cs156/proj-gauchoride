@@ -90,7 +90,7 @@ describe("RideAssignDriverForm tests", () => {
                 <Router>
                     <RideAssignDriverForm />
                 </Router>
-            </QueryClientProvider>
+            </QueryClientProvider> 
         );
 
 

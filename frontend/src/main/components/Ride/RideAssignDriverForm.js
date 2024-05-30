@@ -96,7 +96,7 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
 
         // Main driver option
         if (getDriverFullName(shift.driverID)) {
-            console.log(`${shift.id}-main`);
+            console.log(`${shift.id}-main`); 
             driverOptions.push(
                 <option key={`${shift.id}-main`} value={shift.id}>
                     {`${shift.driverID} - ${getDriverFullName(shift.driverID)} - ${shift.day} ${shift.shiftStart}-${shift.shiftEnd}`}
