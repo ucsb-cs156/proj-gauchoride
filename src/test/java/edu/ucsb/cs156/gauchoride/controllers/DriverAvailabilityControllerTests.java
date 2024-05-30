@@ -183,8 +183,6 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
     @Test
     public void test_that_logged_in_driver_can_get_by_id_when_the_id_exists_and_user_id_matches() throws Exception {
         
-        Long UserId = currentUserService.getCurrentUser().getUser().getId();
-
         DriverAvailability availability = DriverAvailability.builder()
                         .driverId(1)
                         .day("Tuesday")
@@ -256,10 +254,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
     @Test
     public void driver_can_edit_their_own_availability() throws Exception {
 
-        Long DriverId = currentUserService.getCurrentUser().getUser().getId();
-
         DriverAvailability availability_original = DriverAvailability.builder()
-                        .driverId(DriverId)
                         .day("Tuesday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
@@ -267,7 +262,6 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
                         .build();
 
         DriverAvailability availability_edited = DriverAvailability.builder()
-                        .driverId(7)
                         .day("Monday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
@@ -276,18 +270,18 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         String requestBody = mapper.writeValueAsString(availability_edited);
 
-        when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.of(availability_original));
+        when(driverAvailabilityRepository.findById(eq(1L))).thenReturn(Optional.of(availability_original));
 
         // act
         MvcResult response = mockMvc.perform(
-        put("/api/driverAvailability?id=67")
+        put("/api/driverAvailability?id=1")
                             .contentType(MediaType.APPLICATION_JSON)
                             .characterEncoding("utf-8")
                             .content(requestBody)
                             .with(csrf()))
             .andExpect(status().isOk()).andReturn();
         // assert
-        verify(driverAvailabilityRepository, times(1)).findById(eq(67L));
+        verify(driverAvailabilityRepository, times(1)).findById(eq(1L));
         verify(driverAvailabilityRepository, times(1)).save(availability_edited); // should be saved with correct user
         String responseString = response.getResponse().getContentAsString();
         assertEquals(requestBody, responseString);
@@ -298,10 +292,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
     public void driver_cannot_edit_availability_that_does_not_exist() throws Exception {
             // arrange
 
-            Long DriverId = currentUserService.getCurrentUser().getUser().getId();
-
             DriverAvailability availability_edited = DriverAvailability.builder()
-                        .driverId(DriverId)
                         .day("Tuesday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
@@ -310,11 +301,11 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
                         
             String requestBody = mapper.writeValueAsString(availability_edited);
 
-            when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.empty());
+            when(driverAvailabilityRepository.findById(eq(1L))).thenReturn(Optional.empty());
 
             // act
             MvcResult response = mockMvc.perform(
-                            put("/api/driverAvailability?id=67")
+                            put("/api/driverAvailability?id=1")
                                             .contentType(MediaType.APPLICATION_JSON)
                                             .characterEncoding("utf-8")
                                             .content(requestBody)
@@ -322,9 +313,9 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
                             .andExpect(status().isNotFound()).andReturn();
 
             // assert
-            verify(driverAvailabilityRepository, times(1)).findById(67L);
+            verify(driverAvailabilityRepository, times(1)).findById(1L);
             Map<String, Object> json = responseToJson(response);
-            assertEquals("DriverAvailability with id 67 not found", json.get("message"));
+            assertEquals("DriverAvailability with id 1 not found", json.get("message"));
 
     }
 
