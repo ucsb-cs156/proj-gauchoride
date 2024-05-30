@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,14 +81,14 @@ public class ShiftController extends ApiController {
         @Parameter(name="day") @RequestParam String day,
         @Parameter(name="shiftStart") @RequestParam String shiftStart,
         @Parameter(name="shiftEnd") @RequestParam String shiftEnd,
-        @Parameter(name="driverID") @RequestParam long driverID ,
+        @Parameter(name="driverID") @RequestParam long driverID,
         @Parameter(name="driverBackupID") @RequestParam long driverBackupID
         )
         {
 
         Shift shift = new Shift();
 
-        shift.setDriverID(getCurrentUser().getUser().getId());
+        shift.setDriverID(driverID);
         shift.setDay(day);
         shift.setShiftStart(shiftStart);
         shift.setShiftEnd(shiftEnd);

@@ -9,6 +9,7 @@ import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 import mockConsole from "jest-mock-console";
+import driverFixtures from "fixtures/driverFixtures";
 
 const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
@@ -44,6 +45,7 @@ describe("ShiftEditPage tests", () => {
             axiosMock.resetHistory();
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+            axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
             axiosMock.onGet("/api/shift", { params: { id: 17 } }).timeout();
         });
 
@@ -74,6 +76,7 @@ describe("ShiftEditPage tests", () => {
             axiosMock.resetHistory();
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+            axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
             axiosMock.onGet("/api/shift", { params: { id: 17 } }).reply(200, {
                 id: 17,
                 day: "Tuesday",
@@ -125,8 +128,8 @@ describe("ShiftEditPage tests", () => {
             expect(dayField).toHaveValue("Tuesday");
             expect(startField).toHaveValue("05:00PM");
             expect(endField).toHaveValue("07:30PM");
-            expect(driverField).toHaveValue(1);
-            expect(backupDriverField).toHaveValue(2);
+            expect(driverField).toHaveValue("1");
+            expect(backupDriverField).toHaveValue("2");
         });
 
         test("Changes when you click Update", async () => {
@@ -152,8 +155,8 @@ describe("ShiftEditPage tests", () => {
             expect(dayField).toHaveValue("Tuesday");
             expect(startField).toHaveValue("05:00PM");
             expect(endField).toHaveValue("07:30PM");
-            expect(driverField).toHaveValue(1);
-            expect(backupDriverField).toHaveValue(2);
+            expect(driverField).toHaveValue("1");
+            expect(backupDriverField).toHaveValue("2");
 
             expect(submitButton).toBeInTheDocument();
         

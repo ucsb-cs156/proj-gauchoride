@@ -5,8 +5,8 @@ const usersFixtures = {
             "email": "phtcon@ucsb.edu",
             "googleSub": "115856948234298493496",
             "pictureUrl": "https://lh3.googleusercontent.com/-bQynVrzVIrU/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucmkGuVsELD1ZeV5iDUAUfe6_K-p8w/s96-c/photo.jpg",
-            "fullName": "Phill Conrad",
-            "givenName": "Phill",
+            "fullName": "Phillip Conrad",
+            "givenName": "Phillip",
             "familyName": "Conrad",
             "emailVerified": true,
             "locale": "en",
@@ -35,16 +35,31 @@ const usersFixtures = {
             "email": "craig.zzyzx@example.org",
             "googleSub": "123456789012345678901",
             "pictureUrl": "https://lh3.googleusercontent.com/a-/AOh14GhpDBUt8eCEqiRT45hrFbcimsX_h1ONn0dc3HV8Bp8=s96-c",
-            "fullName": "Craig Zzyxx",
+            "fullName": "Craig Azyxx",
             "givenName": "Craig",
-            "familyName": "Zzyxx",
+            "familyName": "Azyxx",
             "emailVerified": true,
             "locale": "en",
             "hostedDomain": null,
             "admin": false,
             "driver": false,
             "rider": true
-        }
+        },
+        {
+            "id": 4,
+            "email": "braig.zzyzx@example.org",
+            "googleSub": "123456789012345678901",
+            "pictureUrl": "https://lh3.googleusercontent.com/a-/AOh14GhpDBUt8eCEqiRT45hrFbcimsX_h1ONn0dc3HV8Bp8=s96-c",
+            "fullName": "Braig Azyxx",
+            "givenName": "Braig",
+            "familyName": "Azyxx",
+            "emailVerified": true,
+            "locale": "en",
+            "hostedDomain": null,
+            "admin": false,
+            "driver": false,
+            "rider": true
+        },
     ]
 }
 

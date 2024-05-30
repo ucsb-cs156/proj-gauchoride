@@ -74,7 +74,7 @@ describe("RiderApplicationIndexPageAdmin tests", () => {
     test("renders three rides without crashing for regular user", async () => {
         setupMemberOnly();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/rider").reply(200, riderApplicationFixtures.threeRiderApplications);
+        axiosMock.onGet("/api/rider/admin/all").reply(200, riderApplicationFixtures.threeRiderApplications);
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -93,7 +93,7 @@ describe("RiderApplicationIndexPageAdmin tests", () => {
     test("renders three rides without crashing for admin user", async () => {
         setupAdminUser();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/rider").reply(200, riderApplicationFixtures.threeRiderApplications);
+        axiosMock.onGet("/api/rider/admin/all").reply(200, riderApplicationFixtures.threeRiderApplications);
 
         render(
             <QueryClientProvider client={queryClient}>

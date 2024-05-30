@@ -3,6 +3,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 import ShiftForm from "main/components/Shift/ShiftForm";
 import { shiftFixtures } from "fixtures/shiftFixtures";
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
+import driverFixtures from "fixtures/driverFixtures";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -18,6 +21,13 @@ describe("ShiftForm tests", () => {
 
     const expectedHeaders = ["Day of the Week", "Shift Start","Shift End","Driver ID","Driver Backup ID"];
     const testId = "ShiftForm";
+    const axiosMock = new AxiosMockAdapter(axios);
+
+    beforeEach(() => {
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
+    });
 
     test("renders correctly with no initialContents", async () => {
         render(
@@ -110,6 +120,36 @@ describe("ShiftForm tests", () => {
         expect(screen.getByTestId("ShiftForm-driverID")).toBeInTheDocument();
         expect(screen.getByTestId("ShiftForm-driverBackupID")).toBeInTheDocument();
         expect(screen.getByTestId("ShiftForm-submit")).toBeInTheDocument();
+    });
+
+    test("validates that backup driver cannot be the same as the main driver", async () => { 
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Router>
+                    <ShiftForm />
+                </Router>
+            </QueryClientProvider>
+        );
+
+        // Select the same driver for both driverID and driverBackupID
+        fireEvent.change(screen.getByTestId("ShiftForm-driverID"), { target: { value: "1" } });
+        fireEvent.change(screen.getByTestId("ShiftForm-driverBackupID"), { target: { value: "1" } });
+
+        // Try to submit the form
+        fireEvent.click(screen.getByTestId("ShiftForm-submit"));
+
+        // Check for the validation message
+        await waitFor(() => expect(screen.getByText("Backup driver cannot be the same as the main driver.")).toBeInTheDocument());
+
+        // Select different drivers for driverID and driverBackupID
+        fireEvent.change(screen.getByTestId("ShiftForm-driverID"), { target: { value: "1" } });
+        fireEvent.change(screen.getByTestId("ShiftForm-driverBackupID"), { target: { value: "2" } });
+
+        // Try to submit the form again
+        fireEvent.click(screen.getByTestId("ShiftForm-submit"));
+
+        // Check that the validation message is not present
+        await waitFor(() => expect(screen.queryByText("Backup driver cannot be the same as the main driver.")).not.toBeInTheDocument());
     });
 
     test("validates time format", async () => {

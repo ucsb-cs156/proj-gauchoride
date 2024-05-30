@@ -1,6 +1,7 @@
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useBackend } from 'main/utils/useBackend';
 
 function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
     // Stryker disable all
@@ -8,10 +9,28 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
         register,
         formState: { errors },
         handleSubmit,
+        watch,
     } = useForm({ defaultValues: initialContents || {} });
     // Stryker restore all
     const navigate = useNavigate();
     const testIdPrefix = "ShiftForm";
+
+    const { data: drivers, error: _error, status: _status } =
+        useBackend(
+            // Stryker disable all : hard to test for query caching
+            ["/api/drivers/all"],
+            { method: "GET", url: "/api/drivers/all" },
+            []
+            // Stryker restore all 
+        );
+
+    const selectedMainDriver = watch("driverID");
+    const validateBackupDriver = (value) => {
+        if (value === selectedMainDriver) {
+            return "Backup driver cannot be the same as the main driver.";
+        }
+        return true;
+    };
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
@@ -33,7 +52,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
 
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="day">Day of the Week</Form.Label>
-                <Form.Control 
+                <Form.Select 
                     as="select"
                     data-testid={testIdPrefix + "-day"}
                     id="day"
@@ -51,7 +70,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     <option value="Friday">Friday</option>
                     <option value="Saturday">Saturday</option>
                     <option value="Sunday">Sunday</option>
-                </Form.Control>
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {errors.day?.message}
                 </Form.Control.Feedback>
@@ -103,16 +122,24 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
 
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="driverID">Driver ID</Form.Label>
-                <Form.Control
+                <Form.Select
                     data-testid={testIdPrefix + "-driverID"}
                     id="driverID"
                     name="driverID"
-                    type="number"
+                    as="select"
+                    type="select"
                     isInvalid={Boolean(errors.driverID)}
                     {...register("driverID", {
                         required: "Driver ID is required."
                     })}
-                />
+                >
+                    <option value="">Select a driver</option>
+                    {drivers && drivers.map(driver => (
+                        <option key={driver.id} value={driver.id}>
+                            {driver.id + " - " + driver.fullName}
+                        </option>
+                    ))}
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {errors.driverID?.message}
                 </Form.Control.Feedback>
@@ -120,16 +147,25 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
 
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="driverBackupID">Driver Backup ID</Form.Label>
-                <Form.Control
+                <Form.Select
                     data-testid={testIdPrefix + "-driverBackupID"}
                     id="driverBackupID"
                     name="driverBackupID"
-                    type="number"
+                    as="select"
+                    type="select"
                     isInvalid={Boolean(errors.driverBackupID)}
                     {...register("driverBackupID", {
-                        required: "Driver Backup ID is required."
+                        required: "Driver Backup ID is required.",
+                        validate: validateBackupDriver
                     })}
-                />
+                >
+                    <option value="">Select a driver</option>
+                    {drivers && drivers.map(driver => (
+                        <option key={driver.id} value={driver.id}>
+                            {driver.id + " - " + driver.fullName}
+                        </option>
+                    ))}
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {errors.driverBackupID?.message}
                 </Form.Control.Feedback>
