@@ -113,7 +113,7 @@ function RideForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     data-testid={testIdPrefix + "-end"}
                     id="end"
                     type="text"
-                    isInvalid={Boolean(errors.start) }
+                    isInvalid={Boolean(errors.end) }
                     {...register("end", {
                         required: "Drop Off Time is required.",
                         pattern: {
