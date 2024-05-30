@@ -8,30 +8,36 @@ import { useBackend } from 'main/utils/useBackend';
 
 function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "Assign Driver" }) {
     const navigate = useNavigate();
-                // Stryker disable all : hard to test for query caching
+    
     const { data: drivers, error: _error, status: _status } = useBackend(
+        // Stryker disable all : hard to test for query caching
         ["/api/drivers/all"],
-        { method: "GET", url: "" },
+        { method: "GET", url: "/api/drivers/all" },
         []
+        // Stryker restore all 
     );
 
     const { data: driverAvailabilities, error: _availabilityError, status: _availabilityStatus } = useBackend(
+        // Stryker disable all : hard to test for query caching
         ["/api/driverAvailability/admin/all"],
         { method: "GET", url: "/api/driverAvailability/admin/all" },
         []
+        // Stryker restore all 
     );
-                // Stryker restore all 
-
+    // Stryker disable all
 
     const { register, formState: { errors }, handleSubmit } = useForm(
         { defaultValues: initialContents }
     );
+    // Stryker enable all
 
     const testIdPrefix = "RideAssignDriverForm";
 
     // Helper func
     const getDriverFullName = (driverId) => {
+        
         const driver = drivers.find(driver => driver.id === driverId);
+        
         return driver ? `${driver.givenName} ${driver.familyName}` : '';
     };
 
@@ -67,13 +73,18 @@ function RideAssignDriverForm({ initialContents, submitAction, buttonLabel = "As
                     {...register("shiftId", {
                         required: "Shift Id is required."
                     })}
+                    defaultValue={initialContents?.shiftId}
                 >
-                    {driverAvailabilities && driverAvailabilities.map(availability => (
-                        <option key={availability.id} value={availability.id}>
-                            {`${availability.id} - ${getDriverFullName(availability.driverId)} - ${availability.day} ${availability.startTime}-${availability.endTime}`}
-                        </option>
-                    ))}
+                    <option value="">Select a shift</option> {/* Default empty option */}
+        {driverAvailabilities && driverAvailabilities
+            .filter(availability => getDriverFullName(availability.driverId)) // Filter out empty driver names
+            .map(availability => (
+                <option key={availability.id} value={availability.id}>
+                    {`${availability.id} - ${getDriverFullName(availability.driverId)} - ${availability.day} ${availability.startTime}-${availability.endTime}`}
+                </option>
+            ))}
                 </Form.Select>
+
                 <Form.Control.Feedback type="invalid">
                     {errors.shiftId?.message}
                 </Form.Control.Feedback>

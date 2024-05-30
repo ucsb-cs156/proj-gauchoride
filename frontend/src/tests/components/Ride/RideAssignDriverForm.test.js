@@ -67,8 +67,26 @@ describe("RideAssignDriverForm tests", () => {
         expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();
         expect(screen.getByText(`Id`)).toBeInTheDocument();
     });
+    
 
+    test("shows validation error messages", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Router>
+                    <RideAssignDriverForm />
+                </Router>
+            </QueryClientProvider>
+        );
 
+        // Click create without filling in any fields
+        fireEvent.click(screen.getByText(/Assign Driver/));
+
+        // Check for validation error messages
+        await screen.findByText(/Shift Id is required./);
+        //expect(screen.getByText("Day is required.")).toBeInTheDocument();
+        
+    });
+    
     test("that navigate(-1) is called when Cancel is clicked", async () => {
         render(
             <QueryClientProvider client={queryClient}>

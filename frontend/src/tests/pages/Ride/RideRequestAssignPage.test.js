@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import RideRequestAssignPage from "main/pages/Ride/RideRequestAssignPage";
@@ -93,7 +93,7 @@ describe("RideRequestAssignPage tests", () => {
             });
             axiosMock.onPut('/api/ride_request/assigndriver').reply(200, {
                 id: "17",
-                shiftId: 3,
+                shiftId: 2,
                 day: "Monday",
                 startTime: "3:30PM",
                 endTime: "4:30PM", 
@@ -120,6 +120,12 @@ describe("RideRequestAssignPage tests", () => {
         });
 
         test("Is populated with the data provided", async () => {
+            
+            const getDriverFullName = (driverId) => {
+        
+                const driver = (driverFixtures.threeDrivers).find(driver => driver.id === driverId);
+        return driver ? `${driver.givenName} ${driver.familyName}` : '';
+            };
 
             const { getByTestId, findByTestId } = render(
                 <QueryClientProvider client={queryClient}>
@@ -152,6 +158,18 @@ describe("RideRequestAssignPage tests", () => {
             expect(pickupRoomField).toHaveValue("1111");
             expect(courseField).toHaveValue("CMPSC 156");
             expect(notesField).toHaveValue("note1");
+
+            await findByTestId("RideAssignDriverForm-day");
+
+            const driverAvailability = driverAvailabilityFixtures.threeAvailability;
+
+            driverAvailability.forEach(availability => {
+                if(getDriverFullName(availability.driverId)!='') {
+                    console.log((availability.driverId));
+                    const expectedOptionText = `${availability.id} - ${getDriverFullName(availability.driverId)} - ${availability.day} ${availability.startTime}-${availability.endTime}`;
+                    expect(screen.getByText(expectedOptionText)).toBeInTheDocument();
+                }
+            });
             
         });
 
@@ -197,7 +215,7 @@ describe("RideRequestAssignPage tests", () => {
 
             expect(submitButton).toBeInTheDocument();
             
-            fireEvent.change(shiftIdField, { target: { value: '3' } })
+            fireEvent.change(shiftIdField, { target: { value: '2' } })
             fireEvent.change(dayField, { target: { value: 'Monday' } })
             fireEvent.change(startTimeField, { target: { value: '3:30PM' } })
             fireEvent.change(endTimeField, { target: { value: "4:30PM" } })
@@ -217,7 +235,7 @@ describe("RideRequestAssignPage tests", () => {
             expect(axiosMock.history.put.length).toBe(1); // times called
             expect(axiosMock.history.put[0].params).toEqual({ id: 17 });
             expect(axiosMock.history.put[0].data).toBe(JSON.stringify({
-                shiftId: "3",
+                shiftId: "2",
             })); // posted object
 
         });
