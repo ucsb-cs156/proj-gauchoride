@@ -45,7 +45,7 @@ describe("RiderApplicationIndexPageAdmin tests", () => {
     test("renders without crashing for regular user", () => {
         setupMemberOnly();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/rider").reply(200, []);
+        axiosMock.onGet("/api/rider/admin/all").reply(200, []);
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -60,7 +60,7 @@ describe("RiderApplicationIndexPageAdmin tests", () => {
     test("renders without crashing for admin user", () => {
         setupAdminUser();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/rider").reply(200, []);
+        axiosMock.onGet("/api/rider/admin/all").reply(200, []);
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -74,7 +74,7 @@ describe("RiderApplicationIndexPageAdmin tests", () => {
     test("renders three rides without crashing for regular user", async () => {
         setupMemberOnly();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/rider").reply(200, riderApplicationFixtures.threeRiderApplications);
+        axiosMock.onGet("/api/rider/admin/all").reply(200, riderApplicationFixtures.threeRiderApplications);
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -93,7 +93,7 @@ describe("RiderApplicationIndexPageAdmin tests", () => {
     test("renders three rides without crashing for admin user", async () => {
         setupAdminUser();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/rider").reply(200, riderApplicationFixtures.threeRiderApplications);
+        axiosMock.onGet("/api/rider/admin/all").reply(200, riderApplicationFixtures.threeRiderApplications);
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -113,7 +113,7 @@ describe("RiderApplicationIndexPageAdmin tests", () => {
         setupMemberOnly();
 
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/rider").timeout();
+        axiosMock.onGet("/api/rider/admin/all").timeout();
 
         const restoreConsole = mockConsole();
 
