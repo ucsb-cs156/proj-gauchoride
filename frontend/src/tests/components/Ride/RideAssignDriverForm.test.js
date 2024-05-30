@@ -3,7 +3,11 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 import RideAssignDriverForm from "main/components/Ride/RideAssignDriverForm";
 import { rideFixtures } from "fixtures/rideFixtures";
+import driverFixtures from "fixtures/driverFixtures";
+import driverAvailabilityFixtures from "fixtures/driverAvailabilityFixturesSecond";
 
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const mockedNavigate = jest.fn();
@@ -14,6 +18,13 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe("RideAssignDriverForm tests", () => {
+    const axiosMock = new AxiosMockAdapter(axios);
+    beforeEach(() => {
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/driverAvailability/admin/all").reply(200, driverAvailabilityFixtures.threeAvailability);
+        axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
+    });
     const queryClient = new QueryClient();
 
     const expectedHeaders = ["Shift Id", "Day of Week", "Start Time", "End Time", "Pick Up Building", "Drop Off Building", "Room Number for Dropoff", "Course Number"];
@@ -56,8 +67,26 @@ describe("RideAssignDriverForm tests", () => {
         expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();
         expect(screen.getByText(`Id`)).toBeInTheDocument();
     });
+    
 
+    test("shows validation error messages", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Router>
+                    <RideAssignDriverForm />
+                </Router>
+            </QueryClientProvider>
+        );
 
+        // Click create without filling in any fields
+        fireEvent.click(screen.getByText(/Assign Driver/));
+
+        // Check for validation error messages
+        await screen.findByText(/Shift Id is required./);
+        //expect(screen.getByText("Day is required.")).toBeInTheDocument();
+        
+    });
+    
     test("that navigate(-1) is called when Cancel is clicked", async () => {
         render(
             <QueryClientProvider client={queryClient}>
