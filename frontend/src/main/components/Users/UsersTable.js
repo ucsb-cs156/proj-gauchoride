@@ -111,9 +111,12 @@ export default function UsersTable({ users}) {
     ]
 
     //const columnsToDisplay = showButtons ? buttonColumn : columns;
+    const sortedById = (users) => {
+        return [...users].sort((a, b) => a.id - b.id);
+    };
 
     return <OurTable
-        data={users}
+        data={sortedById(users)}
         columns={buttonColumn}
         testid={"UsersTable"}
     />;
