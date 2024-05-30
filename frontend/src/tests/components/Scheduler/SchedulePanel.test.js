@@ -4,39 +4,12 @@ import { within } from '@testing-library/dom'
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import SchedulerPanel from 'main/components/Scheduler/SchedulerPanel';
+import { scheduleEventsFixtures } from 'fixtures/scheduleEventsFixtures';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 describe('SchedulerPanel tests', () => {
     const queryClient = new QueryClient();
-    const events = [
-        {
-            id: 1,
-            title: 'Meeting with Bob',
-            day: 'Monday',
-            startTime: '02:00PM',
-            endTime: '03:00PM',
-            description: 'Discuss the new project milestones.',
-            actions: []
-        },
-        {
-            id: 2,
-            title: 'Lunch with Alice',
-            day: 'Wednesday',
-            startTime: '12:00PM',
-            endTime: '01:00PM',
-            description: 'Casual lunch.',
-            actions: []
-        },
-        {
-            id: 3,
-            title: 'Gym',
-            day: 'Friday',
-            startTime: '06:00AM',
-            endTime: '07:00AM',
-            description: 'Morning workout.',
-            actions: []
-        },
-    ];
+    const events = scheduleEventsFixtures.sixEvents;
 
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
