@@ -81,6 +81,9 @@ public class DriverAvailabilityController extends ApiController{
         DriverAvailability availability;
         availability = driverAvailabilityRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+        if (availability.getDriverId() != getCurrentUser().getUser().getId()) {
+            throw new EntityNotFoundException(DriverAvailability.class, id);
+        }
         return availability;
     }
 
@@ -113,7 +116,9 @@ public class DriverAvailabilityController extends ApiController{
             @Parameter(name="id") @RequestParam Long id) {
         DriverAvailability availability = driverAvailabilityRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
-
+        if (availability.getDriverId() != getCurrentUser().getUser().getId()) {
+            throw new EntityNotFoundException(DriverAvailability.class, id);
+        }
         driverAvailabilityRepository.delete(availability);
         return genericMessage("DriverAvailability with id %s deleted".formatted(id));
     }
@@ -130,6 +135,7 @@ public class DriverAvailabilityController extends ApiController{
         DriverAvailability availability;
         availability = driverAvailabilityRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+                
         return availability;
     }
 
