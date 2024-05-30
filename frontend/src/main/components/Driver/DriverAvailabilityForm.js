@@ -29,9 +29,9 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
-            {initialContents && (
+            {initialContents?.driverId && (
                 <Form.Group className="mb-3" >
-                    <Form.Label htmlFor="id">Driver Id</Form.Label>
+                    <Form.Label htmlFor="driverId">Driver Id</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-driverId"}
                         id="driverId"

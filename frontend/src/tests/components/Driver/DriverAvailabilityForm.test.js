@@ -53,6 +53,9 @@ describe("DriverAvailabilityForm tests", () => {
             expect(header).toBeInTheDocument();
         });
 
+        expect(await screen.findByTestId(`${testId}-driverId`)).toBeInTheDocument();
+        expect(screen.getByText("Driver Id")).toBeInTheDocument();
+
         expect(await screen.findByTestId(`${testId}-day`)).toBeInTheDocument();
         expect(screen.getByText("Day")).toBeInTheDocument();
 
@@ -96,7 +99,6 @@ describe("DriverAvailabilityForm tests", () => {
         const submitButton = screen.getByText(/Create/);
         fireEvent.click(submitButton);
 
-        // await screen.findByText(/Driver Id is required./);
         await screen.findByText(/Day is required./);
         expect(screen.getByText(/Start Time is required./)).toBeInTheDocument();
         expect(screen.getByText(/End Time is required./)).toBeInTheDocument();
