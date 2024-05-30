@@ -164,7 +164,7 @@ describe("RideRequestAssignPage tests", () => {
             const driverAvailability = driverAvailabilityFixtures.threeAvailability;
 
             driverAvailability.forEach(availability => {
-                if(getDriverFullName(availability.driverId)!='') {
+                if(getDriverFullName(availability.driverId)!=='') {
                     console.log((availability.driverId));
                     const expectedOptionText = `${availability.id} - ${getDriverFullName(availability.driverId)} - ${availability.day} ${availability.startTime}-${availability.endTime}`;
                     expect(screen.getByText(expectedOptionText)).toBeInTheDocument();
