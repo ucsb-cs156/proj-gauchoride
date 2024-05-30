@@ -7,7 +7,6 @@ import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import { Button, ButtonGroup, Stack } from "react-bootstrap";
 
 import { useBackend, useBackendMutation } from "main/utils/useBackend";
-import { useCurrentUser , hasRole} from 'main/utils/currentUser'
 
 import { cellToAxiosParamsDelete as shiftCellToAxiosParamsDelete, onDeleteSuccess as shiftOnDeleteSuccess } from "main/utils/shiftUtils"
 import { cellToAxiosParamsDelete as RideCellToAxiosParamsDelete, onDeleteSuccess as RideOnDeleteSuccess } from "main/utils/rideUtils"
@@ -17,7 +16,6 @@ export default function SchedulerPage() {
     const { page } = useParams();
 
     const navigate = useNavigate();
-    const currentUser = useCurrentUser();
 
     const [events, setEvents] = useState([]);
     const [createLink, setCreateLink] = useState("");
