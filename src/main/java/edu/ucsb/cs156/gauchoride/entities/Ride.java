@@ -1,12 +1,13 @@
 package edu.ucsb.cs156.gauchoride.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.persistence.GeneratedValue;
+import jakarta.persistence.GeneratedValue;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Ride {
   private String student;
 
   @Schema(allowableValues = "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday")
+  @Column(name = "\"day\"")
   private String day;
   
   private String startTime; // format: HH:MM(A/P)M e.g. "11:00AM" or "1:37PM"

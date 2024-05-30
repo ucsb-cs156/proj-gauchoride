@@ -36,7 +36,7 @@ public class DriversController extends ApiController{
     ObjectMapper mapper;
 
     @Operation(summary = "Get a list of all drivers")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_DRIVER') || hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_DRIVER')")
     @GetMapping("/all")
     public ResponseEntity<String> drivers()
             throws JsonProcessingException {

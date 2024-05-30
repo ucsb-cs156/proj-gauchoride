@@ -90,14 +90,7 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
                 )
               }
               {
-                !hasRole(currentUser, "ROLE_DRIVER") && isParticipant(currentUser) && (
-                  <NavDropdown title="Shifts" id="appnavbar-shift-dropdown" data-testid="appnavbar-shift-dropdown" >
-                    <NavDropdown.Item data-testid="appnavbar-shift-dropdown-shifts" as={Link} to="/shift/">Shifts</NavDropdown.Item>
-                  </NavDropdown>
-                )
-              }
-              {
-                hasRole(currentUser, "ROLE_DRIVER") && isParticipant(currentUser) && (
+                (hasRole(currentUser, "ROLE_DRIVER") || hasRole(currentUser, "ROLE_ADMIN")) && (
                   <NavDropdown title="Shifts" id="appnavbar-shift-dropdown" data-testid="appnavbar-shift-dropdown" >
                     <NavDropdown.Item data-testid="appnavbar-shift-dropdown-shifts" as={Link} to="/shift/">Shifts</NavDropdown.Item>
                     <NavDropdown.Item data-testid="appnavbar-availability-dropdown-availabilities" as={Link} to="/availability/">Availability</NavDropdown.Item>
@@ -120,16 +113,15 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
                 )
               }
               {
-                isParticipant(currentUser) && (
+                (hasRole(currentUser, "ROLE_DRIVER") || hasRole(currentUser, "ROLE_ADMIN")) && (
                   <Nav.Link id ="appnavbar-driver-link" data-testid="appnavbar-driver" as={Link} to="/drivers/list">Drivers Page</Nav.Link>
                 )
               }
               {
-                !hasRole(currentUser, "ROLE_RIDER") && (
+                !hasRole(currentUser, "ROLE_RIDER") && hasRole(currentUser, "ROLE_MEMBER") && (
                   <Nav.Link id ="appnavbar-applytobearider-link" data-testid="appnavbar-applytoberider" as={Link} to="/apply/rider">Apply to be a Rider</Nav.Link>
                 )
               }
-
             </Nav>
 
             <Nav className="ml-auto">

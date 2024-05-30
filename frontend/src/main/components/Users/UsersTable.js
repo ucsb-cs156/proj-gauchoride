@@ -2,7 +2,7 @@
 import OurTable, { ButtonColumn } from "main/components/OurTable"
 import { useBackendMutation } from "main/utils/useBackend";
 
-export default function UsersTable({ users}) {
+export default function UsersTable({ users }) {
     function cellToAxiosParamsToggleRider(cell) {
         return {
             url: "/api/admin/users/toggleRider",
@@ -110,7 +110,15 @@ export default function UsersTable({ users}) {
         ButtonColumn("Toggle Rider", "danger", toggleRiderCallback, "UsersTable")
     ]
 
-    //const columnsToDisplay = showButtons ? buttonColumn : columns;
+    users.sort((a, b) => {
+        if (a.familyName === b.familyName) {
+            if (a.givenName === b.givenName) {
+                return a.id - b.id;
+            }
+            return a.givenName < b.givenName ? -1 : 1;
+        }
+        return a.familyName < b.familyName ? -1 : 1;
+    });
 
     return <OurTable
         data={users}
