@@ -31,34 +31,17 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
         <Form onSubmit={handleSubmit(submitAction)}>
             {initialContents && (
                 <Form.Group className="mb-3" >
-                    <Form.Label htmlFor="id">id</Form.Label>
+                    <Form.Label htmlFor="id">Driver Id</Form.Label>
                     <Form.Control
-                        data-testid={testIdPrefix + "-id"}
-                        id="id"
+                        data-testid={testIdPrefix + "-driverId"}
+                        id="driverId"
                         type="text"
-                        {...register("id")}
-                        value={initialContents.id}
+                        {...register("driverId")}
+                        value={initialContents.driverId}
                         disabled
                     />
                 </Form.Group>
             )}
-            <Form.Group className="mb-3" >
-                <Form.Label htmlFor="driverId">Driver Id</Form.Label>
-                <Form.Control
-                    data-testid={testIdPrefix + "-driverId"}
-                    id="driverId"
-                    type="text"
-                    isInvalid={Boolean(errors.driverId)}
-                    {...register("driverId", {
-                        required: "Driver Id is required.",
-                    })}
-                    placeholder="e.g. 1"   
-                    defaultValue={initialContents?.driverId}  
-                />
-                <Form.Control.Feedback type="invalid">
-                    {errors.driverId?.message}
-                </Form.Control.Feedback>
-            </Form.Group>
 
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="day">Day</Form.Label>
