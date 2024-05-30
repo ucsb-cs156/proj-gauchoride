@@ -1,15 +1,15 @@
 package edu.ucsb.cs156.gauchoride.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import java.sql.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.persistence.GeneratedValue;
+import jakarta.persistence.GeneratedValue;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,7 @@
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom';
+import { parse, isBefore } from 'date-fns';
 
 function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "Create" }) {
     // Stryker disable all
@@ -8,6 +9,7 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
         register,
         formState: { errors },
         handleSubmit,
+        watch
     } = useForm(
         { defaultValues: initialContents || {}, }
     );
@@ -15,6 +17,16 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
     const navigate = useNavigate();
 
     const testIdPrefix = "DriverAvailabilityForm";
+
+    const startTime = watch("startTime");
+
+    const validateEndTime = (endTime) => {
+        const format = "hh:mma";
+        const start = parse(startTime, format, new Date());
+        const end = parse(endTime, format, new Date());
+        return isBefore(start, end) || "End time must be later than start time.";
+    };
+
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
             {initialContents && (
@@ -107,7 +119,8 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                         pattern: {
                             value: /^(0?[1-9]|1[0-2]):[0-5][0-9](AM|PM)$/,
                             message: "Please enter time in the format HH:MM AM/PM (e.g., 3:30PM)."
-                          }
+                          },
+                          validate: validateEndTime
                     })}
                     placeholder="Enter time in the format HH:MM AM/PM (e.g. 3:30PM)"   
                     defaultValue={initialContents?.endTime}   
