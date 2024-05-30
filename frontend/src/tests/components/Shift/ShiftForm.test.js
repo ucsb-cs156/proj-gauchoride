@@ -122,6 +122,36 @@ describe("ShiftForm tests", () => {
         expect(screen.getByTestId("ShiftForm-submit")).toBeInTheDocument();
     });
 
+    test("validates that shift end time cannot be earlier than shift start time", async () => { 
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Router>
+                    <ShiftForm />
+                </Router>
+            </QueryClientProvider>
+        );
+
+        // Select the same driver for both driverID and driverBackupID
+        fireEvent.change(screen.getByTestId("ShiftForm-shiftStart"), { target: { value: "11:00AM" } });
+        fireEvent.change(screen.getByTestId("ShiftForm-shiftEnd"), { target: { value: "10:00AM" } });
+
+        // Try to submit the form
+        fireEvent.click(screen.getByTestId("ShiftForm-submit"));
+
+        // Check for the validation message
+        await waitFor(() => expect(screen.getByText("Shift end time must be later than shift start time.")).toBeInTheDocument());
+
+        // Select different drivers for driverID and driverBackupID
+        fireEvent.change(screen.getByTestId("ShiftForm-shiftStart"), { target: { value: "11:00AM" } });
+        fireEvent.change(screen.getByTestId("ShiftForm-shiftEnd"), { target: { value: "11:30AM" } });
+
+        // Try to submit the form again
+        fireEvent.click(screen.getByTestId("ShiftForm-submit"));
+
+        // Check that the validation message is not present
+        await waitFor(() => expect(screen.queryByText("Shift end time must be later than shift start time.")).not.toBeInTheDocument());
+    });
+
     test("validates time format", async () => {
         render(
             <QueryClientProvider client={queryClient}>

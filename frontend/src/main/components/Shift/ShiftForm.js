@@ -2,6 +2,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useBackend } from 'main/utils/useBackend';
+import { parse, isBefore } from 'date-fns';
 
 function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
     // Stryker disable all
@@ -9,6 +10,7 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
         register,
         formState: { errors },
         handleSubmit,
+        watch
     } = useForm({ defaultValues: initialContents || {} });
     // Stryker restore all
     const navigate = useNavigate();
@@ -22,6 +24,16 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
             []
             // Stryker restore all 
         );
+    
+    const shiftStart = watch("shiftStart");
+
+    const validateShiftEnd = (shiftEnd) => {
+        if (!shiftStart || !shiftEnd) return true;
+        const format = "hh:mma";
+        const start = parse(shiftStart, format, new Date());
+        const end = parse(shiftEnd, format, new Date());
+        return isBefore(start, end) || "Shift end time must be later than shift start time.";
+    };
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
@@ -103,7 +115,8 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                         pattern: {
                             value: /^(0[0-9]|1[0-2]):[0-5][0-9](AM|PM)$/,
                             message: "Invalid time format."
-                        }
+                        },
+                        validate: validateShiftEnd
                     })}
                 />
                 <Form.Control.Feedback type="invalid">
