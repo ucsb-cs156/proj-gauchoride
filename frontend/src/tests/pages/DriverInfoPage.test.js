@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
@@ -100,5 +100,24 @@ describe("DriverInfoPage tests", () => {
             expect(screen.getByText("gName fName, Email: example@gmail.com")).toBeInTheDocument();
         });
 
+    });
+
+    test("renders and clicks return button", async () => {
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <DriverInfoPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("Return")).toBeInTheDocument();
+        });
+
+        const returnButton = screen.getByText("Return");
+        fireEvent.click(returnButton);
+       
     });
 });

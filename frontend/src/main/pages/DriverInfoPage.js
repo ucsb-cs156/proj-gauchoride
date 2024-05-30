@@ -3,8 +3,10 @@ import { useParams } from "react-router-dom";
 import { useBackend } from "main/utils/useBackend";
 import DriverInfo from "main/components/Driver/DriverInfo";
 import { Button } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 export default function DriverInfoPage() {
+    const navigate = useNavigate();
     let { id } = useParams();
 
     const { data: info, _error, _status } =
@@ -26,7 +28,7 @@ export default function DriverInfoPage() {
             return (
                 <Button
                     variant="primary"
-                    href="/shift/"
+                    onClick={() => navigate(-1)}
                 >
                     Return
                 </Button>
