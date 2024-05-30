@@ -8,14 +8,12 @@ import RiderApplicationTable from "main/components/RiderApplication/RiderApplica
 export default function RiderApplicationIndexPage() {
 
     const currentUser = useCurrentUser();
-    // Stryker disable all
-    // Stryker restore all 
     
     const { data: riderApplications, error: _error, status: _status } =
         useBackend(
             // Stryker disable all : hard to test for query caching
-            ["/api/rider"],
-            { method: "GET", url: "/api/rider" },
+            ["/api/rider/admin/all"],
+            { method: "GET", url: "/api/rider/admin/all" },
             []
             // Stryker restore all 
     ); 
