@@ -44,11 +44,11 @@ export default function ShiftTable({
             accessor: 'day',
         },
         {
-            Header: 'Shift start',
+            Header: 'Shift Start',
             accessor: 'shiftStart',
         },
         {
-            Header: 'Shift end',
+            Header: 'Shift End',
             accessor: 'shiftEnd',
         },
         {
@@ -60,7 +60,7 @@ export default function ShiftTable({
               ),
         },
         {
-            Header: 'Backup driver',
+            Header: 'Backup Driver',
             accessor: 'driverBackupID',
             Cell: ({ value }) => (
                 // Stryker disable next-line all : hard to set up test
