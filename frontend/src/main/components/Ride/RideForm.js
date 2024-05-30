@@ -2,8 +2,7 @@ import React from 'react'
 import { Button, Form, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom';
-
-
+import { parse, isBefore } from 'date-fns';
 
 function RideForm({ initialContents, submitAction, buttonLabel = "Create" }) {
     const navigate = useNavigate();
@@ -13,6 +12,7 @@ function RideForm({ initialContents, submitAction, buttonLabel = "Create" }) {
         register,
         formState: { errors },
         handleSubmit,
+        watch
     } = useForm(
         { defaultValues: initialContents }
     );
@@ -20,6 +20,14 @@ function RideForm({ initialContents, submitAction, buttonLabel = "Create" }) {
    
     const testIdPrefix = "RideForm";
 
+    const startTime = watch("start");
+
+    const validateEndTime = (endTime) => {
+        const format = "hh:mma";
+        const start = parse(startTime, format, new Date());
+        const end = parse(endTime, format, new Date());
+        return isBefore(start, end) || "End time must be later than start time.";
+    };
 
     return (
 
@@ -105,13 +113,14 @@ function RideForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     data-testid={testIdPrefix + "-end"}
                     id="end"
                     type="text"
-                    isInvalid={Boolean(errors.start) }
+                    isInvalid={Boolean(errors.end) }
                     {...register("end", {
                         required: "Drop Off Time is required.",
                         pattern: {
                             value: /^(0?[1-9]|1[0-2]):[0-5][0-9](AM|PM)$/,
                             message: "Please enter time in the format HH:MM AM/PM (e.g., 3:30PM)."
-                          }
+                        },
+                        validate: validateEndTime
                     })}
                     placeholder="Enter time in the format HH:MM AM/PM (e.g. 3:30PM)"   
                     defaultValue={initialContents?.endTime}     
