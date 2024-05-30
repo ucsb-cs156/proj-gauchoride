@@ -83,6 +83,7 @@ describe('SchedulerEvents tests', () => {
         { startTime: '12:00PM', endTime: '01:00PM', expectedFontSize: '16px', expectedHeight: 60 },
         { startTime: '12:00PM', endTime: '02:00PM', expectedFontSize: '16px', expectedHeight: 120 },
         { startTime: '12:00AM', endTime: '02:00PM', expectedFontSize: '16px', expectedHeight: 840 },
+        { startTime: '2:00AM', endTime: '02:00PM', expectedFontSize: '16px', expectedHeight: 720 },
     ];
     
     heights.forEach(({ startTime, endTime, expectedFontSize, expectedHeight }) => {
@@ -114,7 +115,11 @@ describe('SchedulerEvents tests', () => {
 
             if(expectedHeight >= 40) {
                 expect(screen.getByTestId('SchedulerEvent-title')).toBeInTheDocument();
-                expect(screen.getByTestId('SchedulerEvent-time')).toBeInTheDocument();
+                const time = screen.getByTestId('SchedulerEvent-time');
+                expect(time).toBeInTheDocument();
+                expect(time).toHaveStyle('font-size: 12px');
+                expect(time).toHaveStyle('text-align: left');
+
             }
             else if(expectedHeight >= 20) {
                 expect(screen.queryByTestId('SchedulerEvent-title')).toBeInTheDocument();

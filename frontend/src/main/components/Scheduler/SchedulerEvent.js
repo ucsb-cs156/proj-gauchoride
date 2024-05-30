@@ -6,11 +6,6 @@ export default function SchedulerEvents({ event, eventColor, borderColor }) {
 
     const testId = "SchedulerEvent";
 
-    // Stryker disable all : hard to test for pixel offsets
-    const startOffset = 94;
-    // Stryker restore all
-
-    // Stryker disable all : hard to test for style calculations
     const convertTimeToMinutes = (time) => {
         const [timePart, modifier] = [time.slice(0, -2), time.slice(-2)];
         let [hours, minutes] = timePart.split(':').map(Number);
@@ -23,14 +18,13 @@ export default function SchedulerEvents({ event, eventColor, borderColor }) {
 
         return hours * 60 + minutes;
     };
-    // Stryker restore all
 
-    // Stryker disable all : hard to test for query caching
+    // Stryker disable all : hard to test for specfic styles
     useEffect(() => {
         const startMinutes = convertTimeToMinutes(event.startTime);
         const endMinutes = convertTimeToMinutes(event.endTime);
         const height = endMinutes - startMinutes;
-        const topPosition = startMinutes + startOffset;
+        const topPosition = startMinutes + 94;
 
         setStyle({
             event: {
@@ -87,11 +81,7 @@ export default function SchedulerEvents({ event, eventColor, borderColor }) {
             <Card key={event.title} style={style.event} data-testid={testId}>
                 <Card.Body style={style.padding5}>
                     {style.height >= 20 && <Card.Text data-testid={`${testId}-title`} style={style.title}>{event.title}</Card.Text>}
-                    {style.height >= 40 && 
-                        // Stryker disable all : hard to test for style
-                        <Card.Text data-testid={`${testId}-time`} style={{ fontSize: '12px', textAlign: 'left' }}>{event.startTime} - {event.endTime}</Card.Text>
-                        // Stryker restore all
-                    }
+                    {style.height >= 40 && <Card.Text data-testid={`${testId}-time`} style={{ fontSize: '12px', textAlign: 'left' }}>{event.startTime} - {event.endTime}</Card.Text>}
                 </Card.Body>
             </Card>
         </OverlayTrigger>
