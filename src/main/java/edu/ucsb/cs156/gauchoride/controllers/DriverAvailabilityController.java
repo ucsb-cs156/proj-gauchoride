@@ -92,11 +92,14 @@ public class DriverAvailabilityController extends ApiController{
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @PutMapping("")
     public ResponseEntity<Object> updateDriverAvailability(
+                            @Parameter(name="id", description = "Long, Id of the driver availability to get", 
+                                        required = true)  
+                            @RequestParam Long id,
                             @RequestBody @Valid DriverAvailability incoming)
     {
         DriverAvailability availability;
-        availability = driverAvailabilityRepository.findById(getCurrentUser().getUser().getId())
-                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, getCurrentUser().getUser().getId()));
+        availability = driverAvailabilityRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
 
         availability.setDay(incoming.getDay());
         availability.setStartTime(incoming.getStartTime());
