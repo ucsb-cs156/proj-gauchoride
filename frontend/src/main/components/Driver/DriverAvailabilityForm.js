@@ -21,7 +21,6 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
     const startTime = watch("startTime");
 
     const validateEndTime = (endTime) => {
-        if (!startTime || !endTime) return true;
         const format = "hh:mma";
         const start = parse(startTime, format, new Date());
         const end = parse(endTime, format, new Date());
