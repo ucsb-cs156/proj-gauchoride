@@ -145,6 +145,24 @@ describe('SchedulerPage tests', () => {
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/admin/schedule/driver'));
     });
 
+    test('navigates to wrong page', async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/admin/schedule/wrong']}>
+                    <Routes>
+                        <Route path="/admin/schedule/:page" element={<SchedulerPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId(`SchedulerEvent-1`)).not.toBeInTheDocument();
+        });
+
+        expect(screen.queryByTestId('SchedulerPage-create-wrong')).not.toBeInTheDocument();
+    });
+
     test('navigates to shifts and loads shift events', async () => {
         render(
             <QueryClientProvider client={queryClient}>
@@ -165,6 +183,9 @@ describe('SchedulerPage tests', () => {
 
         const createButton = screen.getByText('Create shifts');
         expect(createButton).toBeInTheDocument();
+
+        const createButton2 = screen.getByTestId('SchedulerPage-create-shifts');
+        expect(createButton2).toBeInTheDocument();
 
         fireEvent.click(createButton);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/shift/create'));
@@ -241,9 +262,20 @@ describe('SchedulerPage tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Edit')).toBeInTheDocument();
-            expect(screen.getByText('Info')).toBeInTheDocument();
-            expect(screen.getByText('Delete')).toBeInTheDocument();
         });
+
+        const editButton = screen.getByText('Edit');
+        expect(editButton).toBeInTheDocument();
+
+        const infoButton = screen.getByText('Info');
+        expect(infoButton).toBeInTheDocument();
+
+        const deleteButton = screen.getByText('Delete');
+        expect(deleteButton).toBeInTheDocument();
+
+        expect(editButton).toHaveClass('btn-primary');
+        expect(infoButton).toHaveClass('btn-success');
+        expect(deleteButton).toHaveClass('btn-danger');
 
         fireEvent.click(screen.getByText('Edit'));
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/shift/edit/1'));
@@ -278,8 +310,16 @@ describe('SchedulerPage tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Review')).toBeInTheDocument();
-            expect(screen.getByText('Delete')).toBeInTheDocument();
         });
+
+        const reviewButton = screen.getByText('Review');
+        expect(reviewButton).toBeInTheDocument();
+
+        const deleteButton = screen.getByText('Delete');
+        expect(deleteButton).toBeInTheDocument();
+
+        expect(reviewButton).toHaveClass('btn-success');
+        expect(deleteButton).toHaveClass('btn-danger');
 
         fireEvent.click(screen.getByText('Review'));
         await waitFor(()=> expect(mockNavigate).toHaveBeenCalledWith(`/admin/availability/review/${driverAvailabilityFixtures.threeAvailability[0].id}`));
@@ -311,9 +351,20 @@ describe('SchedulerPage tests', () => {
 
         await waitFor(() => {
             expect(screen.getByText('Edit')).toBeInTheDocument();
-            expect(screen.getByText('Delete')).toBeInTheDocument();
-            expect(screen.getByText('Assign Driver')).toBeInTheDocument();
         });
+
+        const editButton = screen.getByText('Edit');
+        expect(editButton).toBeInTheDocument();
+
+        const deleteButton = screen.getByText('Delete');
+        expect(deleteButton).toBeInTheDocument();
+
+        const assignButton = screen.getByText('Assign Driver');
+        expect(assignButton).toBeInTheDocument();
+
+        expect(editButton).toHaveClass('btn-primary');
+        expect(deleteButton).toHaveClass('btn-danger');
+        expect(assignButton).toHaveClass('btn-success');
 
         fireEvent.click(screen.getByText('Edit'));
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(`/ride/edit/${rideFixtures.threeRidesTable[0].id}`));

@@ -15,6 +15,8 @@ import { cellToAxiosParamsDelete as driverAvailabilityCellToAxiosParamsDelete, o
 export default function SchedulerPage() {
     const { page } = useParams();
 
+    const testId = "SchedulerPage";
+
     const navigate = useNavigate();
 
     const [events, setEvents] = useState();
@@ -115,15 +117,13 @@ export default function SchedulerPage() {
     // Stryker disable next-line all : TODO try to make a good test for this
     const deleteDriverCallback = async (driver) => { DriverDeleteMutation.mutate({row: {values: {id: driver.id}}}); }
 
-
-
-    // Stryker disable all : hard to test for use effect
-    useEffect(() => {
+    function onUpdateEvents(){
         if(page === "shifts") {
             if(shifts === undefined) return;
             setEvents(shifts.map(shift => ({
                 id: shift.id,
                 title: `Shift for Driver ${shift.driverID}`,
+                // Stryker disable next-line all : hard to test for specific description
                 description: `Backup Driver: ${shift.driverBackupID}`,
                 day: shift.day,
                 startTime: shift.shiftStart,
@@ -132,7 +132,7 @@ export default function SchedulerPage() {
                     { text: "Edit", variant: "primary", callback: () => editShiftCallback(shift) },
                     { text: "Delete", variant: "danger", callback: () => {deleteShiftCallback(shift); navigate(0)} },
                     { text: "Info", variant: "success", callback: () => infoShiftCallback(shift) }
-                ].filter(Boolean) // remove undefined values
+                ]
             })));
             setCreateLink("/shift/create");
         }
@@ -141,6 +141,7 @@ export default function SchedulerPage() {
             setEvents(ride_request.map(request => ({
                 id: request.id,
                 title: `Ride Request for ${request.student}`,
+                // Stryker disable next-line all : hard to test for specific description
                 description: `From ${request.pickupBuilding} to ${request.dropoffBuilding}`,
                 day: request.day,
                 startTime: request.startTime,
@@ -149,7 +150,7 @@ export default function SchedulerPage() {
                     { text: "Edit", variant: "primary", callback: () => editRideCallback(request) },
                     { text: "Delete", variant: "danger", callback: () => {deleteRideCallback(request); navigate(0)} },
                     { text: "Assign Driver", variant: "success", callback: () => assignRideCallback(request) }
-                ].filter(Boolean) // remove undefined values
+                ]
             })));
             setCreateLink("/ride/create");
         }
@@ -165,15 +166,16 @@ export default function SchedulerPage() {
                 actions: [  
                     { text: "Delete", variant: "danger", callback: () => {deleteDriverCallback(availability); navigate(0)} },
                     { text: "Review", variant: "success", callback: () => reviewDriverCallback(availability) }
-                ].filter(Boolean) // remove undefined values
+                ]
             })));
             setCreateLink("/availability/create");
         }
-        else {
-            setEvents();
-            setCreateLink();
-        }
-    }, [shifts, ride_request, driverAvailability, page]);
+    }
+
+    // Stryker disable all : hard to test for use effect
+    useEffect(() => {
+        onUpdateEvents();
+    }, [ shifts, ride_request, driverAvailability, page]);
     // Stryker restore all
 
     return (
@@ -184,9 +186,10 @@ export default function SchedulerPage() {
                     <Button onClick={() => {navigate('/admin/schedule/rides')}}>Ride Requests</Button>
                     <Button onClick={() => {navigate('/admin/schedule/driver')}}>Driver Availability</Button>
                 </ButtonGroup>
-                {page && 
+                {page && createLink && 
                     <Button
                         variant="success"
+                        data-testid={`${testId}-create-${page}`}
                         onClick={() => navigate(createLink)}
                     >
                         Create {page}
