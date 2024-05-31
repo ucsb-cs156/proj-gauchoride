@@ -1,16 +1,19 @@
 import React from 'react';
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter as Router, MemoryRouter, Route, Routes } from 'react-router-dom';
-import SchedulerPage from 'main/pages/Scheduler/SchedulerPage';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { useBackend } from 'main/utils/useBackend';
 
-const mockedNavigate = jest.fn();
+import SchedulerPage from 'main/pages/Scheduler/SchedulerPage';
 
-jest.mock('main/utils/useBackend', () => ({
-    useBackend: jest.fn(),
-    useBackendMutation: jest.fn(() => ({ mutate: jest.fn() })),
-}));
+import driverAvailabilityFixtures from 'fixtures/driverAvailabilityFixtures';
+import { rideFixtures } from 'fixtures/rideFixtures';
+import shiftFixtures from 'fixtures/shiftFixtures';
+import { systemInfoFixtures } from 'fixtures/systemInfoFixtures';
+import { apiCurrentUserFixtures } from 'fixtures/currentUserFixtures';
+
+import AxiosMockAdapter from "axios-mock-adapter";
+import axios from 'axios';
 
 const mockDeleteMutation = jest.fn();
 jest.mock('react-query', () => ({
@@ -20,63 +23,41 @@ jest.mock('react-query', () => ({
   }),
 }));
 
+const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
-    useNavigate: () => mockedNavigate
+    useNavigate: () => mockNavigate
 }));
 
-describe('SchedulerPage tests', () => {
+describe('SchedulerPage if backend is not working', () => {
     const queryClient = new QueryClient();
-    
+
+    const axiosMock = new AxiosMockAdapter(axios);
+
     beforeEach(() => {
-        useBackend.mockImplementation((key, request) => {
-            if (request.url.includes('shift')) {
-                return { data: shiftsMockData };
-            }
-            if (request.url.includes('ride_request')) {
-                return { data: rideRequestsMockData };
-            }
-            if (request.url.includes('driverAvailability')) {
-                return { data: driverAvailabilityMockData };
-            }
-        });
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
+        axiosMock.onGet('/api/systemInfo').reply(200, systemInfoFixtures.showingNeither);
+
+        axiosMock.onGet('/api/shift/all').timeout();
+        axiosMock.onGet('/api/ride_request/all').timeout();
+        axiosMock.onGet('/api/driverAvailability/admin/all').timeout();
     });
 
-    const shiftsMockData = [
-        {
-            id: 1,
-            driverID: 1,
-            driverBackupID: 2,
-            day: 'Monday',
-            shiftStart: '02:00PM',
-            shiftEnd: '03:00PM',
-        },
-    ];
+    test('renders default without crashing', async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/admin/schedule']}>
+                    <Routes>
+                        <Route path="/admin/schedule" element={<SchedulerPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+    });
 
-    const rideRequestsMockData = [
-        {
-            id: 1,
-            student: 'Alice',
-            day: 'Wednesday',
-            startTime: '12:00PM',
-            endTime: '01:00PM',
-            pickupBuilding: 'Building A',
-            dropoffBuilding: 'Building B',
-        },
-    ];
-
-    const driverAvailabilityMockData = [
-        {
-            id: 1,
-            driverId: 1,
-            day: 'Friday',
-            startTime: '06:00AM',
-            endTime: '07:00AM',
-            notes: 'Available',
-        },
-    ];
-
-    test('renders without crashing', () => {
+    test('navigates to shifts and loads shift events', async () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/admin/schedule/shifts']}>
@@ -87,9 +68,81 @@ describe('SchedulerPage tests', () => {
             </QueryClientProvider>
         );
 
-        expect(screen.getByText('Shifts')).toBeInTheDocument();
-        expect(screen.getByText('Ride Requests')).toBeInTheDocument();
-        expect(screen.getByText('Driver Availability')).toBeInTheDocument();
+        await waitFor(() => expect(screen.queryByTestId(`ScedulerEvent-${shiftFixtures.threeShifts[0].id}`)).not.toBeInTheDocument());
+    });
+
+    test('navigates to ride requests and loads ride events', async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/admin/schedule/rides']}>
+                    <Routes>
+                        <Route path="/admin/schedule/:page" element={<SchedulerPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => expect(screen.queryByTestId(`ScedulerEvent-${rideFixtures.threeRidesTable[0].id}`)).not.toBeInTheDocument());
+    });
+
+    test('navigates to driver availability and loads availability events', async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/admin/schedule/driver']}>
+                    <Routes>
+                        <Route path="/admin/schedule/:page" element={<SchedulerPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => expect(screen.queryByTestId(`ScedulerEvent-${driverAvailabilityFixtures.threeAvailability[0].id}`)).not.toBeInTheDocument());
+    });
+});
+
+describe('SchedulerPage tests', () => {
+    const queryClient = new QueryClient();
+
+    const axiosMock = new AxiosMockAdapter(axios);
+    
+    beforeEach(() => {
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+
+        axiosMock.onGet("/api/shift/all").reply(200, shiftFixtures.threeShifts);
+        axiosMock.onGet("/api/ride_request/all").reply(200, rideFixtures.threeRidesTable);
+        axiosMock.onGet("/api/driverAvailability/admin/all").reply(200, driverAvailabilityFixtures.threeAvailability);
+    });
+
+    test('renders default without crashing', async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/admin/schedule']}>
+                    <Routes>
+                        <Route path="/admin/schedule" element={<SchedulerPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        const shifts = screen.getByText('Shifts')
+        const rides = screen.getByText('Ride Requests')
+        const driver = screen.getByText('Driver Availability')
+
+        expect(shifts).toBeInTheDocument();
+        expect(rides).toBeInTheDocument();
+        expect(driver).toBeInTheDocument();
+
+        fireEvent.click(shifts);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/admin/schedule/shifts'));
+
+        fireEvent.click(rides);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/admin/schedule/rides'));
+
+        fireEvent.click(driver);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/admin/schedule/driver'));
     });
 
     test('navigates to shifts and loads shift events', async () => {
@@ -104,8 +157,17 @@ describe('SchedulerPage tests', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Shift for Driver 1')).toBeInTheDocument();
+            expect(screen.getByText(`Shift for Driver ${shiftFixtures.threeShifts[0].driverID}`)).toBeInTheDocument();
         });
+
+        expect(screen.getByText(`Shift for Driver ${shiftFixtures.threeShifts[1].driverID}`)).toBeInTheDocument();
+        expect(screen.getByText(`Shift for Driver ${shiftFixtures.threeShifts[2].driverID}`)).toBeInTheDocument();
+
+        const createButton = screen.getByText('Create shifts');
+        expect(createButton).toBeInTheDocument();
+
+        fireEvent.click(createButton);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/shift/create'));
     });
 
     test('navigates to ride requests and loads ride events', async () => {
@@ -120,8 +182,18 @@ describe('SchedulerPage tests', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Ride Request for Alice')).toBeInTheDocument();
+            expect(screen.getAllByText(`Ride Request for ${rideFixtures.threeRidesTable[0].student}`).length).toBe(2);
         });
+
+        expect(screen.getByTestId(`SchedulerEvent-${rideFixtures.threeRidesTable[0].id}`)).toBeInTheDocument();
+        expect(screen.getByTestId(`SchedulerEvent-${rideFixtures.threeRidesTable[1].id}`)).toBeInTheDocument();
+        expect(screen.getByTestId(`SchedulerEvent-${rideFixtures.threeRidesTable[2].id}`)).toBeInTheDocument();
+
+        const createButton = screen.getByText('Create rides');
+        expect(createButton).toBeInTheDocument();
+
+        fireEvent.click(createButton);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/ride/create'));
     });
 
     test('navigates to driver availability and loads availability events', async () => {
@@ -136,11 +208,20 @@ describe('SchedulerPage tests', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Availability for Driver 1')).toBeInTheDocument();
+            expect(screen.getByText(`Availability for Driver ${driverAvailabilityFixtures.threeAvailability[0].driverId}`)).toBeInTheDocument();
         });
+
+        expect(screen.getByText(`Availability for Driver ${driverAvailabilityFixtures.threeAvailability[1].driverId}`)).toBeInTheDocument();
+        expect(screen.getByText(`Availability for Driver ${driverAvailabilityFixtures.threeAvailability[2].driverId}`)).toBeInTheDocument();
+
+        const createButton = screen.getByText('Create driver');
+        expect(createButton).toBeInTheDocument();
+
+        fireEvent.click(createButton);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/availability/create'));
     });
 
-    test('action buttons trigger correct callbacks', async () => {
+    test('shift action buttons trigger correct callbacks', async () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/admin/schedule/shifts']}>
@@ -165,16 +246,85 @@ describe('SchedulerPage tests', () => {
         });
 
         fireEvent.click(screen.getByText('Edit'));
-        await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith('/shift/edit/1'));
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/shift/edit/1'));
 
         fireEvent.click(screen.getByText('Info'));
-        // expect(window.location.pathname).toBe('/shiftInfo/1');
-        await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith('/shiftInfo/1'));
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/shiftInfo/1'));
 
         fireEvent.click(screen.getByText('Delete'));
 
         await waitFor(() => {
             expect(mockDeleteMutation).toHaveBeenCalled();
         });
+    });
+
+    test('driver action buttons trigger correct callbacks', async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/admin/schedule/driver']}>
+                    <Routes>
+                        <Route path="/admin/schedule/:page" element={<SchedulerPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText(`Availability for Driver ${driverAvailabilityFixtures.threeAvailability[0].driverId}`)).toBeInTheDocument();
+        });
+
+        const event = screen.getByText(`Availability for Driver ${driverAvailabilityFixtures.threeAvailability[0].driverId}`);
+        fireEvent.click(event);
+
+        await waitFor(() => {
+            expect(screen.getByText('Review')).toBeInTheDocument();
+            expect(screen.getByText('Delete')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByText('Review'));
+        await waitFor(()=> expect(mockNavigate).toHaveBeenCalledWith(`/admin/availability/review/${driverAvailabilityFixtures.threeAvailability[0].id}`));
+
+        fireEvent.click(screen.getByText('Delete'));
+
+        await waitFor(() => {
+            expect(mockDeleteMutation).toHaveBeenCalled();
+        });
+    });
+
+    test('ride action buttons trigger correct callbacks', async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/admin/schedule/rides']}>
+                    <Routes>
+                        <Route path="/admin/schedule/:page" element={<SchedulerPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId(`SchedulerEvent-${rideFixtures.threeRidesTable[0].id}`)).toBeInTheDocument();
+        });
+
+        const event = screen.getByTestId(`SchedulerEvent-${rideFixtures.threeRidesTable[0].id}`);
+        fireEvent.click(event);
+
+        await waitFor(() => {
+            expect(screen.getByText('Edit')).toBeInTheDocument();
+            expect(screen.getByText('Delete')).toBeInTheDocument();
+            expect(screen.getByText('Assign Driver')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByText('Edit'));
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(`/ride/edit/${rideFixtures.threeRidesTable[0].id}`));
+
+        fireEvent.click(screen.getByText('Delete'));
+
+        await waitFor(() => {
+            expect(mockDeleteMutation).toHaveBeenCalled();
+        });
+
+        fireEvent.click(screen.getByText('Assign Driver'));
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(`/ride/assigndriver/${rideFixtures.threeRidesTable[0].id}`));
     });
 });

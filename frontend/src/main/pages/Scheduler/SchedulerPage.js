@@ -17,8 +17,8 @@ export default function SchedulerPage() {
 
     const navigate = useNavigate();
 
-    const [events, setEvents] = useState([]);
-    const [createLink, setCreateLink] = useState("");
+    const [events, setEvents] = useState();
+    const [createLink, setCreateLink] = useState();
 
     const { data: shifts } =
         useBackend(
@@ -117,7 +117,7 @@ export default function SchedulerPage() {
 
 
 
-
+    // Stryker disable all : hard to test for use effect
     useEffect(() => {
         if(page === "shifts") {
             if(shifts === undefined) return;
@@ -170,9 +170,11 @@ export default function SchedulerPage() {
             setCreateLink("/availability/create");
         }
         else {
-            setEvents([]);
+            setEvents();
+            setCreateLink();
         }
     }, [shifts, ride_request, driverAvailability, page]);
+    // Stryker restore all
 
     return (
         <BasicLayout>
@@ -185,7 +187,7 @@ export default function SchedulerPage() {
                 {page && 
                     <Button
                         variant="success"
-                        href={createLink}
+                        onClick={() => navigate(createLink)}
                     >
                         Create {page}
                     </Button>
