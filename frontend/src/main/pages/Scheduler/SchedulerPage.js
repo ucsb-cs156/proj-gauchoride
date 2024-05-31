@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import SchedulerPanel from "main/components/Scheduler/SchedulerPanel";
@@ -19,9 +19,6 @@ export default function SchedulerPage() {
 
     const navigate = useNavigate();
 
-    const [events, setEvents] = useState();
-    const [createLink, setCreateLink] = useState();
-
     const { data: shifts } =
         useBackend(
             // Stryker disable next-line all : don't test internal caching of React Query
@@ -33,13 +30,13 @@ export default function SchedulerPage() {
             },
         );
 
-    const editShiftCallback = useCallback((shift) => {
-        navigate(`/shift/edit/${shift.id}`);
-    }, [navigate]);
+    const editShiftCallback = (shift) => {
+        navigate(`/shift/edit/${shift.id}`)
+    }
 
-    const infoShiftCallback = useCallback((shift) => {
-        navigate(`/shiftInfo/${shift.id}`);
-    }, [navigate]);
+    const infoShiftCallback = (shift) => {
+        navigate(`/shiftInfo/${shift.id}`)
+    }
 
     // Stryker disable all : hard to test for query caching
     const shiftDeleteMutation = useBackendMutation(
@@ -49,11 +46,8 @@ export default function SchedulerPage() {
     );
     // Stryker restore all 
 
-    // Stryker disable all : delete call back
-    const deleteShiftCallback = useCallback(async (shift) => {
-        shiftDeleteMutation.mutate({ row: { values: { id: shift.id } } });
-    }, [shiftDeleteMutation]);
-    // Stryker restore all
+    // Stryker disable next-line all : TODO try to make a good test for this
+    const deleteShiftCallback = async (shift) => { shiftDeleteMutation.mutate({row: {values: {id: shift.id}}}); }
 
 
 
@@ -69,13 +63,13 @@ export default function SchedulerPage() {
             },
         );
 
-    const editRideCallback = useCallback((ride) => {
-        navigate(`/ride/edit/${ride.id}`);
-    }, [navigate]);
+    const editRideCallback = (ride) => {
+        navigate(`/ride/edit/${ride.id}`)
+    }
 
-    const assignRideCallback = useCallback((ride) => {
-        navigate(`/ride/assigndriver/${ride.id}`);
-    }, [navigate]);
+    const assignRideCallback = (ride) => {
+        navigate(`/ride/assigndriver/${ride.id}`)
+    }
 
     // Stryker disable all : hard to test for query caching
     const RideDeleteMutation = useBackendMutation(
@@ -85,11 +79,8 @@ export default function SchedulerPage() {
     );
     // Stryker restore all 
 
-    // Stryker disable all : delete call back
-    const deleteRideCallback = useCallback(async (ride) => {
-        RideDeleteMutation.mutate({ row: { values: { id: ride.id } } });
-    }, [RideDeleteMutation]);
-    // Stryker restore all
+    // Stryker disable next-line all : TODO try to make a good test for this
+    const deleteRideCallback = async (ride) => { RideDeleteMutation.mutate({row: {values: {id: ride.id}}}); }
 
 
 
@@ -105,9 +96,9 @@ export default function SchedulerPage() {
             },
         );
 
-    const reviewDriverCallback = useCallback((driver) => {
-        navigate(`/admin/availability/review/${driver.id}`);
-    }, [navigate]);
+    const reviewDriverCallback = (driver) => {
+        navigate(`/admin/availability/review/${driver.id}`)
+    }
 
     // Stryker disable all : hard to test for query caching
     const DriverDeleteMutation = useBackendMutation(
@@ -117,72 +108,70 @@ export default function SchedulerPage() {
     );
     // Stryker restore all 
 
-    // Stryker disable all : delete call back
-    const deleteDriverCallback = useCallback(async (driver) => {
-        DriverDeleteMutation.mutate({ row: { values: { id: driver.id } } });
-    }, [DriverDeleteMutation]);
-    // Stryker restore all
+    // Stryker disable next-line all : TODO try to make a good test for this
+    const deleteDriverCallback = async (driver) => { DriverDeleteMutation.mutate({row: {values: {id: driver.id}}}); }
 
-    const onUpdateEvents = useCallback(() => {
-        if(page === "shifts") {
-            if(shifts === undefined) return;
-            setEvents(shifts.map(shift => ({
-                id: shift.id,
-                title: `Shift for Driver ${shift.driverID}`,
-                // Stryker disable next-line all : hard to test for specific description
-                description: `Backup Driver: ${shift.driverBackupID}`,
-                day: shift.day,
-                startTime: shift.shiftStart,
-                endTime: shift.shiftEnd,
-                actions: [
-                    { text: "Edit", variant: "primary", callback: () => editShiftCallback(shift) },
-                    { text: "Delete", variant: "danger", callback: () => {deleteShiftCallback(shift); navigate(0)} },
-                    { text: "Info", variant: "success", callback: () => infoShiftCallback(shift) }
-                ]
-            })));
-            setCreateLink("/shift/create");
+    const eventLink = () => {
+        if(page === "shifts" && shifts !== undefined) {
+            return {
+                event: 
+                    shifts.map(shift => ({
+                        id: shift.id,
+                        title: `Shift for Driver ${shift.driverID}`,
+                        // Stryker disable next-line all : hard to test for specific description
+                        description: `Backup Driver: ${shift.driverBackupID}`,
+                        day: shift.day,
+                        startTime: shift.shiftStart,
+                        endTime: shift.shiftEnd,
+                        actions: [
+                            { text: "Edit", variant: "primary", callback: () => editShiftCallback(shift) },
+                            { text: "Delete", variant: "danger", callback: () => {deleteShiftCallback(shift); navigate(0)} },
+                            { text: "Info", variant: "success", callback: () => infoShiftCallback(shift) }
+                        ]
+                    })),
+                createLink: "/shift/create"
+            }
         }
-        else if(page === "rides") {
-            if(ride_request === undefined) return;
-            setEvents(ride_request.map(request => ({
-                id: request.id,
-                title: `Ride Request for ${request.student}`,
-                // Stryker disable next-line all : hard to test for specific description
-                description: `From ${request.pickupBuilding} to ${request.dropoffBuilding}`,
-                day: request.day,
-                startTime: request.startTime,
-                endTime: request.endTime,
-                actions: [
-                    { text: "Edit", variant: "primary", callback: () => editRideCallback(request) },
-                    { text: "Delete", variant: "danger", callback: () => {deleteRideCallback(request); navigate(0)} },
-                    { text: "Assign Driver", variant: "success", callback: () => assignRideCallback(request) }
-                ]
-            })));
-            setCreateLink("/ride/create");
+        else if(page === "rides" && ride_request !== undefined) {
+            return {
+                event:
+                    ride_request.map(request => ({
+                        id: request.id,
+                        title: `Ride Request for ${request.student}`,
+                        // Stryker disable next-line all : hard to test for specific description
+                        description: `From ${request.pickupBuilding} to ${request.dropoffBuilding}`,
+                        day: request.day,
+                        startTime: request.startTime,
+                        endTime: request.endTime,
+                        actions: [
+                            { text: "Edit", variant: "primary", callback: () => editRideCallback(request) },
+                            { text: "Delete", variant: "danger", callback: () => {deleteRideCallback(request); navigate(0)} },
+                            { text: "Assign Driver", variant: "success", callback: () => assignRideCallback(request) }
+                        ]
+                    })),
+                createLink: "/ride/create"
+            }
         }
-        else if(page === "driver") {
-            if(driverAvailability === undefined) return;
-            setEvents(driverAvailability.map(availability => ({
-                id: availability.id,
-                title: `Availability for Driver ${availability.driverId}`,
-                description: availability.notes,
-                day: availability.day,
-                startTime: availability.startTime,
-                endTime: availability.endTime,
-                actions: [  
-                    { text: "Delete", variant: "danger", callback: () => {deleteDriverCallback(availability); navigate(0)} },
-                    { text: "Review", variant: "success", callback: () => reviewDriverCallback(availability) }
-                ]
-            })));
-            setCreateLink("/availability/create");
+        else if(page === "driver" && driverAvailability !== undefined) {
+            return {
+                event:
+                    driverAvailability.map(availability => ({
+                        id: availability.id,
+                        title: `Availability for Driver ${availability.driverId}`,
+                        description: availability.notes,
+                        day: availability.day,
+                        startTime: availability.startTime,
+                        endTime: availability.endTime,
+                        actions: [  
+                            { text: "Delete", variant: "danger", callback: () => {deleteDriverCallback(availability); navigate(0)} },
+                            { text: "Review", variant: "success", callback: () => reviewDriverCallback(availability) }
+                        ]
+                    })),
+                createLink: "/availability/create"
+            }
         }
-    }, [page, shifts, ride_request, driverAvailability, navigate, editShiftCallback, editRideCallback, assignRideCallback, reviewDriverCallback, deleteShiftCallback, deleteRideCallback, deleteDriverCallback, infoShiftCallback]);
-
-    // Stryker disable all : hard to test for use effect
-    useEffect(() => {
-        onUpdateEvents();
-    }, [ shifts, ride_request, driverAvailability, page, onUpdateEvents ]);
-    // Stryker restore all
+        return {}
+    }
 
     return (
         <BasicLayout>
@@ -192,17 +181,17 @@ export default function SchedulerPage() {
                     <Button onClick={() => {navigate('/admin/schedule/rides')}}>Ride Requests</Button>
                     <Button onClick={() => {navigate('/admin/schedule/driver')}}>Driver Availability</Button>
                 </ButtonGroup>
-                {page && createLink && 
+                {page && eventLink().createLink && 
                     <Button
                         variant="success"
                         data-testid={`${testId}-create-${page}`}
-                        onClick={() => navigate(createLink)}
+                        onClick={() => navigate(eventLink().createLink)}
                     >
                         Create {page}
                     </Button>
                 }
             </Stack>
-            <SchedulerPanel Events={events} />
+            <SchedulerPanel Events={eventLink().event} />
         </BasicLayout>
     );
 }
