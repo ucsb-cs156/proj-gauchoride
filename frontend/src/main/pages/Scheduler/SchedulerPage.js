@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import SchedulerPanel from "main/components/Scheduler/SchedulerPanel";
@@ -33,16 +33,15 @@ export default function SchedulerPage() {
             },
         );
 
-    const editShiftCallback = (shift) => {
-        navigate(`/shift/edit/${shift.id}`)
-    }
+    const editShiftCallback = useCallback((shift) => {
+        navigate(`/shift/edit/${shift.id}`);
+    }, [navigate]);
 
-    const infoShiftCallback = (shift) => {
-        navigate(`/shiftInfo/${shift.id}`)
-    }
+    const infoShiftCallback = useCallback((shift) => {
+        navigate(`/shiftInfo/${shift.id}`);
+    }, [navigate]);
 
     // Stryker disable all : hard to test for query caching
-
     const shiftDeleteMutation = useBackendMutation(
         shiftCellToAxiosParamsDelete,
         { onSuccess: shiftOnDeleteSuccess },
@@ -50,8 +49,11 @@ export default function SchedulerPage() {
     );
     // Stryker restore all 
 
-    // Stryker disable next-line all : TODO try to make a good test for this
-    const deleteShiftCallback = async (shift) => { shiftDeleteMutation.mutate({row: {values: {id: shift.id}}}); }
+    // Stryker disable all : delete call back
+    const deleteShiftCallback = useCallback(async (shift) => {
+        shiftDeleteMutation.mutate({ row: { values: { id: shift.id } } });
+    }, [shiftDeleteMutation]);
+    // Stryker restore all
 
 
 
@@ -67,16 +69,15 @@ export default function SchedulerPage() {
             },
         );
 
-    const editRideCallback = (ride) => {
-        navigate(`/ride/edit/${ride.id}`)
-    }
+    const editRideCallback = useCallback((ride) => {
+        navigate(`/ride/edit/${ride.id}`);
+    }, [navigate]);
 
-    const assignRideCallback = (ride) => {
-        navigate(`/ride/assigndriver/${ride.id}`)
-    }
+    const assignRideCallback = useCallback((ride) => {
+        navigate(`/ride/assigndriver/${ride.id}`);
+    }, [navigate]);
 
     // Stryker disable all : hard to test for query caching
-
     const RideDeleteMutation = useBackendMutation(
         RideCellToAxiosParamsDelete,
         { onSuccess: RideOnDeleteSuccess },
@@ -84,8 +85,11 @@ export default function SchedulerPage() {
     );
     // Stryker restore all 
 
-    // Stryker disable next-line all : TODO try to make a good test for this
-    const deleteRideCallback = async (ride) => { RideDeleteMutation.mutate({row: {values: {id: ride.id}}}); }
+    // Stryker disable all : delete call back
+    const deleteRideCallback = useCallback(async (ride) => {
+        RideDeleteMutation.mutate({ row: { values: { id: ride.id } } });
+    }, [RideDeleteMutation]);
+    // Stryker restore all
 
 
 
@@ -101,12 +105,11 @@ export default function SchedulerPage() {
             },
         );
 
-    const reviewDriverCallback = (driver) => {
-        navigate(`/admin/availability/review/${driver.id}`)
-    }
+    const reviewDriverCallback = useCallback((driver) => {
+        navigate(`/admin/availability/review/${driver.id}`);
+    }, [navigate]);
 
     // Stryker disable all : hard to test for query caching
-
     const DriverDeleteMutation = useBackendMutation(
         driverAvailabilityCellToAxiosParamsDelete,
         { onSuccess: driverAvailabilityOnDeleteSuccess },
@@ -114,10 +117,13 @@ export default function SchedulerPage() {
     );
     // Stryker restore all 
 
-    // Stryker disable next-line all : TODO try to make a good test for this
-    const deleteDriverCallback = async (driver) => { DriverDeleteMutation.mutate({row: {values: {id: driver.id}}}); }
+    // Stryker disable all : delete call back
+    const deleteDriverCallback = useCallback(async (driver) => {
+        DriverDeleteMutation.mutate({ row: { values: { id: driver.id } } });
+    }, [DriverDeleteMutation]);
+    // Stryker restore all
 
-    function onUpdateEvents(){
+    const onUpdateEvents = useCallback(() => {
         if(page === "shifts") {
             if(shifts === undefined) return;
             setEvents(shifts.map(shift => ({
@@ -170,12 +176,12 @@ export default function SchedulerPage() {
             })));
             setCreateLink("/availability/create");
         }
-    }
+    }, [page, shifts, ride_request, driverAvailability, navigate, editShiftCallback, editRideCallback, assignRideCallback, reviewDriverCallback, deleteShiftCallback, deleteRideCallback, deleteDriverCallback, infoShiftCallback]);
 
     // Stryker disable all : hard to test for use effect
     useEffect(() => {
         onUpdateEvents();
-    }, [ shifts, ride_request, driverAvailability, page]);
+    }, [ shifts, ride_request, driverAvailability, page, onUpdateEvents ]);
     // Stryker restore all
 
     return (
