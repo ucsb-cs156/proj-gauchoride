@@ -45,14 +45,14 @@ describe("UserTable tests", () => {
         });
 
         expect(getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-        expect(getByTestId(`${testId}-cell-row-0-col-admin`)).toHaveTextContent("true");
+        expect(getByTestId(`${testId}-cell-row-0-col-admin`)).toHaveTextContent("false");
         expect(getByTestId(`${testId}-cell-row-0-col-driver`)).toHaveTextContent("false");
-        expect(getByTestId(`${testId}-cell-row-0-col-rider`)).toHaveTextContent("false");
+        expect(getByTestId(`${testId}-cell-row-0-col-rider`)).toHaveTextContent("true");
         expect(getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("2");
-        expect(getByTestId(`${testId}-cell-row-1-col-admin`)).toHaveTextContent("false");
-        expect(getByTestId(`${testId}-cell-row-1-col-driver`)).toHaveTextContent("true");
+        expect(getByTestId(`${testId}-cell-row-1-col-admin`)).toHaveTextContent("true");
+        expect(getByTestId(`${testId}-cell-row-1-col-driver`)).toHaveTextContent("false");
         expect(getByTestId(`${testId}-cell-row-1-col-rider`)).toHaveTextContent("false");
-        expect(getByTestId(`${testId}-cell-row-2-col-rider`)).toHaveTextContent("true");
+        expect(getByTestId(`${testId}-cell-row-2-col-rider`)).toHaveTextContent("false");
       });
 });
 
