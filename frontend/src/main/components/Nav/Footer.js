@@ -1,8 +1,19 @@
 import { Container } from "react-bootstrap";
+import { useBackend } from "main/utils/useBackend";
 
 export const space = " ";
 
 export default function Footer() {
+  
+  const { data: systemInfo, error: _error, status: _status } =
+        useBackend(
+            // Stryker disable next-line all : don't test internal caching of React Query
+            ["/api/systemInfo"],
+            // Stryker disable next-line StringLiteral,ObjectLiteral : since "GET" is default, "" is an equivalent mutation
+            { method: "GET", url: "/api/systemInfo" },
+            []
+        );
+  
   return (
     <footer className="bg-light pt-3 pt-md-4 pb-4 pb-md-5">
       <Container>
@@ -26,7 +37,7 @@ export default function Footer() {
           {space}
           <a
             data-testid="footer-source-code-link"
-            href={"https://github.com/ucsb-cs156-s23/proj-gauchoride-s23-5pm-2"}
+            href={systemInfo["sourceRepo"]}
             target="_blank"
             rel="noopener noreferrer"
           >
