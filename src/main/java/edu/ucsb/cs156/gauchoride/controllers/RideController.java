@@ -211,6 +211,7 @@ public class RideController extends ApiController {
             .orElseThrow(() -> new EntityNotFoundException(Ride.class, id));
 
         ride.setShiftId(incoming.getShiftId());
+        ride.setStatus("Assigned");
 
         rideRepository.save(ride);
 

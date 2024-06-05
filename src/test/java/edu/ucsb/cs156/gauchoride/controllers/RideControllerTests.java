@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -1256,7 +1257,9 @@ public class RideControllerTests extends ControllerTestCase {
                                 .content(requestBody)
                                 .with(csrf()))
                         .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.status").value("Assigned"))
                         .andExpect(jsonPath("$.shiftId").value((int) shiftId));
+                        
             
                 // assert
                 verify(rideRepository).findById(eq(rideId));
