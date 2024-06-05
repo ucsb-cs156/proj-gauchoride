@@ -16,7 +16,7 @@ jest.mock('react-router-dom', () => ({
 describe("DriverAvailabilityForm tests", () => {
     const queryClient = new QueryClient();
 
-    const expectedHeaders = ["Driver Id", "Day", "Start Time", "End Time", "Notes"];
+    const expectedHeaders = ["Day", "Start Time", "End Time", "Notes"];
     const testId = "DriverAvailabilityForm";
 
     test("renders correctly with no initialContents", async () => {
@@ -52,9 +52,6 @@ describe("DriverAvailabilityForm tests", () => {
             const header = screen.getByText(headerText);
             expect(header).toBeInTheDocument();
         });
-
-        expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();
-        expect(screen.getByText(`id`)).toBeInTheDocument();
 
         expect(await screen.findByTestId(`${testId}-driverId`)).toBeInTheDocument();
         expect(screen.getByText("Driver Id")).toBeInTheDocument();
@@ -102,8 +99,7 @@ describe("DriverAvailabilityForm tests", () => {
         const submitButton = screen.getByText(/Create/);
         fireEvent.click(submitButton);
 
-        await screen.findByText(/Driver Id is required./);
-        expect(screen.getByText(/Day is required./)).toBeInTheDocument();
+        await screen.findByText(/Day is required./);
         expect(screen.getByText(/Start Time is required./)).toBeInTheDocument();
         expect(screen.getByText(/End Time is required./)).toBeInTheDocument();
         expect(screen.getByText(/Notes is required./)).toBeInTheDocument();
@@ -120,16 +116,14 @@ describe("DriverAvailabilityForm tests", () => {
                 <DriverAvailabilityForm submitAction={mockSubmitAction} />
             </Router>
         );
-        await screen.findByTestId("DriverAvailabilityForm-driverId");
+        await screen.findByTestId("DriverAvailabilityForm-day");
 
-        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
         const dayField = screen.getByTestId("DriverAvailabilityForm-day");
         const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
         const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
         const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
         const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
 
-        fireEvent.change(driverIdField, { target: { value: 'test' } });
         fireEvent.change(dayField, { target: { value: 'Tuesday' } });
         fireEvent.change(startTimeField, { target: { value: '3:15PM' } });
         fireEvent.change(endTimeField, { target: { value: '4:15PM' } });
@@ -138,7 +132,6 @@ describe("DriverAvailabilityForm tests", () => {
 
         await waitFor(() => expect(mockSubmitAction).toHaveBeenCalled());
 
-        expect(screen.queryByText(/Driver Id is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Day is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/Start Time is required./)).not.toBeInTheDocument();
         expect(screen.queryByText(/End Time is required./)).not.toBeInTheDocument();
@@ -156,24 +149,21 @@ describe("DriverAvailabilityForm tests", () => {
                 <DriverAvailabilityForm submitAction={mockSubmitAction} />
             </Router>
         );
-        await screen.findByTestId("DriverAvailabilityForm-driverId");
+        await screen.findByTestId("DriverAvailabilityForm-day");
 
-        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
         const dayField = screen.getByTestId("DriverAvailabilityForm-day");
         const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
         const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
         const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
         const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
 
-        fireEvent.change(driverIdField, { target: { value: '' } });
         fireEvent.change(dayField, { target: { value: '' } });
         fireEvent.change(startTimeField, { target: { value: '' } });
         fireEvent.change(endTimeField, { target: { value: '' } });
         fireEvent.change(notesField, { target: { value: '' } });
         fireEvent.click(submitButton);
 
-        expect(await screen.findByText(/Driver Id is required./)).toBeInTheDocument();
-        expect(screen.queryByText(/Day is required./)).toBeInTheDocument();
+        await screen.findByText(/Day is required./);        
         expect(screen.queryByText(/Start Time is required./)).toBeInTheDocument();
         expect(screen.queryByText(/End Time is required./)).toBeInTheDocument();
         expect(screen.queryByText(/Notes is required./)).toBeInTheDocument();
@@ -219,17 +209,14 @@ describe("DriverAvailabilityForm tests", () => {
             </Router>
         );
 
-        await screen.findByTestId("DriverAvailabilityForm-driverId");
+        await screen.findByTestId("DriverAvailabilityForm-day");
 
-        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
         const dayField = screen.getByTestId("DriverAvailabilityForm-day");
         const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
         const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
         const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
         const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
 
-        // Invalid start time format
-        fireEvent.change(driverIdField, { target: { value: 'test' } });
         fireEvent.change(dayField, { target: { value: 'Tuesday' } });
         fireEvent.change(startTimeField, { target: { value: '315PM' } });
         fireEvent.change(endTimeField, { target: { value: '4:15PM' } });
@@ -251,17 +238,14 @@ describe("DriverAvailabilityForm tests", () => {
             </Router>
         );
 
-        await screen.findByTestId("DriverAvailabilityForm-driverId");
+        await screen.findByTestId("DriverAvailabilityForm-day");
 
-        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
         const dayField = screen.getByTestId("DriverAvailabilityForm-day");
         const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
         const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
         const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
         const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
 
-        // Invalid start time format
-        fireEvent.change(driverIdField, { target: { value: 'test' } });
         fireEvent.change(dayField, { target: { value: 'Tuesday' } });
         fireEvent.change(startTimeField, { target: { value: 'a3:15PM' } });
         fireEvent.change(endTimeField, { target: { value: 'a4:15PM' } });
@@ -285,16 +269,14 @@ describe("DriverAvailabilityForm tests", () => {
             </Router>
         );
 
-        await screen.findByTestId("DriverAvailabilityForm-driverId");
+        await screen.findByTestId("DriverAvailabilityForm-day");
 
-        const driverIdField = screen.getByTestId("DriverAvailabilityForm-driverId");
         const dayField = screen.getByTestId("DriverAvailabilityForm-day");
         const startTimeField = screen.getByTestId("DriverAvailabilityForm-startTime");
         const endTimeField = screen.getByTestId("DriverAvailabilityForm-endTime");
         const notesField = screen.getByTestId("DriverAvailabilityForm-notes");
         const submitButton = screen.getByTestId("DriverAvailabilityForm-submit");
 
-        fireEvent.change(driverIdField, { target: { value: 'test' } });
         fireEvent.change(dayField, { target: { value: 'Tuesday' } });
         fireEvent.change(startTimeField, { target: { value: '3:15PMa' } });
         fireEvent.change(endTimeField, { target: { value: '4:15PMa' } });

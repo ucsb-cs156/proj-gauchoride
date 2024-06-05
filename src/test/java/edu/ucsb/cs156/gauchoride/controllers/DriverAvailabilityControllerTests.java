@@ -183,8 +183,6 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
     @Test
     public void test_that_logged_in_driver_can_get_by_id_when_the_id_exists_and_user_id_matches() throws Exception {
         
-        Long UserId = currentUserService.getCurrentUser().getUser().getId();
-
         DriverAvailability availability = DriverAvailability.builder()
                         .driverId(1)
                         .day("Tuesday")
@@ -256,10 +254,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
     @Test
     public void driver_can_edit_their_own_availability() throws Exception {
 
-        Long DriverId = currentUserService.getCurrentUser().getUser().getId();
-
         DriverAvailability availability_original = DriverAvailability.builder()
-                        .driverId(DriverId)
                         .day("Tuesday")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
@@ -267,7 +262,6 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
                         .build();
 
         DriverAvailability availability_edited = DriverAvailability.builder()
-                        .driverId(7)
                         .day("Monday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
@@ -276,18 +270,18 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         String requestBody = mapper.writeValueAsString(availability_edited);
 
-        when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.of(availability_original));
+        when(driverAvailabilityRepository.findById(eq(1L))).thenReturn(Optional.of(availability_original));
 
         // act
         MvcResult response = mockMvc.perform(
-        put("/api/driverAvailability?id=67")
+        put("/api/driverAvailability?id=1")
                             .contentType(MediaType.APPLICATION_JSON)
                             .characterEncoding("utf-8")
                             .content(requestBody)
                             .with(csrf()))
             .andExpect(status().isOk()).andReturn();
         // assert
-        verify(driverAvailabilityRepository, times(1)).findById(eq(67L));
+        verify(driverAvailabilityRepository, times(1)).findById(eq(1L));
         verify(driverAvailabilityRepository, times(1)).save(availability_edited); // should be saved with correct user
         String responseString = response.getResponse().getContentAsString();
         assertEquals(requestBody, responseString);
@@ -298,10 +292,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
     public void driver_cannot_edit_availability_that_does_not_exist() throws Exception {
             // arrange
 
-            Long DriverId = currentUserService.getCurrentUser().getUser().getId();
-
             DriverAvailability availability_edited = DriverAvailability.builder()
-                        .driverId(DriverId)
                         .day("Tuesday")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
@@ -310,11 +301,11 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
                         
             String requestBody = mapper.writeValueAsString(availability_edited);
 
-            when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.empty());
+            when(driverAvailabilityRepository.findById(eq(1L))).thenReturn(Optional.empty());
 
             // act
             MvcResult response = mockMvc.perform(
-                            put("/api/driverAvailability?id=67")
+                            put("/api/driverAvailability?id=1")
                                             .contentType(MediaType.APPLICATION_JSON)
                                             .characterEncoding("utf-8")
                                             .content(requestBody)
@@ -322,10 +313,91 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
                             .andExpect(status().isNotFound()).andReturn();
 
             // assert
-            verify(driverAvailabilityRepository, times(1)).findById(67L);
+            verify(driverAvailabilityRepository, times(1)).findById(1L);
             Map<String, Object> json = responseToJson(response);
-            assertEquals("DriverAvailability with id 67 not found", json.get("message"));
+            assertEquals("DriverAvailability with id 1 not found", json.get("message"));
 
+    }
+
+    @WithMockUser(roles = { "ADMIN" })
+    @Test
+    public void admin_can_edit_any_availability() throws Exception {
+
+        DriverAvailability availability_original = DriverAvailability.builder()
+                        .day("Tuesday")
+                        .startTime("10:30AM")
+                        .endTime("2:30PM")
+                        .notes("End for late lunch")
+                        .build();
+        availability_original.setId(1L);
+
+        DriverAvailability availability_edited = DriverAvailability.builder()
+                        .day("Monday")
+                        .startTime("5:00AM")
+                        .endTime("12:00PM")
+                        .notes("Early Shift")
+                        .build();
+        availability_edited.setId(1L); 
+
+        String requestBody = mapper.writeValueAsString(availability_edited);
+
+        when(driverAvailabilityRepository.findById(eq(1L))).thenReturn(Optional.of(availability_original));
+
+        // act
+        MvcResult response = mockMvc.perform(
+        put("/api/driverAvailability/admin?id=1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding("utf-8")
+                            .content(requestBody)
+                            .with(csrf()))
+            .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(driverAvailabilityRepository, times(1)).findById(eq(1L));
+        
+        // Ensure that the original object is updated with new values
+        availability_original.setDay(availability_edited.getDay());
+        availability_original.setStartTime(availability_edited.getStartTime());
+        availability_original.setEndTime(availability_edited.getEndTime());
+        availability_original.setNotes(availability_edited.getNotes());
+
+        verify(driverAvailabilityRepository, times(1)).save(availability_original);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(requestBody, responseString);
+    }
+
+    @WithMockUser(roles = { "ADMIN" })
+    @Test
+    public void admin_tries_to_edit_non_existent_availability() throws Exception {
+        
+        DriverAvailability availability_edited = DriverAvailability.builder()
+                        .day("Monday")
+                        .startTime("5:00AM")
+                        .endTime("12:00PM")
+                        .notes("Early Shift")
+                        .build();
+        availability_edited.setId(1L); // Ensure the ID is set
+
+        String requestBody = mapper.writeValueAsString(availability_edited);
+
+        when(driverAvailabilityRepository.findById(eq(1L))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = mockMvc.perform(
+        put("/api/driverAvailability/admin?id=1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding("utf-8")
+                            .content(requestBody)
+                            .with(csrf()))
+            .andExpect(status().isNotFound()).andReturn();
+
+        // assert
+        verify(driverAvailabilityRepository, times(1)).findById(eq(1L));
+        verify(driverAvailabilityRepository, times(0)).save(any(DriverAvailability.class));
+        
+        Map<String, Object> json = responseToJson(response);
+        assertEquals("EntityNotFoundException", json.get("type"));
+        assertEquals("DriverAvailability with id 1 not found", json.get("message"));
     }
 
     // Test for DELETE api/driverAvailability
