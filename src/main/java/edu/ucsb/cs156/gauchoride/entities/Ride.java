@@ -42,4 +42,7 @@ public class Ride {
 
   @Builder.Default
   private long shiftId = 0;
+
+  @Builder.Default
+  private String status = "Unassigned";
 }
