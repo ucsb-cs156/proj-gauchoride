@@ -568,20 +568,17 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
         when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.of(availability_original));
 
         // act
-        MvcResult response = mockMvc.perform(
+        mockMvc.perform(
                 put("/api/driverAvailability?id=67")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .characterEncoding("utf-8")
                                 .content(requestBody)
                                 .with(csrf()))
-                .andExpect(status().isNotFound()).andReturn();
+                .andExpect(status().isForbidden()).andReturn();
 
         // assert
         verify(driverAvailabilityRepository, times(1)).findById(eq(67L));
         verify(driverAvailabilityRepository, times(0)).save(any());
-        Map<String, Object> json = responseToJson(response);
-        assertEquals("EntityNotFoundException", json.get("type"));
-        assertEquals("DriverAvailability with id 67 not found", json.get("message"));
     }
 
     @WithMockUser(roles = { "DRIVER" })
@@ -602,14 +599,11 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
         when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.of(availability));
 
         // act
-        MvcResult response = mockMvc.perform(get("/api/driverAvailability/id?id=67"))
-                .andExpect(status().isNotFound()).andReturn();
+        mockMvc.perform(get("/api/driverAvailability/id?id=67"))
+                .andExpect(status().isForbidden()).andReturn();
 
         // assert
         verify(driverAvailabilityRepository, times(1)).findById(eq(67L));
-        Map<String, Object> json = responseToJson(response);
-        assertEquals("EntityNotFoundException", json.get("type"));
-        assertEquals("DriverAvailability with id 67 not found", json.get("message"));
     }
 
     @WithMockUser(roles = { "DRIVER" })
@@ -630,17 +624,14 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
         when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.of(availability));
 
         // act
-        MvcResult response = mockMvc.perform(
+        mockMvc.perform(
                 delete("/api/driverAvailability?id=67")
                                 .with(csrf()))
-                .andExpect(status().isNotFound()).andReturn();
+                .andExpect(status().isForbidden()).andReturn();
 
         // assert
         verify(driverAvailabilityRepository, times(1)).findById(eq(67L));
         verify(driverAvailabilityRepository, times(0)).delete(any());
-        Map<String, Object> json = responseToJson(response);
-        assertEquals("EntityNotFoundException", json.get("type"));
-        assertEquals("DriverAvailability with id 67 not found", json.get("message"));
     }
 
 }

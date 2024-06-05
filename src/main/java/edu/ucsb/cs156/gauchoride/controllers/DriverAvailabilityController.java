@@ -3,6 +3,7 @@ package edu.ucsb.cs156.gauchoride.controllers;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.web.server.ResponseStatusException;
 
 import edu.ucsb.cs156.gauchoride.entities.User;
 import edu.ucsb.cs156.gauchoride.models.CurrentUser;
@@ -88,7 +90,7 @@ public class DriverAvailabilityController extends ApiController{
                 .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
 
         if (availability.getDriverId() != getCurrentUser().getUser().getId()){
-            throw new EntityNotFoundException(DriverAvailability.class, id);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this resource.");
         }
         
         return availability;
@@ -108,7 +110,7 @@ public class DriverAvailabilityController extends ApiController{
                 .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
 
         if (availability.getDriverId() != getCurrentUser().getUser().getId()) {
-            throw new EntityNotFoundException(DriverAvailability.class, id);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this resource.");
         }
 
         availability.setDay(incoming.getDay());
@@ -131,7 +133,7 @@ public class DriverAvailabilityController extends ApiController{
                 .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
 
         if (availability.getDriverId() != getCurrentUser().getUser().getId()) {
-            throw new EntityNotFoundException(DriverAvailability.class, id);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this resource.");
         }
 
         driverAvailabilityRepository.delete(availability);
@@ -147,9 +149,8 @@ public class DriverAvailabilityController extends ApiController{
                     required = true)  
                     @RequestParam Long id) 
     {
-        DriverAvailability availability;
-        availability = driverAvailabilityRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+        DriverAvailability availability = driverAvailabilityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
         return availability;
     }
 
