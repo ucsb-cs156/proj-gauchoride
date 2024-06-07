@@ -86,6 +86,10 @@ export default function RideTable({
         {
             Header: 'Notes',
             accessor: 'notes',
+        },
+        {
+            Header: 'Status',
+            accessor: 'status'
         }
     ];
 
@@ -141,6 +145,10 @@ export default function RideTable({
         {
             Header: 'Notes',
             accessor: 'notes',
+        },
+        {
+            Header: 'Status',
+            accessor: 'status'
         }
     ];
 
@@ -184,6 +192,10 @@ export default function RideTable({
         {
             Header: 'Notes',
             accessor: 'notes',
+        },
+        {
+            Header: 'Status',
+            accessor: 'status'
         }
     ];
 
