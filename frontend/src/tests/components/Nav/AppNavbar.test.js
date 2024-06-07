@@ -600,7 +600,7 @@ describe("AppNavbar tests", () => {
         expect(driverLink).toBeInTheDocument();      
     });
 
-    test("Driver page link should appear for a user that is a adminOnlyNoUser", async () => {
+    test("Driver page link should appear for a user that is a adminOnly", async () => {
         const currentUser = currentUserFixtures.adminOnly;
         const doLogin = jest.fn();
 
