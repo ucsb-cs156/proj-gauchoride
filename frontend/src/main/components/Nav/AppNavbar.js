@@ -80,6 +80,7 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
                     <NavDropdown.Item as={Link} to="/admin/users">Users</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/admin/driverAvailability">Driver Availabilities</NavDropdown.Item>
                     <NavDropdown.Item as={Link} to="/admin/applications/riders">Rider Applications</NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/admin/schedule">Schedule</NavDropdown.Item>
                   </NavDropdown>
                 )
               }
