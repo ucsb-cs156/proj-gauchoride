@@ -601,7 +601,7 @@ describe("AppNavbar tests", () => {
     });
 
     test("Driver page link should appear for a user that is a adminOnlyNoUser", async () => {
-        const currentUser = currentUserFixtures.adminOnlyNoUser;
+        const currentUser = currentUserFixtures.adminOnly;
         const doLogin = jest.fn();
 
         const { getByText } = render(
