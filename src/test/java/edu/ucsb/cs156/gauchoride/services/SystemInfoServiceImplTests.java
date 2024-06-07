@@ -2,6 +2,8 @@ package edu.ucsb.cs156.gauchoride.services;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,12 +22,11 @@ import edu.ucsb.cs156.gauchoride.services.SystemInfoServiceImpl;
 // The unit under test relies on property values
 // For hints on testing, see: https://www.baeldung.com/spring-boot-testing-configurationproperties
 
-
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = SystemInfoServiceImpl.class)
 @TestPropertySource("classpath:application-development.properties")
-class SystemInfoServiceImplTests  {
-  
+class SystemInfoServiceImplTests {
+
   @Autowired
   private SystemInfoService systemInfoService;
 
@@ -34,6 +35,23 @@ class SystemInfoServiceImplTests  {
     SystemInfo si = systemInfoService.getSystemInfo();
     assertTrue(si.getSpringH2ConsoleEnabled());
     assertTrue(si.getShowSwaggerUILink());
+
+    // added for git commit info feature
+    assertTrue(si.getGithubUrl().startsWith(si.getSourceRepo()));
+    assertTrue(si.getGithubUrl().endsWith(si.getCommitId()));
+    assertTrue(si.getGithubUrl().contains("/commit/"));
+  }
+
+  // added test for git commit info feature
+  @Test
+  void test_githubUrl() {
+    assertEquals(
+        SystemInfoServiceImpl.githubUrl(
+            "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-7", "abcdef12345"),
+        "https://github.com/ucsb-cs156-s24/proj-gauchoride-s24-5pm-7/commit/abcdef12345");
+    assertNull(SystemInfoServiceImpl.githubUrl(null, null));
+    assertNull(SystemInfoServiceImpl.githubUrl("x", null));
+    assertNull(SystemInfoServiceImpl.githubUrl(null, "x"));
   }
 
 }

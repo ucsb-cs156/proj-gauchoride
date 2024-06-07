@@ -82,21 +82,21 @@ describe("DriverAvailabilityCreatePage tests", () => {
         )
 
 
-        const driverIdInput = screen.getByLabelText("driverId")
+        const driverIdInput = screen.getByLabelText("Driver ID")
         await waitFor(() => {
             expect(driverIdInput).toBeInTheDocument();
         });
 
-        const dayInput = screen.getByLabelText("day");
+        const dayInput = screen.getByLabelText("Day");
         expect(dayInput).toBeInTheDocument();
 
-        const startTimeInput = screen.getByLabelText("startTime");
+        const startTimeInput = screen.getByLabelText("Start Time");
         expect(startTimeInput).toBeInTheDocument();
 
-        const endTimeInput = screen.getByLabelText("endTime");
+        const endTimeInput = screen.getByLabelText("End Time");
         expect(endTimeInput).toBeInTheDocument();
 
-        const notesInput = screen.getByLabelText("notes");
+        const notesInput = screen.getByLabelText("Notes");
         expect(notesInput).toBeInTheDocument();
 
         // Simulating filling out the form

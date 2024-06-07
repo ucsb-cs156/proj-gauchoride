@@ -19,7 +19,7 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
         <Form onSubmit={handleSubmit(submitAction)}>
             {initialContents && (
                 <Form.Group className="mb-3" >
-                    <Form.Label htmlFor="id">id</Form.Label>
+                    <Form.Label htmlFor="id">ID</Form.Label>
                     <Form.Control
                         data-testid={testIdPrefix + "-id"}
                         id="id"
@@ -31,14 +31,14 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                 </Form.Group>
             )}
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="driverId">driverId</Form.Label>
+                <Form.Label htmlFor="driverId">Driver ID</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-driverId"}
                     id="driverId"
                     type="text"
                     isInvalid={Boolean(errors.driverId)}
                     {...register("driverId", {
-                        required: "driverId is required.",
+                        required: "Driver ID is required.",
                     })}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -47,14 +47,14 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
             </Form.Group>
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="day">day</Form.Label>
+                <Form.Label htmlFor="day">Day</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-day"}
                     id="day"
                     type="text"
                     isInvalid={Boolean(errors.day)}
                     {...register("day", {
-                        required: "day is required."
+                        required: "Day is required."
                     })}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -63,14 +63,14 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
             </Form.Group>
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="startTime">startTime</Form.Label>
+                <Form.Label htmlFor="startTime">Start Time</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-startTime"}
                     id="startTime"
                     type="text"
                     isInvalid={Boolean(errors.startTime)}
                     {...register("startTime", {
-                        required: "startTime is required."
+                        required: "Start Time is required."
                     })}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -79,14 +79,14 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
             </Form.Group>
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="endTime">endTime</Form.Label>
+                <Form.Label htmlFor="endTime">End Time</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-endTime"}
                     id="endTime"
                     type="text"
                     isInvalid={Boolean(errors.endTime)}
                     {...register("endTime", {
-                        required: "endTime is required."
+                        required: "End Time is required."
                     })}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -95,14 +95,14 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
             </Form.Group>
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="notes">notes</Form.Label>
+                <Form.Label htmlFor="notes">Notes</Form.Label>
                 <Form.Control
                     data-testid={testIdPrefix + "-notes"}
                     id="notes"
                     type="text"
                     isInvalid={Boolean(errors.notes)}
                     {...register("notes", {
-                        required: "notes is required."
+                        required: "Notes are required."
                     })}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -125,7 +125,6 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
             </Button>
 
         </Form>
-
     )
 }
 
