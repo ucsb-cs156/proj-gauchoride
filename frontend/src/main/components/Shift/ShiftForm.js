@@ -1,6 +1,8 @@
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useBackend } from 'main/utils/useBackend';
+import React from 'react'
 
 function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
     // Stryker disable all
@@ -9,7 +11,17 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
         formState: { errors },
         handleSubmit,
     } = useForm({ defaultValues: initialContents || {} });
+
+    const { data: drivers, _error, _status } =
+        useBackend(
+            [`/api/drivers/all`],
+            {
+                method: "GET",
+                url: `/api/drivers/all`
+            },
+        );
     // Stryker restore all
+
     const navigate = useNavigate();
     const testIdPrefix = "ShiftForm";
 
@@ -103,36 +115,31 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
 
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="driverID">Driver ID</Form.Label>
-                <Form.Control
+                <Form.Select
                     data-testid={testIdPrefix + "-driverID"}
                     id="driverID"
                     name="driverID"
-                    type="number"
-                    isInvalid={Boolean(errors.driverID)}
-                    {...register("driverID", {
-                        required: "Driver ID is required."
-                    })}
-                />
-                <Form.Control.Feedback type="invalid">
-                    {errors.driverID?.message}
-                </Form.Control.Feedback>
+                    {...register("driverID")}
+                >
+                {drivers && drivers.map((driver) => (
+                    <option key={driver.id} data-testid={testIdPrefix + "-driverId-" + driver.id} value={driver.id.toString()}>{driver.id} - {driver.fullName}</option>
+                ))
+                }
+                </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="driverBackupID">Driver Backup ID</Form.Label>
-                <Form.Control
+                <Form.Select
                     data-testid={testIdPrefix + "-driverBackupID"}
                     id="driverBackupID"
                     name="driverBackupID"
-                    type="number"
-                    isInvalid={Boolean(errors.driverBackupID)}
-                    {...register("driverBackupID", {
-                        required: "Driver Backup ID is required."
-                    })}
-                />
-                <Form.Control.Feedback type="invalid">
-                    {errors.driverBackupID?.message}
-                </Form.Control.Feedback>
+                    {...register("driverBackupID")}
+                >
+                {drivers && drivers.map((driver) => (
+                    <option key={driver.id} data-testid={testIdPrefix + "-driverBackupId-" + driver.id}  value={driver.id.toString()}>{driver.id} - {driver.fullName}</option>
+                ))}
+                </Form.Select>
             </Form.Group>
 
             <Button

@@ -9,6 +9,7 @@ import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 import mockConsole from "jest-mock-console";
+import driverFixtures from "fixtures/driverFixtures";
 
 const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
@@ -45,6 +46,7 @@ describe("ShiftEditPage tests", () => {
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
             axiosMock.onGet("/api/shift", { params: { id: 17 } }).timeout();
+            axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
         });
 
         const queryClient = new QueryClient();
@@ -74,6 +76,7 @@ describe("ShiftEditPage tests", () => {
             axiosMock.resetHistory();
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+            axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
             axiosMock.onGet("/api/shift", { params: { id: 17 } }).reply(200, {
                 id: 17,
                 day: "Tuesday",
@@ -125,8 +128,8 @@ describe("ShiftEditPage tests", () => {
             expect(dayField).toHaveValue("Tuesday");
             expect(startField).toHaveValue("05:00PM");
             expect(endField).toHaveValue("07:30PM");
-            expect(driverField).toHaveValue(1);
-            expect(backupDriverField).toHaveValue(2);
+            expect(driverField).toHaveValue("1");
+            expect(backupDriverField).toHaveValue("2");
         });
 
         test("Changes when you click Update", async () => {
@@ -152,16 +155,16 @@ describe("ShiftEditPage tests", () => {
             expect(dayField).toHaveValue("Tuesday");
             expect(startField).toHaveValue("05:00PM");
             expect(endField).toHaveValue("07:30PM");
-            expect(driverField).toHaveValue(1);
-            expect(backupDriverField).toHaveValue(2);
+            expect(driverField).toHaveValue("1");
+            expect(backupDriverField).toHaveValue("2");
 
             expect(submitButton).toBeInTheDocument();
         
             fireEvent.change(dayField, { target: { value: 'Monday' } });
             fireEvent.change(startField, { target: { value: '03:30PM' } });
             fireEvent.change(endField, { target: { value: "04:30PM" } });
-            fireEvent.change(driverField, { target: { value: 2 } });
-            fireEvent.change(backupDriverField, { target: { value: 3 } });
+            fireEvent.change(driverField, { target: { value: "2" } });
+            fireEvent.change(backupDriverField, { target: { value: "3" } });
         
             fireEvent.click(submitButton);
 

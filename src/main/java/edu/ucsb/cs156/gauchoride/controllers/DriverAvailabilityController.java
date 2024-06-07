@@ -38,8 +38,7 @@ public class DriverAvailabilityController extends ApiController{
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @PostMapping("/new")
     public DriverAvailability postDriverAvailability(
-            @Parameter(name="driverId") @RequestParam long driverId,
-            @Parameter(name="day") @RequestParam String day,
+            @Parameter(name="day") @RequestParam String day, // day of the week
             @Parameter(name="startTime") @RequestParam String startTime,
             @Parameter(name="endTime") @RequestParam String endTime,
             @Parameter(name="notes") @RequestParam String notes)
@@ -49,7 +48,7 @@ public class DriverAvailabilityController extends ApiController{
         log.info("notes={}", notes);
 
         DriverAvailability driverAvailability = new DriverAvailability();
-        driverAvailability.setDriverId(driverId);
+        driverAvailability.setDriverId(getCurrentUser().getUser().getId());
         driverAvailability.setDay(day);
         driverAvailability.setStartTime(startTime);
         driverAvailability.setEndTime(endTime);
@@ -82,6 +81,11 @@ public class DriverAvailabilityController extends ApiController{
         DriverAvailability availability;
         availability = driverAvailabilityRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+
+        if (availability.getDriverId() != getCurrentUser().getUser().getId()) {
+            throw new EntityNotFoundException(DriverAvailability.class, id);
+        }
+
         return availability;
     }
 
@@ -100,7 +104,11 @@ public class DriverAvailabilityController extends ApiController{
         availability = driverAvailabilityRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
 
-        availability.setDriverId(incoming.getDriverId());
+        // ensure that the availability is owned by the current user
+        if (availability.getDriverId() != getCurrentUser().getUser().getId()) {
+            throw new EntityNotFoundException(DriverAvailability.class, id);
+        }
+
         availability.setDay(incoming.getDay());
         availability.setStartTime(incoming.getStartTime());
         availability.setEndTime(incoming.getEndTime());
@@ -119,7 +127,11 @@ public class DriverAvailabilityController extends ApiController{
             @Parameter(name="id") @RequestParam Long id) {
         DriverAvailability availability = driverAvailabilityRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
-
+        
+        if (availability.getDriverId() != getCurrentUser().getUser().getId()) {
+            throw new EntityNotFoundException(DriverAvailability.class, id);
+        }
+        
         driverAvailabilityRepository.delete(availability);
         return genericMessage("DriverAvailability with id %s deleted".formatted(id));
     }

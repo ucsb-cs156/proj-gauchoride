@@ -184,6 +184,20 @@ export default function RideTable({
         {
             Header: 'Notes',
             accessor: 'notes',
+        },
+        {
+            Header: 'Assigned',
+            accessor: 'shiftId',
+            Cell: ({ value }) => {
+              const stringValue = String(value);
+              if (stringValue === "") {
+                return "empty";
+              } else if (stringValue === "0") {
+                return "Unassigned";
+              } else {
+                return "Assigned";
+              }
+            },
         }
     ];
 

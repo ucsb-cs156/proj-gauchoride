@@ -6,6 +6,12 @@ import { rideFixtures } from "fixtures/rideFixtures";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
+import driverFixtures from "fixtures/driverFixtures";
+import shiftFixtures from "fixtures/shiftFixtures";
+import axios from "axios";
+import axiosMockAdapter from "axios-mock-adapter";
+
+
 const mockedNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
@@ -18,6 +24,16 @@ describe("RideAssignDriverForm tests", () => {
 
     const expectedHeaders = ["Shift Id", "Day of Week", "Start Time", "End Time", "Pick Up Building", "Drop Off Building", "Room Number for Dropoff", "Course Number"];
     const testId = "RideAssignDriverForm";
+
+    const axiosMock = new axiosMockAdapter(axios);
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/drivers").reply(200, driverFixtures.threeDrivers);
+        axiosMock.onGet("/api/shifts").reply(200, shiftFixtures.threeShifts);
+    });
 
     test("renders correctly with no initialContents", async () => {
         render(

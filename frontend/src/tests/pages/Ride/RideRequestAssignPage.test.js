@@ -9,6 +9,8 @@ import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 import mockConsole from "jest-mock-console";
+import drivershiftsFixtures from "fixtures/drivershiftsFixtures";
+import driverFixtures from "fixtures/driverFixtures";
 
 const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
@@ -44,6 +46,8 @@ describe("RideRequestAssignPage tests", () => {
             axiosMock.resetHistory();
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+            axiosMock.onGet("/api/shift/all").reply(200, drivershiftsFixtures.threeShifts);
+            axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
             axiosMock.onGet("/api/ride_request", { params: { id: 17 } }).timeout();
         });
 
@@ -52,7 +56,7 @@ describe("RideRequestAssignPage tests", () => {
 
             const restoreConsole = mockConsole();
 
-            const {queryByTestId, findByText} = render(
+            const { queryByTestId, findByText } = render(
                 <QueryClientProvider client={queryClient}>
                     <MemoryRouter>
                         <RideRequestAssignPage />
@@ -74,12 +78,14 @@ describe("RideRequestAssignPage tests", () => {
             axiosMock.resetHistory();
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+            axiosMock.onGet("/api/shift/all").reply(200, drivershiftsFixtures.threeShifts);
+            axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
             axiosMock.onGet("/api/ride_request", { params: { id: 17 } }).reply(200, {
                 id: 17,
                 shiftId: 1,
                 day: "Tuesday",
                 startTime: "5:00PM",
-                endTime: "7:30PM", 
+                endTime: "7:30PM",
                 pickupBuilding: "HSSB",
                 dropoffBuilding: "SRB",
                 dropoffRoom: "125",
@@ -92,7 +98,7 @@ describe("RideRequestAssignPage tests", () => {
                 shiftId: 3,
                 day: "Monday",
                 startTime: "3:30PM",
-                endTime: "4:30PM", 
+                endTime: "4:30PM",
                 pickupBuilding: "Phelps",
                 dropoffBuilding: "HSSB",
                 dropoffRoom: "1215",
@@ -124,8 +130,9 @@ describe("RideRequestAssignPage tests", () => {
             );
 
             await findByTestId("RideAssignDriverForm-day");
-            
-            const shiftIdField = getByTestId("RideAssignDriverForm-shiftId")
+
+            const shiftIdField = await waitFor(() => getByTestId("RideAssignDriverForm-shiftId"))
+            const shiftIdFieldId = await waitFor(() => getByTestId("RideAssignDriverForm-shiftId-1"))
             const dayField = getByTestId("RideAssignDriverForm-day");
             const startTimeField = getByTestId("RideAssignDriverForm-start");
             const endTimeField = getByTestId("RideAssignDriverForm-end");
@@ -136,6 +143,8 @@ describe("RideRequestAssignPage tests", () => {
             const courseField = getByTestId("RideAssignDriverForm-course");
             const notesField = getByTestId("RideAssignDriverForm-notes");
             
+
+            expect(shiftIdFieldId).toBeInTheDocument();
             expect(shiftIdField).toHaveValue("1");
             expect(dayField).toHaveValue("Tuesday");
             expect(startTimeField).toHaveValue("5:00PM");
@@ -146,12 +155,12 @@ describe("RideRequestAssignPage tests", () => {
             expect(pickupRoomField).toHaveValue("1111");
             expect(courseField).toHaveValue("CMPSC 156");
             expect(notesField).toHaveValue("note1");
-            
+
         });
 
         test("Changes when you click Update", async () => {
 
-                
+
 
             const { getByTestId, findByTestId } = render(
                 <QueryClientProvider client={queryClient}>
@@ -163,7 +172,7 @@ describe("RideRequestAssignPage tests", () => {
 
             await findByTestId("RideAssignDriverForm-day");
 
-            const shiftIdField = getByTestId("RideAssignDriverForm-shiftId")
+            const shiftIdField = await waitFor(() => getByTestId("RideAssignDriverForm-shiftId"))
             const dayField = getByTestId("RideAssignDriverForm-day");
             const startTimeField = getByTestId("RideAssignDriverForm-start");
             const endTimeField = getByTestId("RideAssignDriverForm-end");
@@ -188,7 +197,7 @@ describe("RideRequestAssignPage tests", () => {
 
 
             expect(submitButton).toBeInTheDocument();
-            
+
             fireEvent.change(shiftIdField, { target: { value: '3' } })
             fireEvent.change(dayField, { target: { value: 'Monday' } })
             fireEvent.change(startTimeField, { target: { value: '3:30PM' } })
@@ -201,7 +210,7 @@ describe("RideRequestAssignPage tests", () => {
 
             fireEvent.click(submitButton);
 
-    
+
             await waitFor(() => expect(mockToast).toHaveBeenCalled());
             expect(mockToast).toBeCalledWith("Driver Assigned - id: 17");
             expect(mockNavigate).toBeCalledWith({ "to": "/ride/" });
@@ -214,6 +223,6 @@ describe("RideRequestAssignPage tests", () => {
 
         });
 
-       
+
     });
 });

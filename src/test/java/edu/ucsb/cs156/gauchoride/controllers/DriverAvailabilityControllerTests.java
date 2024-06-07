@@ -67,13 +67,14 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
     @WithMockUser(roles = { "DRIVER" })
     @Test
     public void a_driver_can_post_a_new_driverAvailability() throws Exception {
-        Long UserId = currentUserService.getCurrentUser().getUser().getId();
+
+        // Long UserId = currentUserService.getCurrentUser().getUser().getId();
 
         DriverAvailability availability1 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
-                        .startTime("10:30AM")
-                        .endTime("2:30PM")
+                        .day("Monday")
+                        .startTime("10:30 AM")
+                        .endTime("2:30 PM")
                         .notes("End for late lunch")
                         .build();
 
@@ -81,7 +82,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         // act
         MvcResult response = mockMvc.perform(
-                        post("/api/driverAvailability/new?driverId=1&day=03/05/2024&startTime=10:30AM&endTime=2:30PM&notes=End for late lunch")
+                        post("/api/driverAvailability/new?driverId=1&day=Monday&startTime=10:30 AM&endTime=2:30 PM&notes=End for late lunch")
                                         .with(csrf()))
                         .andExpect(status().isOk()).andReturn();
 
@@ -124,17 +125,17 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability1 = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
-                        .startTime("10:30AM")
-                        .endTime("2:30PM")
+                        .day("Monday")
+                        .startTime("10:30 AM")
+                        .endTime("2:30 PM")
                         .notes("End for late lunch")
                         .build();
 
         DriverAvailability availability2 = DriverAvailability.builder()
                         .driverId(2)
-                        .day("12/24/2024")
-                        .startTime("5:00AM")
-                        .endTime("12:00PM")
+                        .day("Tuesday")
+                        .startTime("5:00 AM")
+                        .endTime("12:00 PM")
                         .notes("Early Shift")
                         .build();
 
@@ -183,13 +184,13 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
     @Test
     public void test_that_logged_in_driver_can_get_by_id_when_the_id_exists_and_user_id_matches() throws Exception {
         
-        Long UserId = currentUserService.getCurrentUser().getUser().getId();
+        // Long UserId = currentUserService.getCurrentUser().getUser().getId();
 
         DriverAvailability availability = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
-                        .startTime("10:30AM")
-                        .endTime("2:30PM")
+                        .day("Monday")
+                        .startTime("10:30 AM")
+                        .endTime("2:30 PM")
                         .notes("End for late lunch")
                         .build();
 
@@ -260,17 +261,17 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability_original = DriverAvailability.builder()
                         .driverId(DriverId)
-                        .day("03/05/2024")
-                        .startTime("10:30AM")
-                        .endTime("2:30PM")
+                        .day("Monday")
+                        .startTime("10:30 AM")
+                        .endTime("2:30 PM")
                         .notes("End for late lunch")
                         .build();
 
         DriverAvailability availability_edited = DriverAvailability.builder()
-                        .driverId(7)
-                        .day("12/24/2024")
-                        .startTime("5:00AM")
-                        .endTime("12:00PM")
+                        .driverId(DriverId)
+                        .day("Tuesday")
+                        .startTime("5:00 AM")
+                        .endTime("12:00 PM")
                         .notes("Early Shift")
                         .build();
 
@@ -302,9 +303,9 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
             DriverAvailability availability_edited = DriverAvailability.builder()
                         .driverId(DriverId)
-                        .day("12/24/2024")
-                        .startTime("5:00AM")
-                        .endTime("12:00PM")
+                        .day("Monday")
+                        .startTime("5:00 AM")
+                        .endTime("12:00 PM")
                         .notes("Early Shift")
                         .build();
                         
@@ -358,9 +359,9 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         DriverAvailability availability = DriverAvailability.builder()
                 .driverId(1)
-                .day("12/24/2024")
-                .startTime("5:00AM")
-                .endTime("12:00PM")
+                .day("Tuesday")
+                .startTime("5:00 AM")
+                .endTime("12:00 PM")
                 .notes("Early Shift")
                 .build();
 
@@ -427,13 +428,13 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
     @Test
     public void test_that_logged_in_admin_can_get_by_id_when_the_id_exists_and_user_id_matches() throws Exception {
         
-        Long UserId = currentUserService.getCurrentUser().getUser().getId();
+        // Long UserId = currentUserService.getCurrentUser().getUser().getId();
 
         DriverAvailability availability = DriverAvailability.builder()
                         .driverId(1)
-                        .day("03/05/2024")
-                        .startTime("10:30AM")
-                        .endTime("2:30PM")
+                        .day("Monday")
+                        .startTime("10:30 AM")
+                        .endTime("2:30 PM")
                         .notes("End for late lunch")
                         .build();
 
@@ -510,18 +511,18 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
         Long otherUserId = UserId + 1;
 
         DriverAvailability availability1 = DriverAvailability.builder()
-                        .driverId(1)
-                        .day("02/29/2024")
-                        .startTime("10:30AM")
-                        .endTime("2:30PM")
+                        .driverId(UserId)
+                        .day("Monday")
+                        .startTime("10:30 AM")
+                        .endTime("2:30 PM")
                         .notes("End for late lunch")
                         .build();
 
         DriverAvailability availability2 = DriverAvailability.builder()
-                        .driverId(1)
-                        .day("03/05/2024")
-                        .startTime("12:30PM")
-                        .endTime("5:30PM")
+                        .driverId(otherUserId)
+                        .day("Tuesday")
+                        .startTime("12:30 PM")
+                        .endTime("5:30 PM")
                         .notes("Last shift of the day")
                         .build();
         

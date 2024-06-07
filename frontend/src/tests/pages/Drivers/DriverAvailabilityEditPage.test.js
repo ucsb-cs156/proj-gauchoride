@@ -76,18 +76,16 @@ describe("DriverAvailabilityEditPage tests", () => {
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
             axiosMock.onGet("/api/driverAvailability/id", { params: { id: 17 } }).reply(200, {
                 id: 17,
-                driverId: 2,
                 day: "Tuesday",
-                startTime: "05:00PM",
-                endTime: "07:30PM",
+                startTime: "05:00 PM",
+                endTime: "07:30 PM",
                 notes: "none"
             });
             axiosMock.onPut('/api/driverAvailability').reply(200, {
                 id: 17,
-                driverId: 1,
                 day: "Monday",
-                startTime: "03:30PM",
-                endTime: "04:30PM",
+                startTime: "03:30 PM",
+                endTime: "04:30 PM",
                 notes: "important"
             });
               
@@ -119,13 +117,11 @@ describe("DriverAvailabilityEditPage tests", () => {
             const dayField = getByTestId("DriverAvailabilityForm-day");
             const startTimeField = getByTestId("DriverAvailabilityForm-startTime");
             const endTimeField = getByTestId("DriverAvailabilityForm-endTime");
-            const driverIdField = getByTestId("DriverAvailabilityForm-driverId");
             const notesField = getByTestId("DriverAvailabilityForm-notes");
 
             expect(dayField).toHaveValue("Tuesday");
-            expect(startTimeField).toHaveValue("05:00PM");
-            expect(endTimeField).toHaveValue("07:30PM");
-            expect(driverIdField).toHaveValue("2");
+            expect(startTimeField).toHaveValue("05:00 PM");
+            expect(endTimeField).toHaveValue("07:30 PM");
             expect(notesField).toHaveValue("none");
         });
 
@@ -144,22 +140,19 @@ describe("DriverAvailabilityEditPage tests", () => {
             const dayField = getByTestId("DriverAvailabilityForm-day");
             const startTimeField = getByTestId("DriverAvailabilityForm-startTime");
             const endTimeField = getByTestId("DriverAvailabilityForm-endTime");
-            const driverIdField = getByTestId("DriverAvailabilityForm-driverId");
             const notesField = getByTestId("DriverAvailabilityForm-notes");
 
             expect(dayField).toHaveValue("Tuesday");
-            expect(startTimeField).toHaveValue("05:00PM");
-            expect(endTimeField).toHaveValue("07:30PM");
-            expect(driverIdField).toHaveValue("2");
+            expect(startTimeField).toHaveValue("05:00 PM");
+            expect(endTimeField).toHaveValue("07:30 PM");
             expect(notesField).toHaveValue("none");
             
             const updateButton = screen.getByRole('button', { name: /Update/ });
             expect(updateButton).toBeInTheDocument();
         
             fireEvent.change(dayField, { target: { value: 'Monday' } });
-            fireEvent.change(startTimeField, { target: { value: '03:30PM' } });
-            fireEvent.change(endTimeField, { target: { value: "04:30PM" } });
-            fireEvent.change(driverIdField, { target: { value: 1 } });
+            fireEvent.change(startTimeField, { target: { value: '03:30 PM' } });
+            fireEvent.change(endTimeField, { target: { value: "04:30 PM" } });
             fireEvent.change(notesField, { target: { value: "important" } });
         
             fireEvent.click(updateButton);
@@ -175,10 +168,9 @@ describe("DriverAvailabilityEditPage tests", () => {
 
             expect(axiosMock.history.put[0].params).toEqual({ id: 17 });
             expect(axiosMock.history.put[0].data).toBe(JSON.stringify({
-                driverId: "1",
                 day: "Monday",
-                startTime: "03:30PM",
-                endTime: "04:30PM",
+                startTime: "03:30 PM",
+                endTime: "04:30 PM",
                 notes: "important"
             })); // posted object
         });

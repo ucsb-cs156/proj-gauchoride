@@ -1,8 +1,12 @@
-
 import OurTable, { ButtonColumn } from "main/components/OurTable"
 import { useBackendMutation } from "main/utils/useBackend";
+import React, { useState } from 'react'; 
+
+
 
 export default function UsersTable({ users}) {
+    const [sort, ] = useState({ keyToSort: 'id'});
+
     function cellToAxiosParamsToggleRider(cell) {
         return {
             url: "/api/admin/users/toggleRider",
@@ -61,12 +65,21 @@ export default function UsersTable({ users}) {
     const toggleDriverMutation = useBackendMutation(
         cellToAxiosParamsToggleDriver,
         {},
-        ["/api/admin/users"]
+        ["/api/admin/users"],
     );
     // Stryker enable all 
 
+    function sortTableById(array, sort) {
+        const {keyToSort} = sort;
+            return [...array].sort((a, b) => a[keyToSort] - b[keyToSort]);
+    }
+
+
     // Stryker disable next-line all : TODO try to make a good test for this
-    const toggleDriverCallback = async (cell) => { toggleDriverMutation.mutate(cell); }
+    const toggleDriverCallback = async (cell) => { 
+        await toggleDriverMutation.mutate(cell);
+        users = (sortTableById(users, sort)); // Sort after toggling driver
+    };
 
 
     const columns = [
@@ -110,10 +123,9 @@ export default function UsersTable({ users}) {
         ButtonColumn("Toggle Rider", "danger", toggleRiderCallback, "UsersTable")
     ]
 
-    //const columnsToDisplay = showButtons ? buttonColumn : columns;
 
     return <OurTable
-        data={users}
+        data={sortTableById(users, sort)}
         columns={buttonColumn}
         testid={"UsersTable"}
     />;

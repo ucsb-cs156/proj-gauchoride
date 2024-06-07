@@ -2,9 +2,13 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import ShiftForm from "main/components/Shift/ShiftForm";
-import { shiftFixtures } from "fixtures/shiftFixtures";
 
 import { QueryClient, QueryClientProvider } from "react-query";
+
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
+import driverFixtures from "fixtures/driverFixtures";
+import shiftFixtures from "fixtures/shiftFixtures";
 
 const mockedNavigate = jest.fn();
 
@@ -18,6 +22,15 @@ describe("ShiftForm tests", () => {
 
     const expectedHeaders = ["Day of the Week", "Shift Start","Shift End","Driver ID","Driver Backup ID"];
     const testId = "ShiftForm";
+
+    const axiosMock = new AxiosMockAdapter(axios);
+
+    beforeEach(() => {
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
+    });
+
 
     test("renders correctly with no initialContents", async () => {
         render(
@@ -34,7 +47,6 @@ describe("ShiftForm tests", () => {
             const header = screen.getByText(headerText);
             expect(header).toBeInTheDocument();
         });
-
     });
 
     test("renders correctly when passing in initialContents", async () => {
@@ -55,6 +67,9 @@ describe("ShiftForm tests", () => {
 
         expect(await screen.findByTestId(`${testId}-id`)).toBeInTheDocument();
         expect(screen.getByText(`Id`)).toBeInTheDocument();
+
+        expect(screen.getByTestId("ShiftForm-driverId-1")).toBeInTheDocument();
+        expect(screen.getByTestId("ShiftForm-driverBackupId-1")).toBeInTheDocument();
     });
 
 
@@ -90,8 +105,6 @@ describe("ShiftForm tests", () => {
         await screen.findByText(/Day is required/);
         expect(screen.getByText(/Shift start time is required/)).toBeInTheDocument();
         expect(screen.getByText(/Shift end time is required/)).toBeInTheDocument();
-        expect(screen.getByText(/Driver ID is required/)).toBeInTheDocument();
-        expect(screen.getByText(/Driver Backup ID is required/)).toBeInTheDocument();
 
 
     });
@@ -157,8 +170,6 @@ describe("ShiftForm tests", () => {
         //expect(screen.getByText("Day is required.")).toBeInTheDocument();
         expect(screen.getByText("Shift start time is required.")).toBeInTheDocument();
         expect(screen.getByText("Shift end time is required.")).toBeInTheDocument();
-        expect(screen.getByText("Driver ID is required.")).toBeInTheDocument();
-        expect(screen.getByText("Driver Backup ID is required.")).toBeInTheDocument();
     });
 
     test("validates specific time format anomalies", async () => {
@@ -359,8 +370,4 @@ describe("ShiftForm tests", () => {
         // Resetting input
         fireEvent.change(shiftEndInput, { target: { value: "" } });
     });
-    
-    
-    
-    
 });

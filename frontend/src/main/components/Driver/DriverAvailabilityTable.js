@@ -1,5 +1,6 @@
 import React from "react";
 import OurTable, { ButtonColumn } from "main/components/OurTable";
+import { Link } from "react-router-dom";
 
 import { useBackendMutation } from "main/utils/useBackend";
 import { cellToAxiosParamsDelete, onDeleteSuccess } from "main/utils/driverAvailabilityUtils"
@@ -14,10 +15,6 @@ export default function DriverAvailabilityTable({
 
     const editCallback = (cell) => {
         navigate(`/availability/edit/${cell.row.values.id}`)
-    }
-
-    const reviewCallback = (cell) => {
-        navigate(`/admin/availability/review/${cell.row.values.id}`)
     }
 
     // Stryker disable all : hard to test for query caching
@@ -40,6 +37,10 @@ export default function DriverAvailabilityTable({
         {
             Header: 'Driver Id',
             accessor: 'driverId',
+            Cell: ({ value }) => (
+                // Stryker disable next-line all : hard to set up test
+                <Link to={`/driverInfo/${value}`}>{value}</Link>
+              ),
         },
         {
             Header: 'Day',
@@ -66,13 +67,9 @@ export default function DriverAvailabilityTable({
         ButtonColumn("Delete", "danger", deleteCallback, "DriverAvailabilityTable")
     ];
 
-    const buttonColumnsAdmin = [
-        ...columns,
-        ButtonColumn("Review", "primary", reviewCallback, "DriverAvailabilityTable")
-    ];
     // Stryker restore all 
 
-    const columnsToDisplay = (hasRole(currentUser, "ROLE_ADMIN")) ? buttonColumnsAdmin : (hasRole(currentUser, "ROLE_DRIVER")) ? buttonColumnsDriver : columns;
+    const columnsToDisplay = (hasRole(currentUser, "ROLE_DRIVER")) ? buttonColumnsDriver : columns;
 
     return <OurTable
         data={Availability}
@@ -80,4 +77,3 @@ export default function DriverAvailabilityTable({
         testid={"DriverAvailabilityTable"}
     />;
 };
-

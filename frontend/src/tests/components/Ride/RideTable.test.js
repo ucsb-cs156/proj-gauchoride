@@ -128,7 +128,7 @@ describe("RideTable tests", () => {
 
     const currentUser = currentUserFixtures.userOnly;
 
-    const { getByText, getByTestId } = render(
+    const {getByTestId} = render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
           <RideTable ride={rideFixtures.threeRidesTable} currentUser={currentUser} />
@@ -137,14 +137,19 @@ describe("RideTable tests", () => {
 
     );
 
-    const expectedHeaders = ['id','Day', 'Course #', 'Pick Up Time', 'Drop Off Time', 'Pick Up Building', 'Pick Up Room', 'Drop Off Building', 'Drop Off Room', 'Notes'];
-    const expectedFields = ['id', 'day', 'course', 'startTime', 'endTime', 'pickupBuilding', 'pickupRoom', 'dropoffBuilding','dropoffRoom', 'notes'];
+    const expectedHeaders = ['id', 'Day', 'Course #', 'Pick Up Time', 'Drop Off Time', 'Pick Up Building', 'Pick Up Room', 'Drop Off Building', 'Drop Off Room', 'Notes', 'Assigned'];
+    const expectedFields = ['id', 'day', 'course', 'startTime', 'endTime', 'pickupBuilding', 'pickupRoom', 'dropoffBuilding', 'dropoffRoom', 'notes', 'shiftId'];
     const testId = "RideTable";
 
+
     expectedHeaders.forEach((headerText) => {
-      const header = getByText(headerText);
-      expect(header).toBeInTheDocument();
+      const headers = screen.getAllByText(headerText);
+      headers.forEach(header => expect(header).toBeInTheDocument());
     });
+
+    // Check specific instances of "Assigned" header and cells
+    const headerAssign = getByTestId(`${testId}-header-shiftId`);
+    expect(headerAssign).toHaveTextContent('Assigned');
 
     expectedFields.forEach((field) => {
       const header = getByTestId(`${testId}-cell-row-0-col-${field}`);
@@ -154,6 +159,14 @@ describe("RideTable tests", () => {
     expect(getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("2");
     expect(getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("3");
 
+    const checkShift0 = getByTestId(`${testId}-cell-row-0-col-shiftId`);
+    const checkShift1 = getByTestId(`${testId}-cell-row-1-col-shiftId`);
+    const checkShift2 = getByTestId(`${testId}-cell-row-2-col-shiftId`);
+
+    expect(checkShift0).toHaveTextContent("Assigned");
+    expect(checkShift1).toHaveTextContent("Assigned");
+    expect(checkShift2).toHaveTextContent("Assigned");
+
     const editButton = getByTestId(`${testId}-cell-row-0-col-Edit-button`);
     expect(editButton).toBeInTheDocument();
     expect(editButton).toHaveClass("btn-primary");
@@ -161,8 +174,8 @@ describe("RideTable tests", () => {
     const deleteButton = getByTestId(`${testId}-cell-row-0-col-Delete-button`);
     expect(deleteButton).toBeInTheDocument();
     expect(deleteButton).toHaveClass("btn-danger");
-    
   });
+
 
   test("Has the expected column headers and content for ordinary driver", () => {
 
@@ -193,7 +206,9 @@ describe("RideTable tests", () => {
 
     expect(getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("2");
     expect(getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("3");
-
+    expect(getByTestId(`${testId}-cell-row-0-col-shiftId`)).toHaveTextContent("2");
+    expect(getByTestId(`${testId}-cell-row-1-col-shiftId`)).toHaveTextContent("100");
+    expect(getByTestId(`${testId}-cell-row-1-col-shiftId`)).toHaveTextContent("10");
 
     expect(screen.queryByText("Delete")).not.toBeInTheDocument();
     expect(screen.queryByText("Edit")).not.toBeInTheDocument();
@@ -293,5 +308,29 @@ describe("RideTable tests", () => {
     await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith('/ride/assigndriver/2'));
 
   });
+  
+
+  test("Assigned column displays correct text based on shiftId", () => {
+  const currentUser = currentUserFixtures.userOnly;
+
+  const ridesWithAssignedStatus = [
+    { ...rideFixtures.threeRidesTable[0], shiftId: "0" }, // Unassigned
+    { ...rideFixtures.threeRidesTable[1], shiftId: "1" }, // Assigned
+    { ...rideFixtures.threeRidesTable[2], shiftId: "" }, // Assigned
+  ];
+
+  render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <RideTable ride={ridesWithAssignedStatus} currentUser={currentUser} />
+      </MemoryRouter>
+    </QueryClientProvider>
+  );
+
+  expect(screen.getByTestId("RideTable-cell-row-0-col-shiftId")).toHaveTextContent("Unassigned");
+  expect(screen.getByTestId("RideTable-cell-row-1-col-shiftId")).toHaveTextContent("Assigned");
+  expect(screen.getByTestId("RideTable-cell-row-2-col-shiftId")).toHaveTextContent("empty");
+
+});
 
 });

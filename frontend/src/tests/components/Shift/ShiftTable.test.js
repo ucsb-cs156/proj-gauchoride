@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
 
 const mockedNavigate = jest.fn();
 
-const expectedHeaders = ["id", "Day", "Shift start", "Shift end", "Driver", "Backup driver"];
+const expectedHeaders = ["id", "Day", "Shift Start", "Shift End", "Driver", "Backup Driver"];
 const expectedFields = ["id", "day", "shiftStart", "shiftEnd", "driverID", "driverBackupID"];
 const testId = "ShiftTable";
 describe("ShiftTable tests", () => {
