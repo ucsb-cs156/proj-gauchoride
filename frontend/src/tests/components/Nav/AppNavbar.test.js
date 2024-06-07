@@ -193,8 +193,8 @@ describe("AppNavbar tests", () => {
         );
         
         await waitFor(() => expect(getByText("Welcome, Phillip Conrad")).toBeInTheDocument());
-        const shiftMenu = getByTestId("appnavbar-shift-dropdown");
-        expect(shiftMenu).toBeInTheDocument();        
+        const rideMenu = getByTestId("appnavbar-ride-dropdown");
+        expect(rideMenu).toBeInTheDocument();        
     });
 
     test("not render shift table links for regular user", async () => {
