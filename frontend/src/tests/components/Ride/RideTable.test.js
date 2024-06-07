@@ -137,8 +137,8 @@ describe("RideTable tests", () => {
 
     );
 
-    const expectedHeaders = ['id','Day', 'Course #', 'Pick Up Time', 'Drop Off Time', 'Pick Up Building', 'Pick Up Room', 'Drop Off Building', 'Drop Off Room', 'Notes'];
-    const expectedFields = ['id', 'day', 'course', 'startTime', 'endTime', 'pickupBuilding', 'pickupRoom', 'dropoffBuilding','dropoffRoom', 'notes'];
+    const expectedHeaders = ['id','Day', 'Assigned?', 'Course #', 'Pick Up Time', 'Drop Off Time', 'Pick Up Building', 'Pick Up Room', 'Drop Off Building', 'Drop Off Room', 'Notes'];
+    const expectedFields = ['id', 'day', 'shiftId', 'course', 'startTime', 'endTime', 'pickupBuilding', 'pickupRoom', 'dropoffBuilding','dropoffRoom', 'notes'];
     const testId = "RideTable";
 
     expectedHeaders.forEach((headerText) => {
@@ -150,6 +150,12 @@ describe("RideTable tests", () => {
       const header = getByTestId(`${testId}-cell-row-0-col-${field}`);
       expect(header).toBeInTheDocument();
     });
+
+    const assigned = getByTestId(`${testId}-cell-row-0-col-shiftId`);
+    expect(assigned).toHaveTextContent(/^assigned$/);
+
+    const unassigned = getByTestId(`${testId}-cell-row-2-col-shiftId`);
+    expect(unassigned).toHaveTextContent(/^unassigned$/);
 
     expect(getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("2");
     expect(getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("3");

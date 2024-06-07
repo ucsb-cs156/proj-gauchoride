@@ -1,14 +1,19 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import RideRequestAssignPage from "main/pages/Ride/RideRequestAssignPage";
 
+
+import driverFixtures from "fixtures/driverFixtures";
+import shiftFixtures from "fixtures/shiftFixturesSecond";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
+
 import mockConsole from "jest-mock-console";
+
 
 const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
@@ -19,6 +24,7 @@ jest.mock('react-toastify', () => {
         toast: (x) => mockToast(x)
     };
 });
+
 
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => {
@@ -33,11 +39,15 @@ jest.mock('react-router-dom', () => {
     };
 });
 
+
 describe("RideRequestAssignPage tests", () => {
+
 
     describe("when the backend doesn't return a todo", () => {
 
+
         const axiosMock = new AxiosMockAdapter(axios);
+
 
         beforeEach(() => {
             axiosMock.reset();
@@ -47,10 +57,13 @@ describe("RideRequestAssignPage tests", () => {
             axiosMock.onGet("/api/ride_request", { params: { id: 17 } }).timeout();
         });
 
+
         const queryClient = new QueryClient();
         test("renders header but table is not present", async () => {
 
+
             const restoreConsole = mockConsole();
+
 
             const {queryByTestId, findByText} = render(
                 <QueryClientProvider client={queryClient}>
@@ -65,9 +78,15 @@ describe("RideRequestAssignPage tests", () => {
         });
     });
 
+
+   
+
+
     describe("tests where backend is working normally", () => {
 
+
         const axiosMock = new AxiosMockAdapter(axios);
+
 
         beforeEach(() => {
             axiosMock.reset();
@@ -79,7 +98,7 @@ describe("RideRequestAssignPage tests", () => {
                 shiftId: 1,
                 day: "Tuesday",
                 startTime: "5:00PM",
-                endTime: "7:30PM", 
+                endTime: "7:30PM",
                 pickupBuilding: "HSSB",
                 dropoffBuilding: "SRB",
                 dropoffRoom: "125",
@@ -89,10 +108,10 @@ describe("RideRequestAssignPage tests", () => {
             });
             axiosMock.onPut('/api/ride_request/assigndriver').reply(200, {
                 id: "17",
-                shiftId: 3,
+                shiftId: 2,
                 day: "Monday",
                 startTime: "3:30PM",
-                endTime: "4:30PM", 
+                endTime: "4:30PM",
                 pickupBuilding: "Phelps",
                 dropoffBuilding: "HSSB",
                 dropoffRoom: "1215",
@@ -100,7 +119,10 @@ describe("RideRequestAssignPage tests", () => {
                 course: "WRIT 105CD",
                 notes: "note2"
             });
+            axiosMock.onGet("/api/shift/all").reply(200, shiftFixtures.threeShifts);
+            axiosMock.onGet("/api/drivers/all").reply(200, driverFixtures.threeDrivers);
         });
+
 
         const queryClient = new QueryClient();
         test("renders without crashing", () => {
@@ -113,7 +135,15 @@ describe("RideRequestAssignPage tests", () => {
             );
         });
 
+
         test("Is populated with the data provided", async () => {
+           
+            const getDriverFullName = (driverId) => {
+       
+                const driver = (driverFixtures.threeDrivers).find(driver => driver.id === driverId);
+        return driver ? `${driver.givenName} ${driver.familyName}` : '';
+            };
+
 
             const { getByTestId, findByTestId } = render(
                 <QueryClientProvider client={queryClient}>
@@ -123,8 +153,9 @@ describe("RideRequestAssignPage tests", () => {
                 </QueryClientProvider>
             );
 
+
             await findByTestId("RideAssignDriverForm-day");
-            
+           
             const shiftIdField = getByTestId("RideAssignDriverForm-shiftId")
             const dayField = getByTestId("RideAssignDriverForm-day");
             const startTimeField = getByTestId("RideAssignDriverForm-start");
@@ -135,7 +166,7 @@ describe("RideRequestAssignPage tests", () => {
             const pickupRoomField = getByTestId("RideAssignDriverForm-pickupRoom");
             const courseField = getByTestId("RideAssignDriverForm-course");
             const notesField = getByTestId("RideAssignDriverForm-notes");
-            
+           
             expect(shiftIdField).toHaveValue("1");
             expect(dayField).toHaveValue("Tuesday");
             expect(startTimeField).toHaveValue("5:00PM");
@@ -146,12 +177,39 @@ describe("RideRequestAssignPage tests", () => {
             expect(pickupRoomField).toHaveValue("1111");
             expect(courseField).toHaveValue("CMPSC 156");
             expect(notesField).toHaveValue("note1");
-            
+
+
+            await findByTestId("RideAssignDriverForm-day");
+
+
+            const shift = shiftFixtures.threeShifts;
+
+
+            shift.forEach(shift => { 
+                if(getDriverFullName(shift.driverID)!=='') {
+                    console.log((shift.driverID));
+                    const expectedOptionText = `${shift.id} - ${getDriverFullName(shift.driverID)} - ${shift.day} ${shift.shiftStart}-${shift.shiftEnd}`;
+                    expect(screen.getByText(expectedOptionText)).toBeInTheDocument();
+                }
+                if(getDriverFullName(shift.driverBackupID)!=='') {
+                    console.log((shift.driverBackupID));
+                    const expectedOptionText = `${shift.id} - ${getDriverFullName(shift.driverBackupID)} - ${shift.day} ${shift.shiftStart}-${shift.shiftEnd}`;
+                    expect(screen.getByText(expectedOptionText)).toBeInTheDocument();
+                }
+            });
+            //recommit
+           
         });
+
+
+       
+
 
         test("Changes when you click Update", async () => {
 
-                
+
+               
+
 
             const { getByTestId, findByTestId } = render(
                 <QueryClientProvider client={queryClient}>
@@ -161,7 +219,9 @@ describe("RideRequestAssignPage tests", () => {
                 </QueryClientProvider>
             );
 
+
             await findByTestId("RideAssignDriverForm-day");
+
 
             const shiftIdField = getByTestId("RideAssignDriverForm-shiftId")
             const dayField = getByTestId("RideAssignDriverForm-day");
@@ -175,6 +235,7 @@ describe("RideRequestAssignPage tests", () => {
             const notesField = getByTestId("RideAssignDriverForm-notes");
             const submitButton = getByTestId("RideAssignDriverForm-submit");
 
+
             expect(shiftIdField).toHaveValue("1");
             expect(dayField).toHaveValue("Tuesday");
             expect(startTimeField).toHaveValue("5:00PM");
@@ -187,9 +248,11 @@ describe("RideRequestAssignPage tests", () => {
             expect(notesField).toHaveValue("note1");
 
 
+
+
             expect(submitButton).toBeInTheDocument();
-            
-            fireEvent.change(shiftIdField, { target: { value: '3' } })
+           
+            fireEvent.change(shiftIdField, { target: { value: '2' } })
             fireEvent.change(dayField, { target: { value: 'Monday' } })
             fireEvent.change(startTimeField, { target: { value: '3:30PM' } })
             fireEvent.change(endTimeField, { target: { value: "4:30PM" } })
@@ -199,20 +262,26 @@ describe("RideRequestAssignPage tests", () => {
             fireEvent.change(courseField, { target: { value: "WRIT 105CD" } })
 
 
+
+
             fireEvent.click(submitButton);
 
-    
+
+   
             await waitFor(() => expect(mockToast).toHaveBeenCalled());
             expect(mockToast).toBeCalledWith("Driver Assigned - id: 17");
             expect(mockNavigate).toBeCalledWith({ "to": "/ride/" });
 
+
             expect(axiosMock.history.put.length).toBe(1); // times called
             expect(axiosMock.history.put[0].params).toEqual({ id: 17 });
             expect(axiosMock.history.put[0].data).toBe(JSON.stringify({
-                shiftId: "3",
+                shiftId: "2",
             })); // posted object
 
+
         });
+
 
        
     });

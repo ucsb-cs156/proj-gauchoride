@@ -147,9 +147,6 @@ describe("DriverAvailabilityTable tests", () => {
       expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
       expect(screen.getByTestId(`${testId}-cell-row-0-col-driverId`)).toHaveTextContent("4");
   
-      const reviewButton = screen.getByTestId(`${testId}-cell-row-0-col-Review-button`);
-      expect(reviewButton).toBeInTheDocument();
-      expect(reviewButton).toHaveClass("btn-primary");
     });
 
 
@@ -181,52 +178,4 @@ describe("DriverAvailabilityTable tests", () => {
         expect(screen.queryByText("Edit")).not.toBeInTheDocument();
     });
       
-      test("Review button triggers navigation", async () => {
-        const currentUser = currentUserFixtures.adminUser;
-      
-        render(
-          <QueryClientProvider client={queryClient}>
-            <MemoryRouter>
-              <DriverAvailabilityTable Availability={driverAvailabilityFixtures.threeAvailability} currentUser={currentUser} />
-            </MemoryRouter>
-          </QueryClientProvider>
-        );
-      
-        // assert - check that the expected content is rendered
-        expect(await screen.findByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-        const editButton = screen.getByTestId(`${testId}-cell-row-0-col-Review-button`);
-        expect(editButton).toBeInTheDocument();
-      
-        // act - click the edit button
-        fireEvent.click(editButton);
-      
-        // assert - check if the mocked navigate function was called
-        expect(mockedNavigate).toHaveBeenCalledWith('/admin/availability/review/1');
-      });
-      
-  test("Review button navigates to the edit page", async () => {
-    const currentUser = currentUserFixtures.adminUser;
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <DriverAvailabilityTable Availability={driverAvailabilityFixtures.threeAvailability} currentUser={currentUser} />
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
-
-    // assert - check that the expected content is rendered
-    expect(await screen.findByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-driverId`)).toHaveTextContent("4");
-
-    const reviewButton = screen.getByTestId(`${testId}-cell-row-0-col-Review-button`);
-    expect(reviewButton).toBeInTheDocument();
-
-    // act - click the edit button
-    fireEvent.click(reviewButton);
-
-    // assert - check that we navigated to the expected path
-    await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith('/admin/availability/review/1'));
-  });
-
 });

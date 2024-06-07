@@ -2,6 +2,9 @@ import React from 'react'
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom';
+import { useBackendMutation } from "main/utils/useBackend";
+
+
 
 function RiderApplicationEditForm({ initialContents, submitAction, email}) {
     const navigate = useNavigate();
@@ -22,14 +25,31 @@ function RiderApplicationEditForm({ initialContents, submitAction, email}) {
     const onSubmit = async (data) => {
         submitAction(data);
     };
+
+    function userIdToAxiosParamsToggleRider(userId) {
+        return {
+            url: "/api/admin/users/toggleRider",
+            method: "POST",
+            params: {
+                id: userId
+            }
+        }
+    }
     
+    const toggleRiderMutation = useBackendMutation(
+        userIdToAxiosParamsToggleRider,
+        {},
+        ["/api/admin/users"]
+    );
+
     const handleApprove = () => {
         const updatedData = { ...initialContents, status: 'accepted' , notes: getValues("notes") };
         handleAction(updatedData, -1);
+        toggleRiderMutation.mutate(initialContents.userId);
     };
 
     const handleDeny = () => {
-        const updatedData = { ...initialContents, status: 'declined' , notes: getValues("notes")};
+        const updatedData = { ...initialContents, status: 'declined' , notes: getValues("notes") };
         handleAction(updatedData, -1);
     };
 

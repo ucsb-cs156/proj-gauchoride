@@ -5,6 +5,8 @@ import RiderApplicationEditForm from "main/components/RiderApplication/RiderAppl
 import { riderApplicationFixtures } from "fixtures/riderApplicationFixtures";
 
 import { QueryClient, QueryClientProvider } from "react-query";
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
 
 const mockedNavigate = jest.fn();
 
@@ -14,6 +16,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe("RiderApplicationEditForm tests", () => {
+    const axiosMock = new AxiosMockAdapter(axios);
     const queryClient = new QueryClient();
 
     const expectedHeaders = ["Email", "Description"];
@@ -23,20 +26,22 @@ describe("RiderApplicationEditForm tests", () => {
         const mockSubmitAction = jest.fn();
     
         render(
-            <RiderApplicationEditForm
-                initialContents={{ id: 1,
-                    userId: 'user123',
-                    status: 'pending',
-                    email: 'test@example.com',
-                    created_date: '2024-03-06',
-                    updated_date: '2024-03-06',
-                    cancelled_date: null,
-                    notes: 'This is a note.',
-                    perm_number: '1234567',
-                    description: 'This is a test description.', }}
-                submitAction={mockSubmitAction}
-                email="test@example.com"
-            />
+            <QueryClientProvider client={queryClient}>
+                <RiderApplicationEditForm
+                    initialContents={{ id: 1,
+                        userId: 'user123',
+                        status: 'pending',
+                        email: 'test@example.com',
+                        created_date: '2024-03-06',
+                        updated_date: '2024-03-06',
+                        cancelled_date: null,
+                        notes: 'This is a note.',
+                        perm_number: '1234567',
+                        description: 'This is a test description.', }}
+                    submitAction={mockSubmitAction}
+                    email="test@example.com"
+                />
+             </QueryClientProvider>
         );
     
         // Trigger the button click
@@ -53,22 +58,23 @@ describe("RiderApplicationEditForm tests", () => {
 
     test('handleAction submits data and navigates', async () => {
         const mockSubmitAction = jest.fn();
-    
         render(
-            <RiderApplicationEditForm
-                initialContents={{ id: 1,
-                    userId: 'user123',
-                    status: 'pending',
-                    email: 'test@example.com',
-                    created_date: '2024-03-06',
-                    updated_date: '2024-03-06',
-                    cancelled_date: null,
-                    notes: 'This is a note.',
-                    perm_number: '1234567',
-                    description: 'This is a test description.', }}
-                submitAction={mockSubmitAction}
-                email="test@example.com"
-            />
+            <QueryClientProvider client={queryClient}>
+                <RiderApplicationEditForm
+                    initialContents={{ id: 1,
+                        userId: 'user123',
+                        status: 'pending',
+                        email: 'test@example.com',
+                        created_date: '2024-03-06',
+                        updated_date: '2024-03-06',
+                        cancelled_date: null,
+                        notes: 'This is a note.',
+                        perm_number: '1234567',
+                        description: 'This is a test description.', }}
+                    submitAction={mockSubmitAction}
+                    email="test@example.com"
+                />
+             </QueryClientProvider>
         );
     
         // Trigger the button click
@@ -87,20 +93,22 @@ describe("RiderApplicationEditForm tests", () => {
         const mockSubmitAction = jest.fn();
     
         render(
-            <RiderApplicationEditForm
-                initialContents={{ id: 1,
-                    userId: 'user123',
-                    status: 'accepted',
-                    email: 'test@example.com',
-                    created_date: '2024-03-06',
-                    updated_date: '2024-03-06',
-                    cancelled_date: null,
-                    notes: 'This is a note.',
-                    perm_number: '1234567',
-                    description: 'This is a test description.', }}
-                submitAction={mockSubmitAction}
-                email="test@example.com"
-            />
+            <QueryClientProvider client={queryClient}>
+                <RiderApplicationEditForm
+                    initialContents={{ id: 1,
+                        userId: 'user123',
+                        status: 'accepted',
+                        email: 'test@example.com',
+                        created_date: '2024-03-06',
+                        updated_date: '2024-03-06',
+                        cancelled_date: null,
+                        notes: 'This is a note.',
+                        perm_number: '1234567',
+                        description: 'This is a test description.', }}
+                    submitAction={mockSubmitAction}
+                    email="test@example.com"
+                />
+             </QueryClientProvider>
         );
     
         // Trigger the button click
@@ -244,5 +252,39 @@ describe("RiderApplicationEditForm tests", () => {
 
         await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
     });
+    
+    test("member's role automatically gets toggled to rider when application gets accepted", async () => {
+        const mockSubmitAction = jest.fn();
+    
+        render(
+            <QueryClientProvider client={queryClient}>
+                <RiderApplicationEditForm
+                    initialContents={{ id: 1,
+                        userId: 'user123',
+                        status: 'pending',
+                        email: 'test@example.com',
+                        created_date: '2024-03-06',
+                        updated_date: '2024-03-06',
+                        cancelled_date: null,
+                        notes: 'This is a note.',
+                        perm_number: '1234567',
+                        description: 'This is a test description.', }}
+                    submitAction={mockSubmitAction}
+                    email="test@example.com"
+                />
+             </QueryClientProvider>
+        );
+    
+        fireEvent.click(screen.getByTestId('RiderApplicationEditForm-approve'));
+    
+        expect(mockSubmitAction).toHaveBeenCalledWith(
+            expect.objectContaining({ status: 'accepted' })
+        );
 
+       await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
+       expect(axiosMock.history.post[0].url).toBe("/api/admin/users/toggleRider");
+       expect(axiosMock.history.post[0].params).toEqual({id:"user123"});
+
+       await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith(-1));
+    });
 });

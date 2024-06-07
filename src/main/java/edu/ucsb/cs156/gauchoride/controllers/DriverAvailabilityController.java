@@ -1,6 +1,6 @@
 package edu.ucsb.cs156.gauchoride.controllers;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +38,6 @@ public class DriverAvailabilityController extends ApiController{
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @PostMapping("/new")
     public DriverAvailability postDriverAvailability(
-            @Parameter(name="driverId") @RequestParam long driverId,
             @Parameter(name="day") @RequestParam String day,
             @Parameter(name="startTime") @RequestParam String startTime,
             @Parameter(name="endTime") @RequestParam String endTime,
@@ -49,7 +48,7 @@ public class DriverAvailabilityController extends ApiController{
         log.info("notes={}", notes);
 
         DriverAvailability driverAvailability = new DriverAvailability();
-        driverAvailability.setDriverId(driverId);
+        driverAvailability.setDriverId(getCurrentUser().getUser().getId());
         driverAvailability.setDay(day);
         driverAvailability.setStartTime(startTime);
         driverAvailability.setEndTime(endTime);
@@ -90,17 +89,15 @@ public class DriverAvailabilityController extends ApiController{
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @PutMapping("")
     public ResponseEntity<Object> updateDriverAvailability(
-                            @Parameter(name="id", description="long, Id of the driver availability to be edited", 
-                            required = true)
+                            @Parameter(name="id", description = "Long, Id of the driver availability to get", 
+                                        required = true)  
                             @RequestParam Long id,
                             @RequestBody @Valid DriverAvailability incoming)
     {
         DriverAvailability availability;
-
         availability = driverAvailabilityRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
 
-        availability.setDriverId(incoming.getDriverId());
         availability.setDay(incoming.getDay());
         availability.setStartTime(incoming.getStartTime());
         availability.setEndTime(incoming.getEndTime());
@@ -111,6 +108,28 @@ public class DriverAvailabilityController extends ApiController{
 
     }
 
+    // Edits an availability of any user if the current user is an admin
+    @Operation(summary = "Edit an existing driver availability if the current user is an admin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/admin")
+    public ResponseEntity<Object> updateAnyDriverAvailability(
+                            @Parameter(name = "id", description = "Long, Id of the driver availability to get", 
+                                        required = true)  
+                            @RequestParam Long id,
+                            @RequestBody @Valid DriverAvailability incoming)
+    {
+        DriverAvailability availability = driverAvailabilityRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+
+        availability.setDay(incoming.getDay());
+        availability.setStartTime(incoming.getStartTime());
+        availability.setEndTime(incoming.getEndTime());
+        availability.setNotes(incoming.getNotes());
+
+        driverAvailabilityRepository.save(availability);
+        return ResponseEntity.ok(availability);
+    }
+
     //DELETE for driver Availability
     @Operation(summary= "Delete a driver availability")
     @PreAuthorize("hasRole('ROLE_DRIVER')")
@@ -119,7 +138,6 @@ public class DriverAvailabilityController extends ApiController{
             @Parameter(name="id") @RequestParam Long id) {
         DriverAvailability availability = driverAvailabilityRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
-
         driverAvailabilityRepository.delete(availability);
         return genericMessage("DriverAvailability with id %s deleted".formatted(id));
     }
