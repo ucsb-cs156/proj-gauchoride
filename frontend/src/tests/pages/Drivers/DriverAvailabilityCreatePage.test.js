@@ -57,14 +57,12 @@ describe("DriverAvailabilityCreatePage tests", () => {
         const queryClient = new QueryClient();
         const availability = {
             id: 5,
-            driverId: 3,
             day: "Saturday",
             startTime: "11:40AM",
             endTime: "11:59AM",
             notes: "none",
         };
         const noidavailability = {
-            driverId: "3",
             day: "Saturday",
             startTime: "11:40AM",
             endTime: "11:59AM",
@@ -81,14 +79,10 @@ describe("DriverAvailabilityCreatePage tests", () => {
             </QueryClientProvider>
         )
 
-
-        const driverIdInput = screen.getByLabelText("driverId")
-        await waitFor(() => {
-            expect(driverIdInput).toBeInTheDocument();
-        });
-
         const dayInput = screen.getByLabelText("Day of Week");
-        expect(dayInput).toBeInTheDocument();
+        await waitFor(() => {
+            expect(dayInput).toBeInTheDocument();
+        });
 
         const startTimeInput = screen.getByLabelText("Availability Start");
         expect(startTimeInput).toBeInTheDocument();
@@ -103,7 +97,6 @@ describe("DriverAvailabilityCreatePage tests", () => {
         fireEvent.change(dayInput, { target: { value: availability.day } });
         fireEvent.change(startTimeInput, { target: { value: availability.startTime } });
         fireEvent.change(endTimeInput, { target: { value: availability.endTime } });
-        fireEvent.change(driverIdInput, { target: { value: String(availability.driverId) } });
         fireEvent.change(notesInput, { target: { value: String(availability.notes) } });
 
         const createButton = screen.getByRole('button', { name: /Create/ });

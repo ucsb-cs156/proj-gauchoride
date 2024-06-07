@@ -30,21 +30,6 @@ function DriverAvailabilityForm({ initialContents, submitAction, buttonLabel = "
                     />
                 </Form.Group>
             )}
-            <Form.Group className="mb-3" >
-                <Form.Label htmlFor="driverId">driverId</Form.Label>
-                <Form.Control
-                    data-testid={testIdPrefix + "-driverId"}
-                    id="driverId"
-                    type="text"
-                    isInvalid={Boolean(errors.driverId)}
-                    {...register("driverId", {
-                        required: "driverId is required.",
-                    })}
-                />
-                <Form.Control.Feedback type="invalid">
-                    {errors.driverId?.message}
-                </Form.Control.Feedback>
-            </Form.Group>
 
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="day">Day of Week</Form.Label>

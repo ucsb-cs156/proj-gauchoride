@@ -3,6 +3,7 @@ package edu.ucsb.cs156.gauchoride.controllers;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,8 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.web.server.ResponseStatusException;
 
+import edu.ucsb.cs156.gauchoride.entities.User;
+import edu.ucsb.cs156.gauchoride.models.CurrentUser;
+import edu.ucsb.cs156.gauchoride.services.CurrentUserService;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.ucsb.cs156.gauchoride.entities.DriverAvailability;
 import edu.ucsb.cs156.gauchoride.errors.EntityNotFoundException;
 import edu.ucsb.cs156.gauchoride.repositories.DriverAvailabilityRepository;
@@ -38,7 +44,6 @@ public class DriverAvailabilityController extends ApiController{
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @PostMapping("/new")
     public DriverAvailability postDriverAvailability(
-            @Parameter(name="driverId") @RequestParam long driverId,
             @Parameter(name="day") @RequestParam String day,
             @Parameter(name="startTime") @RequestParam String startTime,
             @Parameter(name="endTime") @RequestParam String endTime,
@@ -48,8 +53,10 @@ public class DriverAvailabilityController extends ApiController{
 
         log.info("notes={}", notes);
 
+        Long UserId = getCurrentUser().getUser().getId();
+
         DriverAvailability driverAvailability = new DriverAvailability();
-        driverAvailability.setDriverId(driverId);
+        driverAvailability.setDriverId(UserId);
         driverAvailability.setDay(day);
         driverAvailability.setStartTime(startTime);
         driverAvailability.setEndTime(endTime);
@@ -79,9 +86,13 @@ public class DriverAvailabilityController extends ApiController{
                     required = true)  
                     @RequestParam Long id) 
     {
-        DriverAvailability availability;
-        availability = driverAvailabilityRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+        DriverAvailability availability = driverAvailabilityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+
+        if (availability.getDriverId() != getCurrentUser().getUser().getId()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this resource.");
+        }
+        
         return availability;
     }
 
@@ -95,12 +106,13 @@ public class DriverAvailabilityController extends ApiController{
                             @RequestParam Long id,
                             @RequestBody @Valid DriverAvailability incoming)
     {
-        DriverAvailability availability;
+        DriverAvailability availability = driverAvailabilityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
 
-        availability = driverAvailabilityRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+        if (availability.getDriverId() != getCurrentUser().getUser().getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this resource.");
+        }
 
-        availability.setDriverId(incoming.getDriverId());
         availability.setDay(incoming.getDay());
         availability.setStartTime(incoming.getStartTime());
         availability.setEndTime(incoming.getEndTime());
@@ -120,6 +132,10 @@ public class DriverAvailabilityController extends ApiController{
         DriverAvailability availability = driverAvailabilityRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
 
+        if (availability.getDriverId() != getCurrentUser().getUser().getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to access this resource.");
+        }
+
         driverAvailabilityRepository.delete(availability);
         return genericMessage("DriverAvailability with id %s deleted".formatted(id));
     }
@@ -133,9 +149,8 @@ public class DriverAvailabilityController extends ApiController{
                     required = true)  
                     @RequestParam Long id) 
     {
-        DriverAvailability availability;
-        availability = driverAvailabilityRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
+        DriverAvailability availability = driverAvailabilityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(DriverAvailability.class, id));
         return availability;
     }
 
