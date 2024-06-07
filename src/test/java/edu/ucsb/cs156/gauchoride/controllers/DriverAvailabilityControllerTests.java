@@ -70,7 +70,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
         Long UserId = currentUserService.getCurrentUser().getUser().getId();
 
         DriverAvailability availability1 = DriverAvailability.builder()
-                        .driverId(1)
+                        .driverId(UserId)
                         .day("03/05/2024")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
@@ -81,7 +81,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
 
         // act
         MvcResult response = mockMvc.perform(
-                        post("/api/driverAvailability/new?driverId=1&day=03/05/2024&startTime=10:30AM&endTime=2:30PM&notes=End for late lunch")
+                        post("/api/driverAvailability/new?day=03/05/2024&startTime=10:30AM&endTime=2:30PM&notes=End for late lunch")
                                         .with(csrf()))
                         .andExpect(status().isOk()).andReturn();
 
@@ -267,7 +267,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
                         .build();
 
         DriverAvailability availability_edited = DriverAvailability.builder()
-                        .driverId(7)
+                        .driverId(DriverId)
                         .day("12/24/2024")
                         .startTime("5:00AM")
                         .endTime("12:00PM")
@@ -510,7 +510,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
         Long otherUserId = UserId + 1;
 
         DriverAvailability availability1 = DriverAvailability.builder()
-                        .driverId(1)
+                        .driverId(otherUserId)
                         .day("02/29/2024")
                         .startTime("10:30AM")
                         .endTime("2:30PM")
@@ -518,7 +518,7 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
                         .build();
 
         DriverAvailability availability2 = DriverAvailability.builder()
-                        .driverId(1)
+                        .driverId(otherUserId)
                         .day("03/05/2024")
                         .startTime("12:30PM")
                         .endTime("5:30PM")
@@ -538,6 +538,100 @@ public class DriverAvailabilityControllerTests extends ControllerTestCase {
         String expectedJson = mapper.writeValueAsString(expectedAvailabilities);
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
+    }
+
+    @WithMockUser(roles = { "DRIVER" })
+    @Test
+    public void driver_cannot_edit_another_drivers_availability() throws Exception {
+        // arrange
+        Long currentDriverId = currentUserService.getCurrentUser().getUser().getId();
+        Long differentDriverId = currentDriverId + 1; // This is a different driver's ID
+
+        DriverAvailability availability_original = DriverAvailability.builder()
+                        .driverId(differentDriverId)
+                        .day("03/05/2024")
+                        .startTime("10:30AM")
+                        .endTime("2:30PM")
+                        .notes("End for late lunch")
+                        .build();
+
+        DriverAvailability availability_edited = DriverAvailability.builder()
+                        .driverId(differentDriverId)
+                        .day("12/24/2024")
+                        .startTime("5:00AM")
+                        .endTime("12:00PM")
+                        .notes("Early Shift")
+                        .build();
+
+        String requestBody = mapper.writeValueAsString(availability_edited);
+
+        when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.of(availability_original));
+
+        // act
+        mockMvc.perform(
+                put("/api/driverAvailability?id=67")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .characterEncoding("utf-8")
+                                .content(requestBody)
+                                .with(csrf()))
+                .andExpect(status().isForbidden()).andReturn();
+
+        // assert
+        verify(driverAvailabilityRepository, times(1)).findById(eq(67L));
+        verify(driverAvailabilityRepository, times(0)).save(any());
+    }
+
+    @WithMockUser(roles = { "DRIVER" })
+    @Test
+    public void driver_cannot_get_another_drivers_availability_by_id() throws Exception {
+        // arrange
+        Long currentDriverId = currentUserService.getCurrentUser().getUser().getId();
+        Long differentDriverId = currentDriverId + 1; // This is a different driver's ID
+
+        DriverAvailability availability = DriverAvailability.builder()
+                        .driverId(differentDriverId)
+                        .day("03/05/2024")
+                        .startTime("10:30AM")
+                        .endTime("2:30PM")
+                        .notes("End for late lunch")
+                        .build();
+
+        when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.of(availability));
+
+        // act
+        mockMvc.perform(get("/api/driverAvailability/id?id=67"))
+                .andExpect(status().isForbidden()).andReturn();
+
+        // assert
+        verify(driverAvailabilityRepository, times(1)).findById(eq(67L));
+    }
+
+    @WithMockUser(roles = { "DRIVER" })
+    @Test
+    public void driver_cannot_delete_another_drivers_availability() throws Exception {
+        // arrange
+        Long currentDriverId = currentUserService.getCurrentUser().getUser().getId();
+        Long differentDriverId = currentDriverId + 1; // This is a different driver's ID
+
+        DriverAvailability availability = DriverAvailability.builder()
+                        .driverId(differentDriverId)
+                        .day("12/24/2024")
+                        .startTime("5:00AM")
+                        .endTime("12:00PM")
+                        .notes("Early Shift")
+                        .build();
+
+        when(driverAvailabilityRepository.findById(eq(67L))).thenReturn(Optional.of(availability));
+
+        // act
+        mockMvc.perform(
+                delete("/api/driverAvailability?id=67")
+                                .with(csrf()))
+                .andExpect(status().isForbidden()).andReturn();
+
+        // assert
+        verify(driverAvailabilityRepository, times(1)).findById(eq(67L));
+        verify(driverAvailabilityRepository, times(0)).delete(any());
     }
 
 }

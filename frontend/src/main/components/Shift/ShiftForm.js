@@ -1,8 +1,22 @@
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useBackend } from 'main/utils/useBackend';
 
 function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
+
+    const { data: drivers, _error, _status } =
+        useBackend(
+            // Stryker disable next-line all : don't test internal caching of React Query
+            [`/api/drivers/all`],
+            {  // Stryker disable next-line all : GET is the default, so changing this to "" doesn't introduce a bug
+                method: "GET",
+                url: `/api/drivers/all`
+                // Stryker restore all
+            },
+        );
+
+
     // Stryker disable all
     const {
         register,
@@ -107,15 +121,16 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     data-testid={testIdPrefix + "-driverID"}
                     id="driverID"
                     name="driverID"
-                    type="number"
-                    isInvalid={Boolean(errors.driverID)}
-                    {...register("driverID", {
-                        required: "Driver ID is required."
-                    })}
-                />
-                <Form.Control.Feedback type="invalid">
-                    {errors.driverID?.message}
-                </Form.Control.Feedback>
+                    as="select"
+                    type="select"
+                    {...register("driverID")}
+                >
+                    {drivers && drivers.map(driver => (
+                        <option key={driver.id} data-testid={testIdPrefix + "-driverID-" + driver.id} value={driver.id}>
+                            {driver.id + " - " + driver.fullName}
+                        </option>
+                    ))}
+                </Form.Control>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -124,15 +139,16 @@ function ShiftForm({ initialContents, submitAction, buttonLabel = "Create" }) {
                     data-testid={testIdPrefix + "-driverBackupID"}
                     id="driverBackupID"
                     name="driverBackupID"
-                    type="number"
-                    isInvalid={Boolean(errors.driverBackupID)}
-                    {...register("driverBackupID", {
-                        required: "Driver Backup ID is required."
-                    })}
-                />
-                <Form.Control.Feedback type="invalid">
-                    {errors.driverBackupID?.message}
-                </Form.Control.Feedback>
+                    as="select"
+                    type="select"
+                    {...register("driverBackupID")}
+                >
+                    {drivers && drivers.map(driver => (
+                        <option key={driver.id} data-testid={testIdPrefix + "-driverBackupID-" + driver.id} value={driver.id}>
+                            {driver.id + " - " + driver.fullName}
+                        </option>
+                    ))}
+                </Form.Control>
             </Form.Group>
 
             <Button

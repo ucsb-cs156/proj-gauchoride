@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import { BrowserRouter as Router } from 'react-router-dom';
 import { currentUserFixtures } from "fixtures/currentUserFixtures";
-  
+
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useNavigate: () => mockedNavigate,
@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
 
 const mockedNavigate = jest.fn();
 
-const expectedHeaders = ["id", "Day", "Shift start", "Shift end", "Driver", "Backup driver"];
+const expectedHeaders = ["id", "Day", "Shift Start", "Shift End", "Driver", "Backup Driver"];
 const expectedFields = ["id", "day", "shiftStart", "shiftEnd", "driverID", "driverBackupID"];
 const testId = "ShiftTable";
 describe("ShiftTable tests", () => {
@@ -56,7 +56,7 @@ describe("ShiftTable tests", () => {
 
         expectedFields.forEach( (field)=> {
           const header = getByTestId(`${testId}-cell-row-0-col-${field}`);
-          expect(header).toBeInTheDocument(); 
+          expect(header).toBeInTheDocument();
         });
 
         expect(getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
@@ -75,7 +75,7 @@ describe("ShiftTable tests", () => {
 
       test("Has the expected column headers, content, and buttons for admin user", () => {
         const currentUser = currentUserFixtures.adminOnly;
-        
+
         render(
             <QueryClientProvider client={queryClient}>
                 <Router>
@@ -83,24 +83,24 @@ describe("ShiftTable tests", () => {
                 </Router>
             </QueryClientProvider>
         );
-    
+
         expectedHeaders.forEach((headerText) => {
             const header = screen.getByText(headerText);
             expect(header).toBeInTheDocument();
         });
-    
+
         expectedFields.forEach((field) => {
             const cellContent = screen.getByTestId(`${testId}-cell-row-0-col-${field}`);
             expect(cellContent).toBeInTheDocument();
         });
-    
+
         expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-day`)).toHaveTextContent("Monday");
-    
+
         const editButton = screen.getByTestId(`${testId}-cell-row-0-col-Edit-button`);
         expect(editButton).toBeInTheDocument();
         expect(editButton).toHaveClass("btn-primary");
-    
+
         const deleteButton = screen.getByTestId(`${testId}-cell-row-0-col-Delete-button`);
         expect(deleteButton).toBeInTheDocument();
         expect(deleteButton).toHaveClass("btn-danger");
@@ -112,7 +112,7 @@ describe("ShiftTable tests", () => {
 
     test("Has the expected column headers, content, and buttons for driver user", () => {
       const currentUser = currentUserFixtures.driverOnly;
-      
+
       render(
           <QueryClientProvider client={queryClient}>
               <Router>
@@ -120,17 +120,17 @@ describe("ShiftTable tests", () => {
               </Router>
           </QueryClientProvider>
       );
-  
+
       expectedHeaders.forEach((headerText) => {
           const header = screen.getByText(headerText);
           expect(header).toBeInTheDocument();
       });
-  
+
       expectedFields.forEach((field) => {
           const cellContent = screen.getByTestId(`${testId}-cell-row-0-col-${field}`);
           expect(cellContent).toBeInTheDocument();
       });
-  
+
       expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
       expect(screen.getByTestId(`${testId}-cell-row-0-col-day`)).toHaveTextContent("Monday");
 
@@ -138,10 +138,10 @@ describe("ShiftTable tests", () => {
       expect(infoButton).toBeInTheDocument();
       expect(infoButton).toHaveClass("btn-success");
   });
-    
+
     test("Has the expected column headers and content for an ordinary user", () => {
         const currentUser = currentUserFixtures.userOnly;
-    
+
         render(
             <QueryClientProvider client={queryClient}>
                 <Router>
@@ -149,20 +149,20 @@ describe("ShiftTable tests", () => {
                 </Router>
             </QueryClientProvider>
         );
-    
+
         expectedHeaders.forEach((headerText) => {
             const header = screen.getByText(headerText);
             expect(header).toBeInTheDocument();
         });
-    
+
         expectedFields.forEach((field) => {
             const cellContent = screen.getByTestId(`${testId}-cell-row-0-col-${field}`);
             expect(cellContent).toBeInTheDocument();
         });
-    
+
         expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-day`)).toHaveTextContent("Monday");
-    
+
         expect(screen.queryByText("Delete")).not.toBeInTheDocument();
         expect(screen.queryByText("Edit")).not.toBeInTheDocument();
         expect(screen.queryByText("Info")).not.toBeInTheDocument();
@@ -170,8 +170,8 @@ describe("ShiftTable tests", () => {
 
     test("Delete button calls delete callback", async () => {
         const currentUser = currentUserFixtures.adminUser;
-        
-        
+
+
         // act - render the component
         render(
           <QueryClientProvider client={queryClient}>
@@ -180,22 +180,22 @@ describe("ShiftTable tests", () => {
             </Router>
           </QueryClientProvider>
         );
-      
+
         // assert - check that the expected content is rendered
         expect(await screen.findByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-day`)).toHaveTextContent("Monday");
-      
+
         const deleteButton = screen.getByTestId(`${testId}-cell-row-0-col-Delete-button`);
         expect(deleteButton).toBeInTheDocument();
-      
+
         // act - click the delete button
         fireEvent.click(deleteButton);
       });
-    
+
 
       test("Edit button triggers navigation", async () => {
         const currentUser = currentUserFixtures.adminUser;
-      
+
         render(
           <QueryClientProvider client={queryClient}>
             <MemoryRouter>
@@ -203,19 +203,19 @@ describe("ShiftTable tests", () => {
             </MemoryRouter>
           </QueryClientProvider>
         );
-      
+
         // assert - check that the expected content is rendered
         expect(await screen.findByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
         const editButton = screen.getByTestId(`${testId}-cell-row-0-col-Edit-button`);
         expect(editButton).toBeInTheDocument();
-      
+
         // act - click the edit button
         fireEvent.click(editButton);
-      
+
         // assert - check if the mocked navigate function was called
         expect(mockedNavigate).toHaveBeenCalledWith('/shift/edit/1');
       });
-      
+
   test("Edit button navigates to the edit page", async () => {
     const currentUser = currentUserFixtures.adminUser;
 
@@ -243,7 +243,7 @@ describe("ShiftTable tests", () => {
 
     test("Info button triggers navigation", async () => {
       const currentUser = currentUserFixtures.adminUser;
-    
+
       render(
         <QueryClientProvider client={queryClient}>
           <MemoryRouter>
@@ -251,15 +251,15 @@ describe("ShiftTable tests", () => {
           </MemoryRouter>
         </QueryClientProvider>
       );
-    
+
       // assert - check that the expected content is rendered
       expect(await screen.findByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
       const infoButton = screen.getByTestId(`${testId}-cell-row-0-col-Info-button`);
       expect(infoButton).toBeInTheDocument();
-    
+
       // act - click the info button
       fireEvent.click(infoButton);
-    
+
       // assert - check if the mocked navigate function was called
       expect(mockedNavigate).toHaveBeenCalledWith('/shiftInfo/1');
     });

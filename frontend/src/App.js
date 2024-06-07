@@ -34,6 +34,8 @@ import RiderApplicationShowPageMember from "main/pages/RiderApplication/RiderApp
 import RiderApplicationIndexPageAdmin from "main/pages/RiderApplication/RiderApplicationIndexPageAdmin";
 import RiderApplicationEditPageAdmin from "main/pages/RiderApplication/RiderApplicationEditPageAdmin";
 
+import SchedulerPage from "main/pages/Scheduler/SchedulerPage";
+
 import { hasRole, useCurrentUser } from "main/utils/currentUser";
 
 import "bootstrap/dist/css/bootstrap.css";  
@@ -130,6 +132,12 @@ function App() {
         }
         {
           (hasRole(currentUser, "ROLE_ADMIN")) && <Route exact path="/admin/availability/review/:id" element={<DriverAvailabilityEditPage />} />
+        }
+        {
+          (hasRole(currentUser, "ROLE_ADMIN")) && <Route exact path="/admin/schedule" element={<SchedulerPage />} />
+        }
+        {
+          (hasRole(currentUser, "ROLE_ADMIN")) && <Route exact path="/admin/schedule/:page" element={<SchedulerPage />} />
         }
         <Route exact path="/privacy.html" />
         <Route exact path="/*" element={<PageNotFound />} />

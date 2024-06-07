@@ -29,7 +29,7 @@ export default function ShiftTable({
         { onSuccess: onDeleteSuccess },
         ["/api/shift/all"]
     );
-    // Stryker restore all 
+    // Stryker restore all
 
     // Stryker disable next-line all : TODO try to make a good test for this
     const deleteCallback = async (cell) => { deleteMutation.mutate(cell); }
@@ -44,11 +44,11 @@ export default function ShiftTable({
             accessor: 'day',
         },
         {
-            Header: 'Shift start',
+            Header: 'Shift Start',
             accessor: 'shiftStart',
         },
         {
-            Header: 'Shift end',
+            Header: 'Shift End',
             accessor: 'shiftEnd',
         },
         {
@@ -60,7 +60,7 @@ export default function ShiftTable({
               ),
         },
         {
-            Header: 'Backup driver',
+            Header: 'Backup Driver',
             accessor: 'driverBackupID',
             Cell: ({ value }) => (
                 // Stryker disable next-line all : hard to set up test
@@ -73,7 +73,7 @@ export default function ShiftTable({
         columns.push(ButtonColumn("Edit", "primary", editCallback, testIdPrefix));
         columns.push(ButtonColumn("Delete", "danger", deleteCallback, testIdPrefix));
     }
-    
+
     if (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_DRIVER")) {
         columns.push(ButtonColumn("Info", "success", infoCallback, testIdPrefix))
     }
@@ -84,4 +84,3 @@ export default function ShiftTable({
         testid={testIdPrefix}
     />;
 };
-

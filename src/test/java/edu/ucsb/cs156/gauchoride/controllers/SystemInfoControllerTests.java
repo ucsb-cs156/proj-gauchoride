@@ -29,14 +29,14 @@ public class SystemInfoControllerTests extends ControllerTestCase {
   @Test
   public void systemInfo__logged_out() throws Exception {
     mockMvc.perform(get("/api/systemInfo"))
-        .andExpect(status().is(403));
+        .andExpect(status().isOk()).andReturn();
   }
 
   @WithMockUser(roles = { "USER" })
   @Test
   public void systemInfo__user_logged_in() throws Exception {
     mockMvc.perform(get("/api/systemInfo"))
-        .andExpect(status().is(403));
+        .andExpect(status().isOk()).andReturn();
   }
 
   @WithMockUser(roles = { "ADMIN", "USER" })

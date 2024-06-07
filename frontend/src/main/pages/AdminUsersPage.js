@@ -13,11 +13,13 @@ const AdminUsersPage = () => {
             { method: "GET", url: "/api/admin/users" },
             []
         );
-
+    const sortUsersById = (users) => {
+        return users.sort((a, b) => a.id - b.id);
+    };
     return (
         <BasicLayout>
             <h2>Users</h2>
-            <UsersTable users={users} />
+            <UsersTable users={sortUsersById(users)} />
         </BasicLayout>
     );
 };
